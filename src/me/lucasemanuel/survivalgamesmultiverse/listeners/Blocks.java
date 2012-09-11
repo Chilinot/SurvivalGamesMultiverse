@@ -16,11 +16,17 @@
 package me.lucasemanuel.survivalgamesmultiverse.listeners;
 
 import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockBurnEvent;
+import org.bukkit.event.block.BlockFadeEvent;
+import org.bukkit.event.block.BlockGrowEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.BlockSpreadEvent;
+import org.bukkit.event.block.LeavesDecayEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 
 import me.lucasemanuel.survivalgamesmultiverse.Main;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
@@ -36,17 +42,84 @@ public class Blocks implements Listener {
 		
 		logger.debug("Initiated");
 	}
-	
-	//TODO logg block changes for registered worlds
 
 	@EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=true)
 	public void onBlockPlace(BlockPlaceEvent event) {
 		
 		Block block = event.getBlock();
-		Player player = event.getPlayer();
 		
 		if(plugin.getWorldManager().isWorld(block.getWorld())) {
-			
+			plugin.getWorldManager().logBlock(block.getLocation());
+		}
+	}
+	
+	@EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=true)
+	public void onBlockBreak(BlockBreakEvent event) {
+		
+		Block block = event.getBlock();
+		
+		if(plugin.getWorldManager().isWorld(block.getWorld())) {
+			plugin.getWorldManager().logBlock(block.getLocation());
+		}
+	}
+	
+	@EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=true)
+	public void onEntityExplode(EntityExplodeEvent event) {
+		
+		if(plugin.getWorldManager().isWorld(event.getLocation().getWorld())) {
+			for(Block block : event.blockList()) {
+				plugin.getWorldManager().logBlock(block.getLocation());
+			}
+		}
+	}
+	
+	@EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=true)
+	public void onLeavesDecay(LeavesDecayEvent event) {
+		
+		Block block = event.getBlock();
+		
+		if(plugin.getWorldManager().isWorld(block.getWorld())) {
+			plugin.getWorldManager().logBlock(block.getLocation());
+		}
+	}
+	
+	@EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=true)
+	public void onBlockBurn(BlockBurnEvent event) {
+		
+		Block block = event.getBlock();
+		
+		if(plugin.getWorldManager().isWorld(block.getWorld())) {
+			plugin.getWorldManager().logBlock(block.getLocation());
+		}
+	}
+	
+	@EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=true)
+	public void onBlockGrow(BlockGrowEvent event) {
+		
+		Block block = event.getBlock();
+		
+		if(plugin.getWorldManager().isWorld(block.getWorld())) {
+			plugin.getWorldManager().logBlock(block.getLocation());
+		}
+	}
+	
+	@EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=true)
+	public void onBlockSpread(BlockSpreadEvent event) {
+
+		Block block = event.getBlock();
+		
+		if(plugin.getWorldManager().isWorld(block.getWorld())) {
+			plugin.getWorldManager().logBlock(block.getLocation());
+		}
+	}
+	
+	@EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=true)
+	public void onBlockFade(BlockFadeEvent event) {
+
+		Block block = event.getBlock();
+		
+		if(plugin.getWorldManager().isWorld(block.getWorld())) {
+			plugin.getWorldManager().logBlock(block.getLocation());
 		}
 	}
 }

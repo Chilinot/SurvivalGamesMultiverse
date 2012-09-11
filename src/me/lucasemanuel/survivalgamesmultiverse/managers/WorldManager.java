@@ -71,4 +71,9 @@ public class WorldManager {
 		else
 			logger.debug("Tried to broadcast message '" + msg + "' to non registered world - " + world.getName());
 	}
+
+	public void logBlock(Location location) {
+		if(loggedblocks.containsKey(location.getWorld().getName()) && loggedblocks.get(location.getWorld().getName()).contains(location) == false)
+			loggedblocks.get(location.getWorld().getName()).add(location);
+	}
 }
