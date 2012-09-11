@@ -18,6 +18,10 @@ package me.lucasemanuel.survivalgamesmultiverse.managers;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
+
 import me.lucasemanuel.survivalgamesmultiverse.Main;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
 
@@ -27,13 +31,11 @@ public class PlayerManager {
 	//TODO have a countdown unfreeze the players after a configurable time
 	//TODO teleport players to arena after configurable time
 	
-	private Main plugin;
 	private ConsoleLogger logger;
 	
 	private HashMap<String, HashSet<String>> playerlists;
 	
 	public PlayerManager(Main instance) {
-		plugin = instance;
 		logger = new ConsoleLogger(instance, "PlayerManager");
 		
 		playerlists = new HashMap<String, HashSet<String>>();
@@ -67,5 +69,28 @@ public class PlayerManager {
 		}
 		
 		return false;
+	}
+
+	public void removePlayer(String worldname, String name) {
+		
+		if(playerlists.containsKey(worldname)) {
+			if(playerlists.get(worldname).remove(name) == false)
+				logger.debug("Tried to remove player from world where he was not listed! Worldname = " + worldname + " - Playername = " + name);
+		}
+		else
+			logger.debug("Tried to remove player '" + name + "' from incorrect world '" + worldname + "'!");
+	}
+
+	public Player getWinner(World world) {
+		
+		if(playerlists.containsKey(world.getName())) {
+			
+			HashSet<String> playerlist = playerlists.get(world.getName());
+			if(playerlist.size() == 1) {
+				return Bukkit.getPlayer((String)playerlist.toArray()[0]);
+			}
+		}
+		
+		return null;
 	}
 }

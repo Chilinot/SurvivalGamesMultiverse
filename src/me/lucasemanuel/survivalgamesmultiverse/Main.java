@@ -17,6 +17,7 @@ package me.lucasemanuel.survivalgamesmultiverse;
 
 import me.lucasemanuel.survivalgamesmultiverse.listeners.Blocks;
 import me.lucasemanuel.survivalgamesmultiverse.listeners.Players;
+import me.lucasemanuel.survivalgamesmultiverse.managers.ChestManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.PlayerManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.WorldManager;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
@@ -40,6 +41,7 @@ public class Main extends JavaPlugin {
 	
 	private PlayerManager playermanager;
 	private WorldManager worldmanager;
+	private ChestManager chestmanager;
 	
 	public void onEnable() {
 		logger = new ConsoleLogger(this, "Main");
@@ -51,6 +53,7 @@ public class Main extends JavaPlugin {
 		
 		playermanager = new PlayerManager(this);
 		worldmanager  = new WorldManager(this);
+		chestmanager  = new ChestManager(this);
 		
 		logger.debug("Finished! Moving on to event listeners...");
 		
@@ -76,5 +79,9 @@ public class Main extends JavaPlugin {
 	
 	public WorldManager getWorldManager() {
 		return worldmanager;
+	}
+	
+	public ChestManager getChestManager() {
+		return chestmanager;
 	}
 }
