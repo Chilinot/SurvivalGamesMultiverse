@@ -75,7 +75,7 @@ public class InsertDeathPointThread extends Thread {
 			con.close();
 		}
 		catch(SQLException | ClassNotFoundException e) {
-			System.out.println("Error while inserting killpoint! Message: " + e.getMessage());
+			System.out.println("Error while inserting deathpoint! Message: " + e.getMessage());
 		}
 	}
 }
