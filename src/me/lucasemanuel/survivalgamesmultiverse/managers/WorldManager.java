@@ -38,7 +38,12 @@ public class WorldManager {
 	private Main plugin;
 	private ConsoleLogger logger;
 	
+	// Key = Gameworlds, Value = Templateworld
 	private HashMap<World, World> worldlist;
+	
+	// Key = Worldname, Value = logged blocks for that world
+	// The logged blocks are separated into several HashSet's so the resetWorld() method will have
+	// less locations to loop over per world, and so speed up performance.
 	private HashMap<String, HashSet<Location>> loggedblocks;
 	
 	public WorldManager(Main instance) {
@@ -51,6 +56,7 @@ public class WorldManager {
 	
 	public void addWorld(World world, World template) {
 		worldlist.put(world, template);
+		loggedblocks.put(world.getName(), new HashSet<Location>());
 	}
 	
 	public boolean isWorld(World world) {
@@ -75,11 +81,15 @@ public class WorldManager {
 	}
 
 	public void logBlock(Location location) {
-		if(loggedblocks.containsKey(location.getWorld().getName()) && loggedblocks.get(location.getWorld().getName()).contains(location) == false)
+		if(loggedblocks.containsKey(location.getWorld().getName()) && loggedblocks.get(location.getWorld().getName()).contains(location) == false) {
 			loggedblocks.get(location.getWorld().getName()).add(location);
+			logger.debug("Logged block in world: " + location.getWorld().getName());
+		}
 	}
 
 	public void resetWorld(World world) {
+		
+		logger.debug("Resetting world: " + world.getName());
 		
 		if(worldlist.containsKey(world)) {
 			
@@ -117,9 +127,14 @@ public class WorldManager {
 				}
 			}
 			
+			blocksToReset.clear();
 			plugin.getChestManager().clearLogs(world.getName());
 		}
 		else
 			logger.debug("Tried to reset non registered world!");
+	}
+
+	public void sendPlayerToSpawn(Player player) {
+		player.teleport(player.getWorld().getSpawnLocation());
 	}
 }

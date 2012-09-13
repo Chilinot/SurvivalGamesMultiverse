@@ -18,9 +18,7 @@ package me.lucasemanuel.survivalgamesmultiverse.managers;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.entity.Player;
 
 import me.lucasemanuel.survivalgamesmultiverse.Main;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
@@ -81,13 +79,25 @@ public class PlayerManager {
 			logger.debug("Tried to remove player '" + name + "' from incorrect world '" + worldname + "'!");
 	}
 
-	public Player getWinner(World world) {
+	public boolean isGameOver(World world) {
 		
-		if(playerlists.containsKey(world.getName())) {
+		HashSet<String> playerlist = playerlists.get(world.getName());
+		
+		if(playerlist != null && playerlist.size() <= 1) {
+			return true;
+		}
+		
+		return false;
+	}
+
+	public String getWinner(World world) {
+		
+		if(isGameOver(world)) {
 			
 			HashSet<String> playerlist = playerlists.get(world.getName());
-			if(playerlist.size() == 1) {
-				return Bukkit.getPlayer((String)playerlist.toArray()[0]);
+			
+			if(playerlist != null && playerlist.isEmpty() == false) {
+				return (String) playerlist.toArray()[0];
 			}
 		}
 		

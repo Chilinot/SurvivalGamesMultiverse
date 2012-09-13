@@ -16,6 +16,9 @@
 package me.lucasemanuel.survivalgamesmultiverse.listeners;
 
 import me.lucasemanuel.survivalgamesmultiverse.Main;
+import me.lucasemanuel.survivalgamesmultiverse.managers.PlayerManager;
+import me.lucasemanuel.survivalgamesmultiverse.managers.StatsManager;
+import me.lucasemanuel.survivalgamesmultiverse.managers.WorldManager;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
 
 import org.bukkit.ChatColor;
@@ -44,7 +47,7 @@ public class Players implements Listener {
 	
 	//TODO teleport players to spawnpoint on join
 	
-	@EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=true)
+	@EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled=true)
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		
 		Block block = event.getClickedBlock();
@@ -77,39 +80,53 @@ public class Players implements Listener {
 		}
 	}
 	
-	@EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=true)
+	@EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled=true)
 	public void onPlayerDeath(PlayerDeathEvent event) {
 		
 		Player victim = event.getEntity();
 		
 		if(plugin.getWorldManager().isWorld(victim.getWorld())) {
 			
+			PlayerManager playermanager = plugin.getPlayerManager();
+			
 			// Blocka alla meddelanden i SG världarna
 			event.setDeathMessage(null);
 			
-			if(plugin.getPlayerManager().isInGame(victim.getName())) {
-				Player killer = event.getEntity().getKiller();
+			if(playermanager.isInGame(victim.getName())) {
+				
+				WorldManager worldmanager = plugin.getWorldManager();
+				StatsManager statsmanager = plugin.getStatsManager();
 				
 				// Dödades spelaren utav en annan spelare eller dog han naturligt?
+				Player killer = event.getEntity().getKiller();
+				
 				if(killer != null) {
-					plugin.getWorldManager().broadcast(victim.getWorld(), ChatColor.LIGHT_PURPLE + victim.getName() + ChatColor.RED + " dödades utav " + ChatColor.BLUE + killer.getName());
-					plugin.getStatsManager().addKillPoints(killer.getName(), 1);
+					worldmanager.broadcast(victim.getWorld(), ChatColor.LIGHT_PURPLE + victim.getName() + ChatColor.RED + " dödades utav " + ChatColor.BLUE + killer.getName());
+					statsmanager.addKillPoints(killer.getName(), 1);
 				}
 				else
-					plugin.getWorldManager().broadcast(victim.getWorld(), ChatColor.LIGHT_PURPLE + victim.getName() + ChatColor.RED + " är ute ur spelet!");
+					worldmanager.broadcast(victim.getWorld(), ChatColor.LIGHT_PURPLE + victim.getName() + ChatColor.RED + " är ute ur spelet!");
 				
 				// Ta bort spelaren och ge honom en dödspoäng
-				plugin.getPlayerManager().removePlayer(victim.getWorld().getName(), victim.getName());
-				plugin.getStatsManager().addDeathPoints(victim.getName(), 1);
+				playermanager.removePlayer(victim.getWorld().getName(), victim.getName());
+				worldmanager.sendPlayerToSpawn(victim);
+				statsmanager.addDeathPoints(victim.getName(), 1);
 				
-				// Finns det en vinnare?
-				Player winner = plugin.getPlayerManager().getWinner(victim.getWorld());
-				if(winner != null) {
+				// Är spelet slut?
+				if(playermanager.isGameOver(victim.getWorld())) {
 					
-					plugin.getWorldManager().broadcast(winner.getWorld(), "Spelet är över!");
-					plugin.getWorldManager().resetWorld(winner.getWorld());
+					// Har vi en vinnare?
+					String winner = playermanager.getWinner(victim.getWorld());
+					if(winner != null) {
+						worldmanager.broadcast(victim.getWorld(), ChatColor.LIGHT_PURPLE + winner + ChatColor.WHITE + " vann spelet!");
+						statsmanager.addWinPoints(winner, 1);
+					}
 					
-					plugin.getStatsManager().addWinPoints(winner.getName(), 1);
+					// Skicka ut ett meddelande till alla spelare i världen att spelet är slut.
+					worldmanager.broadcast(victim.getWorld(), "Spelet är över!");
+					
+					// Återställ världen
+					worldmanager.resetWorld(victim.getWorld());
 				}
 			}
 		}

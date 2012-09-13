@@ -23,9 +23,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockFadeEvent;
-import org.bukkit.event.block.BlockGrowEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 
@@ -44,12 +42,14 @@ public class Blocks implements Listener {
 		logger.debug("Initiated");
 	}
 
-	@EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=true)
+	@EventHandler(priority=EventPriority.MONITOR, ignoreCancelled=true)
 	public void onBlockPlace(BlockPlaceEvent event) {
 		
 		Block block = event.getBlock();
 		
 		if(plugin.getWorldManager().isWorld(block.getWorld())) {
+			
+			logger.debug("logging block");
 			
 			plugin.getWorldManager().logBlock(block.getLocation());
 			
@@ -58,7 +58,7 @@ public class Blocks implements Listener {
 		}
 	}
 	
-	@EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=true)
+	@EventHandler(priority=EventPriority.MONITOR, ignoreCancelled=true)
 	public void onBlockBreak(BlockBreakEvent event) {
 		
 		Block block = event.getBlock();
@@ -68,7 +68,7 @@ public class Blocks implements Listener {
 		}
 	}
 	
-	@EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=true)
+	@EventHandler(priority=EventPriority.MONITOR, ignoreCancelled=true)
 	public void onEntityExplode(EntityExplodeEvent event) {
 		
 		if(plugin.getWorldManager().isWorld(event.getLocation().getWorld())) {
@@ -78,7 +78,7 @@ public class Blocks implements Listener {
 		}
 	}
 	
-	@EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=true)
+	@EventHandler(priority=EventPriority.MONITOR, ignoreCancelled=true)
 	public void onLeavesDecay(LeavesDecayEvent event) {
 		
 		Block block = event.getBlock();
@@ -88,7 +88,7 @@ public class Blocks implements Listener {
 		}
 	}
 	
-	@EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=true)
+	@EventHandler(priority=EventPriority.MONITOR, ignoreCancelled=true)
 	public void onBlockBurn(BlockBurnEvent event) {
 		
 		Block block = event.getBlock();
@@ -98,27 +98,7 @@ public class Blocks implements Listener {
 		}
 	}
 	
-	@EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=true)
-	public void onBlockGrow(BlockGrowEvent event) {
-		
-		Block block = event.getBlock();
-		
-		if(plugin.getWorldManager().isWorld(block.getWorld())) {
-			plugin.getWorldManager().logBlock(block.getLocation());
-		}
-	}
-	
-	@EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=true)
-	public void onBlockSpread(BlockSpreadEvent event) {
-
-		Block block = event.getBlock();
-		
-		if(plugin.getWorldManager().isWorld(block.getWorld())) {
-			plugin.getWorldManager().logBlock(block.getLocation());
-		}
-	}
-	
-	@EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=true)
+	@EventHandler(priority=EventPriority.MONITOR, ignoreCancelled=true)
 	public void onBlockFade(BlockFadeEvent event) {
 
 		Block block = event.getBlock();
