@@ -115,15 +115,15 @@ public class Players implements Listener {
 				// Är spelet slut?
 				if(playermanager.isGameOver(victim.getWorld())) {
 					
+					// Skicka ut ett meddelande till alla spelare i världen att spelet är slut.
+					worldmanager.broadcast(victim.getWorld(), "Spelet är över!");
+					
 					// Har vi en vinnare?
 					String winner = playermanager.getWinner(victim.getWorld());
 					if(winner != null) {
 						worldmanager.broadcast(victim.getWorld(), ChatColor.LIGHT_PURPLE + winner + ChatColor.WHITE + " vann spelet!");
 						statsmanager.addWinPoints(winner, 1);
 					}
-					
-					// Skicka ut ett meddelande till alla spelare i världen att spelet är slut.
-					worldmanager.broadcast(victim.getWorld(), "Spelet är över!");
 					
 					// Återställ världen
 					worldmanager.resetWorld(victim.getWorld());
