@@ -18,6 +18,7 @@ package me.lucasemanuel.survivalgamesmultiverse;
 import me.lucasemanuel.survivalgamesmultiverse.listeners.Blocks;
 import me.lucasemanuel.survivalgamesmultiverse.listeners.Players;
 import me.lucasemanuel.survivalgamesmultiverse.managers.ChestManager;
+import me.lucasemanuel.survivalgamesmultiverse.managers.LanguageManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.PlayerManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.StatsManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.WorldManager;
@@ -40,10 +41,11 @@ public class Main extends JavaPlugin {
 	
 	private ConsoleLogger logger;
 	
-	private PlayerManager playermanager;
-	private WorldManager worldmanager;
-	private ChestManager chestmanager;
-	private StatsManager statsmanager;
+	private PlayerManager   playermanager;
+	private WorldManager    worldmanager;
+	private ChestManager    chestmanager;
+	private StatsManager    statsmanager;
+	private LanguageManager languagemanager;
 	
 	public void onEnable() {
 		logger = new ConsoleLogger(this, "Main");
@@ -53,10 +55,11 @@ public class Main extends JavaPlugin {
 		
 		logger.debug("Initiating managers...");
 		
-		playermanager = new PlayerManager(this);
-		worldmanager  = new WorldManager(this);
-		chestmanager  = new ChestManager(this);
-		statsmanager  = new StatsManager(this);
+		playermanager   = new PlayerManager(this);
+		worldmanager    = new WorldManager(this);
+		chestmanager    = new ChestManager(this);
+		statsmanager    = new StatsManager(this);
+		languagemanager = new LanguageManager(this);
 		
 		logger.debug("Finished! Moving on to event listeners...");
 		
@@ -90,5 +93,9 @@ public class Main extends JavaPlugin {
 	
 	public StatsManager getStatsManager() {
 		return statsmanager;
+	}
+	
+	public LanguageManager getLanguageManager() {
+		return languagemanager;
 	}
 }

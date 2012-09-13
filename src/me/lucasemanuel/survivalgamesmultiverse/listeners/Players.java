@@ -65,12 +65,12 @@ public class Players implements Listener {
 					if(plugin.getPlayerManager().isInGame(player.getName()) == false) {
 						
 						plugin.getPlayerManager().addPlayer(block.getWorld().getName(), player.getName());
-						player.sendMessage(ChatColor.GREEN + "Du har hoppat med i spelet!");
+						player.sendMessage(ChatColor.GREEN + plugin.getLanguageManager().getString("youJoinedTheGame"));
 						
-						plugin.getWorldManager().broadcast(block.getWorld(), ChatColor.LIGHT_PURPLE + player.getName() + ChatColor.WHITE + " har hoppat med i spelet!");
+						plugin.getWorldManager().broadcast(block.getWorld(), ChatColor.LIGHT_PURPLE + player.getName() + ChatColor.WHITE + " " + plugin.getLanguageManager().getString("playerJoinedGame"));
 					}
 					else
-						player.sendMessage(ChatColor.RED + "Du verkar redan spela!");
+						player.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("alreadyPlaying"));
 				}
 			}
 			
@@ -101,11 +101,11 @@ public class Players implements Listener {
 				Player killer = event.getEntity().getKiller();
 				
 				if(killer != null) {
-					worldmanager.broadcast(victim.getWorld(), ChatColor.LIGHT_PURPLE + victim.getName() + ChatColor.RED + " dödades utav " + ChatColor.BLUE + killer.getName());
+					worldmanager.broadcast(victim.getWorld(), ChatColor.LIGHT_PURPLE + victim.getName() + ChatColor.RED + " " + plugin.getLanguageManager().getString("wasKilledBy") + " " + ChatColor.BLUE + killer.getName());
 					statsmanager.addKillPoints(killer.getName(), 1);
 				}
 				else
-					worldmanager.broadcast(victim.getWorld(), ChatColor.LIGHT_PURPLE + victim.getName() + ChatColor.RED + " är ute ur spelet!");
+					worldmanager.broadcast(victim.getWorld(), ChatColor.LIGHT_PURPLE + victim.getName() + ChatColor.RED + " " + plugin.getLanguageManager().getString("isOutOfTheGame"));
 				
 				// Ta bort spelaren och ge honom en dödspoäng
 				playermanager.removePlayer(victim.getWorld().getName(), victim.getName());
@@ -116,12 +116,12 @@ public class Players implements Listener {
 				if(playermanager.isGameOver(victim.getWorld())) {
 					
 					// Skicka ut ett meddelande till alla spelare i världen att spelet är slut.
-					worldmanager.broadcast(victim.getWorld(), "Spelet är över!");
+					worldmanager.broadcast(victim.getWorld(), plugin.getLanguageManager().getString("gameover"));
 					
 					// Har vi en vinnare?
 					String winner = playermanager.getWinner(victim.getWorld());
 					if(winner != null) {
-						worldmanager.broadcast(victim.getWorld(), ChatColor.LIGHT_PURPLE + winner + ChatColor.WHITE + " vann spelet!");
+						worldmanager.broadcast(victim.getWorld(), ChatColor.LIGHT_PURPLE + winner + ChatColor.WHITE + " " + plugin.getLanguageManager().getString("wonTheGame"));
 						statsmanager.addWinPoints(winner, 1);
 					}
 					
