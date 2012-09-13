@@ -65,7 +65,7 @@ public class Players implements Listener {
 					if(plugin.getPlayerManager().isInGame(player.getName()) == false) {
 						
 						plugin.getPlayerManager().addPlayer(block.getWorld().getName(), player.getName());
-						player.sendMessage(ChatColor.GREEN + plugin.getLanguageManager().getString("youJoinedTheGame"));
+						player.sendMessage(ChatColor.GOLD + plugin.getLanguageManager().getString("youJoinedTheGame"));
 						
 						plugin.getWorldManager().broadcast(block.getWorld(), ChatColor.LIGHT_PURPLE + player.getName() + ChatColor.WHITE + " " + plugin.getLanguageManager().getString("playerJoinedGame"));
 					}
