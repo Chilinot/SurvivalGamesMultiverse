@@ -33,6 +33,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 public class Players implements Listener {
@@ -95,6 +96,20 @@ public class Players implements Listener {
 		
 		if(plugin.getWorldManager().isWorld(event.getPlayer().getWorld())) {
 			event.getPlayer().teleport(event.getPlayer().getWorld().getSpawnLocation());
+		}
+	}
+	
+	@EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled=true)
+	public void onPlayerQuit(PlayerQuitEvent event) {
+		
+		Player player = event.getPlayer();
+		
+		if(plugin.getWorldManager().isWorld(player.getWorld()) && plugin.getPlayerManager().isInGame(player.getName())) {
+			
+			String message = ChatColor.RED + "[SGAnti-Cheat]" + ChatColor.WHITE + " :: " + ChatColor.BLUE + player.getName() + ChatColor.WHITE + " - " + plugin.getLanguageManager().getString("anticheatRemoval");
+			
+			plugin.getPlayerManager().removePlayer(player.getWorld().getName(), player.getName());
+			plugin.getWorldManager().broadcast(player.getWorld(), message);
 		}
 	}
 	

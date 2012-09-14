@@ -91,6 +91,11 @@ public class LanguageManager {
 			save = true;
 		}
 		
+		if(!config.contains("anticheatRemoval")) {
+			config.set("anticheatRemoval", "was removed due to disconnect!");
+			save = true;
+		}
+		
 		if(save) {
 			try {
 	            config.save(this.plugin.getDataFolder() + File.separator + "language.yml");
