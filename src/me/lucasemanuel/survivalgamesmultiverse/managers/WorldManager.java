@@ -25,6 +25,8 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 import me.lucasemanuel.survivalgamesmultiverse.Main;
@@ -32,7 +34,6 @@ import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
 
 public class WorldManager {
 	
-	//TODO add method for resetting the worlds based on their templates
 	//TODO add way of setting and saving spawnpoints for gameworlds
 	
 	private Main plugin;
@@ -110,7 +111,7 @@ public class WorldManager {
 				
 				if(templateblock.getType() == Material.WALL_SIGN || templateblock.getType() == Material.SIGN_POST) {
 					
-					// Temprorary bugfix - hopefully
+					// Temporary bugfix - hopefully
 					if(blockToRestore.getType() != templateblock.getType()) {
 						logger.warning("blockToRestore and templateblock not a match! Sign!");
 						continue;
@@ -126,6 +127,33 @@ public class WorldManager {
 					restoredsign.update();
 				}
 			}
+			
+			// Schedule removal of all world entitys to make sure they are all removed
+			
+			final String worldname = world.getName();
+			
+			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+				public void run() {
+					
+					EntityType[] nonremovable = new EntityType[] { EntityType.PLAYER, EntityType.PAINTING };
+					
+					for(Entity entity : Bukkit.getWorld(worldname).getEntities()) {
+						
+						boolean remove = true;
+						
+						for(EntityType type : nonremovable) {
+							if(entity.getType().equals(type))
+								remove = false;
+						}
+						
+						if(remove)
+							entity.remove();
+					}
+				}
+			});
+			
+			
+			// Reset logs
 			
 			blocksToReset.clear();
 			plugin.getChestManager().clearLogs(world.getName());
