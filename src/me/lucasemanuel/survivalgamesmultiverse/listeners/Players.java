@@ -32,6 +32,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 public class Players implements Listener {
@@ -86,6 +87,14 @@ public class Players implements Listener {
 		
 		if(plugin.getWorldManager().isWorld(event.getRespawnLocation().getWorld())) {
 			event.setRespawnLocation(event.getRespawnLocation().getWorld().getSpawnLocation());
+		}
+	}
+	
+	@EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled=true)
+	public void onPlayerJoin(PlayerJoinEvent event) {
+		
+		if(plugin.getWorldManager().isWorld(event.getPlayer().getWorld())) {
+			event.getPlayer().teleport(event.getPlayer().getWorld().getSpawnLocation());
 		}
 	}
 	
