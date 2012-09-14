@@ -32,6 +32,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 
 public class Players implements Listener {
 	
@@ -77,6 +78,14 @@ public class Players implements Listener {
 			else if(block.getType().equals(Material.CHEST)) {
 				plugin.getChestManager().randomizeChest((Chest)block.getState());
 			}
+		}
+	}
+	
+	@EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled=true)
+	public void onPlayerRespawn(PlayerRespawnEvent event) {
+		
+		if(plugin.getWorldManager().isWorld(event.getRespawnLocation().getWorld())) {
+			event.setRespawnLocation(event.getRespawnLocation().getWorld().getSpawnLocation());
 		}
 	}
 	
