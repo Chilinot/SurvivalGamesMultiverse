@@ -112,7 +112,7 @@ public class Players implements Listener {
 			plugin.getWorldManager().broadcast(player.getWorld(), message);
 			
 			// Is the game over?
-			gameOver(player);
+			gameover(player);
 		}
 	}
 	
@@ -149,12 +149,12 @@ public class Players implements Listener {
 				statsmanager.addDeathPoints(victim.getName(), 1);
 				
 				// Is the game over?
-				gameOver(victim);
+				gameover(victim);
 			}
 		}
 	}
 	
-	private void gameOver(Player player) {
+	private void gameover(Player player) {
 		
 		PlayerManager playermanager = plugin.getPlayerManager();
 		WorldManager  worldmanager  = plugin.getWorldManager();
