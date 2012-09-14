@@ -110,6 +110,9 @@ public class Players implements Listener {
 			
 			plugin.getPlayerManager().removePlayer(player.getWorld().getName(), player.getName());
 			plugin.getWorldManager().broadcast(player.getWorld(), message);
+			
+			// Is the game over?
+			gameOver(player);
 		}
 	}
 	
@@ -146,22 +149,31 @@ public class Players implements Listener {
 				statsmanager.addDeathPoints(victim.getName(), 1);
 				
 				// Is the game over?
-				if(playermanager.isGameOver(victim.getWorld())) {
-					
-					// Broadcast a message to all players in that world that the game is over.
-					worldmanager.broadcast(victim.getWorld(), plugin.getLanguageManager().getString("gameover"));
-					
-					// Do we have a winner?
-					String winner = playermanager.getWinner(victim.getWorld());
-					if(winner != null) {
-						worldmanager.broadcast(victim.getWorld(), ChatColor.LIGHT_PURPLE + winner + ChatColor.WHITE + " " + plugin.getLanguageManager().getString("wonTheGame"));
-						statsmanager.addWinPoints(winner, 1);
-					}
-					
-					// Reset the world
-					worldmanager.resetWorld(victim.getWorld());
-				}
+				gameOver(victim);
 			}
+		}
+	}
+	
+	private void gameOver(Player player) {
+		
+		PlayerManager playermanager = plugin.getPlayerManager();
+		WorldManager  worldmanager  = plugin.getWorldManager();
+		StatsManager  statsmanager  = plugin.getStatsManager();
+		
+		if(playermanager.isGameOver(player.getWorld())) {
+			
+			// Broadcast a message to all players in that world that the game is over.
+			worldmanager.broadcast(player.getWorld(), plugin.getLanguageManager().getString("gameover"));
+			
+			// Do we have a winner?
+			String winner = playermanager.getWinner(player.getWorld());
+			if(winner != null) {
+				worldmanager.broadcast(player.getWorld(), ChatColor.LIGHT_PURPLE + winner + ChatColor.WHITE + " " + plugin.getLanguageManager().getString("wonTheGame"));
+				statsmanager.addWinPoints(winner, 1);
+			}
+			
+			// Reset the world
+			worldmanager.resetWorld(player.getWorld());
 		}
 	}
 }
