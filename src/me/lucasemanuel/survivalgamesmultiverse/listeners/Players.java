@@ -89,7 +89,7 @@ public class Players implements Listener {
 			
 			PlayerManager playermanager = plugin.getPlayerManager();
 			
-			// Blocka alla meddelanden i SG världarna
+			// Block all deathmessages in the SG worlds
 			event.setDeathMessage(null);
 			
 			if(playermanager.isInGame(victim.getName())) {
@@ -97,7 +97,7 @@ public class Players implements Listener {
 				WorldManager worldmanager = plugin.getWorldManager();
 				StatsManager statsmanager = plugin.getStatsManager();
 				
-				// Dödades spelaren utav en annan spelare eller dog han naturligt?
+				// Was this player killed by another player?
 				Player killer = event.getEntity().getKiller();
 				
 				if(killer != null) {
@@ -107,25 +107,25 @@ public class Players implements Listener {
 				else
 					worldmanager.broadcast(victim.getWorld(), ChatColor.LIGHT_PURPLE + victim.getName() + ChatColor.RED + " " + plugin.getLanguageManager().getString("isOutOfTheGame"));
 				
-				// Ta bort spelaren och ge honom en dödspoäng
+				// Remove the player and give him one deathpoint
 				playermanager.removePlayer(victim.getWorld().getName(), victim.getName());
 				worldmanager.sendPlayerToSpawn(victim);
 				statsmanager.addDeathPoints(victim.getName(), 1);
 				
-				// Är spelet slut?
+				// Is the game over?
 				if(playermanager.isGameOver(victim.getWorld())) {
 					
-					// Skicka ut ett meddelande till alla spelare i världen att spelet är slut.
+					// Broadcast a message to all players in that world that the game is over.
 					worldmanager.broadcast(victim.getWorld(), plugin.getLanguageManager().getString("gameover"));
 					
-					// Har vi en vinnare?
+					// Do we have a winner?
 					String winner = playermanager.getWinner(victim.getWorld());
 					if(winner != null) {
 						worldmanager.broadcast(victim.getWorld(), ChatColor.LIGHT_PURPLE + winner + ChatColor.WHITE + " " + plugin.getLanguageManager().getString("wonTheGame"));
 						statsmanager.addWinPoints(winner, 1);
 					}
 					
-					// Återställ världen
+					// Reset the world
 					worldmanager.resetWorld(victim.getWorld());
 				}
 			}
