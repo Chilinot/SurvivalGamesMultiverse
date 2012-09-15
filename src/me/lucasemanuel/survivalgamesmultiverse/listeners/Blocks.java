@@ -49,8 +49,6 @@ public class Blocks implements Listener {
 		
 		if(plugin.getWorldManager().isWorld(block.getWorld())) {
 			
-			logger.debug("logging block");
-			
 			plugin.getWorldManager().logBlock(block.getLocation());
 			
 			if(block.getType().equals(Material.CHEST))

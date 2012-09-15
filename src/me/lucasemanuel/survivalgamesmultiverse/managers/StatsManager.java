@@ -7,9 +7,8 @@
  *  
  *  Description:
  *  
- *  
- *  
- * 
+ *  Used by the main-thread to initiate sub-threads that modify the data
+ *  in the database.
  * 
  */
 
@@ -20,7 +19,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import me.lucasemanuel.survivalgamesmultiverse.Main;
-import me.lucasemanuel.survivalgamesmultiverse.threading.ConcurrentInsert;
+import me.lucasemanuel.survivalgamesmultiverse.threading.ConcurrentConnection;
 import me.lucasemanuel.survivalgamesmultiverse.threading.InsertDeathPointThread;
 import me.lucasemanuel.survivalgamesmultiverse.threading.InsertKillPointThread;
 import me.lucasemanuel.survivalgamesmultiverse.threading.InsertWinPointThread;
@@ -37,7 +36,7 @@ public class StatsManager {
 	private final String database;
 	private final String tablename;
 	
-	private ConcurrentInsert insertobject = null;
+	private ConcurrentConnection insertobject = null;
 	
 	public StatsManager(Main instance) {
 		
@@ -67,10 +66,11 @@ public class StatsManager {
 		}
 		
 		if(con != null) {
+			
 			logger.debug("Initiated");
 			logger.info("Connected!");
 			
-			insertobject = new ConcurrentInsert(username, password, host, port, database, tablename);
+			insertobject = new ConcurrentConnection(username, password, host, port, database, tablename);
 			
 			try {
 				con.close();

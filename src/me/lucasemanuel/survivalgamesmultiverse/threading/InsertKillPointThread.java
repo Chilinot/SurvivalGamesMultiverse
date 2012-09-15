@@ -20,9 +20,9 @@ public class InsertKillPointThread extends Thread {
 	private final String playername;
 	private final int points;
 	
-	private ConcurrentInsert insertobject;
+	private ConcurrentConnection insertobject;
 	
-	public InsertKillPointThread(ConcurrentInsert insertobject, String playername, int points) {
+	public InsertKillPointThread(ConcurrentConnection insertobject, String playername, int points) {
 		
 		this.playername = playername;
 		this.points     = points;
@@ -33,6 +33,6 @@ public class InsertKillPointThread extends Thread {
 	}
 	
 	public void run() {
-		insertobject.insert(playername, 0, points, 0);
+		insertobject.update(playername, 0, points, 0);
 	}
 }

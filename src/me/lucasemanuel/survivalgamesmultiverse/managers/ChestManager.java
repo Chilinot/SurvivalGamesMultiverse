@@ -7,9 +7,8 @@
  *  
  *  Description:
  *  
- *  
- *  
- * 
+ *  Manages all chest related stuff.
+ *  Like randomizing and logging etc.
  * 
  */
 

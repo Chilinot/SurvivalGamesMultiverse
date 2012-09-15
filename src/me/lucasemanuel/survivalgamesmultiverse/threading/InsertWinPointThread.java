@@ -20,9 +20,9 @@ public class InsertWinPointThread extends Thread {
 	private final String playername;
 	private final int points;
 	
-	private ConcurrentInsert insertobject;
+	private ConcurrentConnection insertobject;
 	
-	public InsertWinPointThread(ConcurrentInsert insertobject, String playername, int points) {
+	public InsertWinPointThread(ConcurrentConnection insertobject, String playername, int points) {
 		
 		this.playername = playername;
 		this.points     = points;
@@ -33,6 +33,6 @@ public class InsertWinPointThread extends Thread {
 	}
 
 	public void run() {
-		insertobject.insert(playername, points, 0, 0);
+		insertobject.update(playername, points, 0, 0);
 	}
 }

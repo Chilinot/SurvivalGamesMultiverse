@@ -1,3 +1,8 @@
 name: SurvivalGamesMultiverse
 main: me.lucasemanuel.survivalgamesmultiverse.Main
 version: 0.1
+
+commands:
+  sglocation:
+    description: Manages locations.
+    usage: /<command> <set/save/clear> <main/arena>

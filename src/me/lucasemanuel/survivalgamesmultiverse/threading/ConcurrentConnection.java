@@ -1,5 +1,5 @@
 /**
- *  Name: ConcurrentInsert.java
+ *  Name: ConcurrentConnection.java
  *  Date: 16:00:42 - 15 sep 2012
  * 
  *  Author: LucasEmanuel @ bukkit forums
@@ -7,9 +7,10 @@
  *  
  *  Description:
  *  
+ *  Used to insert/update data in the database.
  *  
- *  
- * 
+ *  It will only allow one thread at a time to talk to the database,
+ *  this will remove problems concurrent modifications of the data.
  * 
  */
 
@@ -21,7 +22,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class ConcurrentInsert {
+public class ConcurrentConnection {
 	
 	private final String username;
 	private final String password;
@@ -30,7 +31,7 @@ public class ConcurrentInsert {
 	private final String database;
 	private final String tablename;
 
-	public ConcurrentInsert(String username, String password, String host, int port, String database, String tablename) {
+	public ConcurrentConnection(String username, String password, String host, int port, String database, String tablename) {
 		
 		this.username   = username;
 		this.password   = password;
@@ -40,7 +41,7 @@ public class ConcurrentInsert {
 		this.tablename  = tablename;
 	}
 	
-	public synchronized void insert(String playername, int wins, int kills, int deaths) {
+	public synchronized void update(String playername, int wins, int kills, int deaths) {
 		try {
 			
 			Class.forName("com.mysql.jdbc.Driver");

@@ -7,7 +7,7 @@
  *  
  *  Description:
  *  
- *  
+ *  Manages all worlds, this includes: logging and resetting.
  *  
  * 
  * 
@@ -17,7 +17,6 @@ package me.lucasemanuel.survivalgamesmultiverse.managers;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -48,8 +47,8 @@ public class WorldManager {
 	// less locations to loop over per world, and so speed up performance.
 	private HashMap<String, HashSet<Location>> loggedblocks;
 	
-	// Key = Worldname, Value = startlocation, true|false - true = available location
-	private HashMap<String, HashMap<Location, Boolean>> locations;
+	// Key = Worldname, Value = Main/Arena lists, ValueOfValue = key=location, boolean=true means the location is available
+	private HashMap<String, HashMap<String, HashMap<Location, Boolean>>> locations;
 	
 	public WorldManager(Main instance) {
 		plugin = instance;
@@ -57,13 +56,13 @@ public class WorldManager {
 		
 		worldlist    = new HashMap<World, World>();
 		loggedblocks = new HashMap<String, HashSet<Location>>();
-		locations    = new HashMap<String, HashMap<Location, Boolean>>();
+		locations    = new HashMap<String, HashMap<String, HashMap<Location, Boolean>>>();
 	}
 	
 	public void addWorld(World world, World template) {
 		worldlist.put(world, template);
 		loggedblocks.put(world.getName(), new HashSet<Location>());
-		locations.put(world.getName(), new HashMap<Location, Boolean>());
+		locations.put(world.getName(), new HashMap<String, HashMap<Location, Boolean>>());
 	}
 	
 	public boolean isWorld(World world) {
@@ -148,8 +147,10 @@ public class WorldManager {
 						boolean remove = true;
 						
 						for(EntityType type : nonremovable) {
-							if(entity.getType().equals(type))
+							if(entity.getType().equals(type)) {
 								remove = false;
+								break;
+							}
 						}
 						
 						if(remove)
@@ -157,7 +158,6 @@ public class WorldManager {
 					}
 				}
 			});
-			
 			
 			// Reset logs
 			
@@ -170,22 +170,5 @@ public class WorldManager {
 
 	public void sendPlayerToSpawn(Player player) {
 		player.teleport(player.getWorld().getSpawnLocation());
-	}
-
-	public boolean tpToStart(Player player) {
-		
-		HashMap<Location, Boolean> locationlist = locations.get(player.getWorld().getName());
-		
-		for(Entry<Location, Boolean> entry : locationlist.entrySet()) {
-			if(entry.getValue()) {
-				
-				player.teleport(entry.getKey());
-				entry.setValue(false);
-				
-				return true;
-			}
-		}
-		
-		return false;
 	}
 }

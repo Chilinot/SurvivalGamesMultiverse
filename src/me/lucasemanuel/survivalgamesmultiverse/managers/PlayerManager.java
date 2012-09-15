@@ -7,9 +7,7 @@
  *  
  *  Description:
  *  
- *  
- *  
- * 
+ *  Manages playerlists etc.
  * 
  */
 

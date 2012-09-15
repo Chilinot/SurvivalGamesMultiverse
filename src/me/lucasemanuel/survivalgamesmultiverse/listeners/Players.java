@@ -7,15 +7,14 @@
  *  
  *  Description:
  *  
+ *  Eventlistener concerning player related events.
  *  
- *  
- * 
- * 
  */
 
 package me.lucasemanuel.survivalgamesmultiverse.listeners;
 
 import me.lucasemanuel.survivalgamesmultiverse.Main;
+import me.lucasemanuel.survivalgamesmultiverse.managers.LocationManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.PlayerManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.StatsManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.WorldManager;
@@ -65,7 +64,7 @@ public class Players implements Listener {
 					
 					if(plugin.getPlayerManager().isInGame(player.getName()) == false) {
 						
-						if(plugin.getWorldManager().tpToStart(player)) {
+						if(plugin.getLocationManager().tpToStart(player)) {
 							plugin.getPlayerManager().addPlayer(block.getWorld().getName(), player.getName());
 							player.sendMessage(ChatColor.GOLD + plugin.getLanguageManager().getString("youJoinedTheGame"));
 							plugin.getWorldManager().broadcast(block.getWorld(), ChatColor.LIGHT_PURPLE + player.getName() + ChatColor.WHITE + " " + plugin.getLanguageManager().getString("playerJoinedGame"));
@@ -157,9 +156,10 @@ public class Players implements Listener {
 	
 	private void gameover(Player player) {
 		
-		PlayerManager playermanager = plugin.getPlayerManager();
-		WorldManager  worldmanager  = plugin.getWorldManager();
-		StatsManager  statsmanager  = plugin.getStatsManager();
+		PlayerManager   playermanager   = plugin.getPlayerManager();
+		WorldManager    worldmanager    = plugin.getWorldManager();
+		StatsManager    statsmanager    = plugin.getStatsManager();
+		LocationManager locationmanager = plugin.getLocationManager();
 		
 		if(playermanager.isGameOver(player.getWorld())) {
 			
@@ -175,6 +175,7 @@ public class Players implements Listener {
 			
 			// Reset the world
 			worldmanager.resetWorld(player.getWorld());
+			locationmanager.resetLocationStatuses(player.getWorld());
 		}
 	}
 }

@@ -7,9 +7,7 @@
  *  
  *  Description:
  *  
- *  
- *  
- * 
+ *  Manages all of the configurable broadcasts etc.
  * 
  */
 

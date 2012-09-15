@@ -7,9 +7,9 @@
  *  
  *  Description:
  *  
+ *  This is the object that gets initialized by the server.
  *  
- *  
- * 
+ *  The onEnable() method initializes all managers, loads all worlds, registers all commands etc.
  * 
  */
 
@@ -19,6 +19,7 @@ import me.lucasemanuel.survivalgamesmultiverse.listeners.Blocks;
 import me.lucasemanuel.survivalgamesmultiverse.listeners.Players;
 import me.lucasemanuel.survivalgamesmultiverse.managers.ChestManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.LanguageManager;
+import me.lucasemanuel.survivalgamesmultiverse.managers.LocationManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.PlayerManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.StatsManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.WorldManager;
@@ -30,7 +31,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
 	
-	//TODO add command to register spawnpoints
 	//TODO add command to leave the game
 	//TODO add command to force reset the game
 	//TODO add command to freeze the game
@@ -43,6 +43,7 @@ public class Main extends JavaPlugin {
 	private ChestManager    chestmanager;
 	private StatsManager    statsmanager;
 	private LanguageManager languagemanager;
+	private LocationManager locationmanager;
 	
 	public void onEnable() {
 		logger = new ConsoleLogger(this, "Main");
@@ -57,11 +58,18 @@ public class Main extends JavaPlugin {
 		chestmanager    = new ChestManager(this);
 		statsmanager    = new StatsManager(this);
 		languagemanager = new LanguageManager(this);
+		locationmanager = new LocationManager(this);
 		
 		logger.debug("Finished! Moving on to event listeners...");
 		
 		this.getServer().getPluginManager().registerEvents(new Players(this), this);
 		this.getServer().getPluginManager().registerEvents(new Blocks(this), this);
+		
+		logger.debug("Finished! Registering commands...");
+		
+		Commands commands = new Commands(this);
+		
+		this.getCommand("sglocation").setExecutor(commands);
 		
 		logger.debug("Finished! Lets load some worlds...");
 		
@@ -69,6 +77,7 @@ public class Main extends JavaPlugin {
 			
 			worldmanager.addWorld(Bukkit.createWorld(new WorldCreator(key)), Bukkit.createWorld(new WorldCreator(getConfig().getString("worldnames." + key))));
 			playermanager.addWorld(key);
+			locationmanager.addWorld(key);
 			
 			logger.debug("Creating world - " + key + " :: template - " + getConfig().getString("worldnames." + key));
 		}
@@ -94,5 +103,9 @@ public class Main extends JavaPlugin {
 	
 	public LanguageManager getLanguageManager() {
 		return languagemanager;
+	}
+
+	public LocationManager getLocationManager() {
+		return locationmanager;
 	}
 }
