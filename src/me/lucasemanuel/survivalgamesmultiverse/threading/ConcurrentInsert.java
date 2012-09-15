@@ -1,6 +1,6 @@
 /**
- *  Name: InsertKillPointThread.java
- *  Date: 15:04:21 - 12 sep 2012
+ *  Name: ConcurrentInsert.java
+ *  Date: 16:00:42 - 15 sep 2012
  * 
  *  Author: LucasEmanuel @ bukkit forums
  *  
@@ -13,7 +13,7 @@
  * 
  */
 
-package me.lucasemanuel.survivalgamesmultiverse.threads;
+package me.lucasemanuel.survivalgamesmultiverse.threading;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -21,7 +21,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class InsertKillPointThread extends Thread {
+public class ConcurrentInsert {
 	
 	private final String username;
 	private final String password;
@@ -29,11 +29,8 @@ public class InsertKillPointThread extends Thread {
 	private final int    port;
 	private final String database;
 	private final String tablename;
-	
-	private final String playername;
-	private final int points;
-	
-	public InsertKillPointThread(String username, String password, String host, int port, String database, String tablename, String playername, int points) {
+
+	public ConcurrentInsert(String username, String password, String host, int port, String database, String tablename) {
 		
 		this.username   = username;
 		this.password   = password;
@@ -41,14 +38,9 @@ public class InsertKillPointThread extends Thread {
 		this.port       = port;
 		this.database   = database;
 		this.tablename  = tablename;
-		
-		this.playername = playername;
-		this.points     = points;
-		
-		start();
 	}
 	
-	public void run() {
+	public synchronized void insert(String playername, int wins, int kills, int deaths) {
 		try {
 			
 			Class.forName("com.mysql.jdbc.Driver");
@@ -57,17 +49,19 @@ public class InsertKillPointThread extends Thread {
 			
 			Connection con = DriverManager.getConnection(url, username, password);
 			Statement stmt = con.createStatement();
+			
 			ResultSet rs = stmt.executeQuery("SELECT * FROM " + tablename + " WHERE playernames='" + playername + "'");
 			
-			int kills = points;
-			
 			if(rs.next() && rs.getString("playernames") != null) {
-				kills = kills + rs.getInt("kills");
 				
-				stmt.executeUpdate("UPDATE " + tablename + " SET kills=" + kills + " WHERE playernames='" + playername + "'");
+				wins   = wins   + rs.getInt("wins");
+				kills  = kills  + rs.getInt("kills");
+				deaths = deaths + rs.getInt("deaths");
+				
+				stmt.executeUpdate("UPDATE " + tablename + " SET wins=" + wins + ", kills=" + kills + ", deaths=" + deaths + " WHERE playernames='" + playername + "'");
 			}
 			else {
-				stmt.executeUpdate("INSERT INTO " + tablename + " VALUES('" + playername + "', 0, " + kills + ", 0)");
+				stmt.executeUpdate("INSERT INTO " + tablename + " VALUES('" + playername + "', " + wins + ", " + kills + ", " + deaths + ")");
 			}
 			
 			rs.close();

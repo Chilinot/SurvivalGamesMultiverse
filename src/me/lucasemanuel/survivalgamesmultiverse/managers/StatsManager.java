@@ -20,9 +20,10 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import me.lucasemanuel.survivalgamesmultiverse.Main;
-import me.lucasemanuel.survivalgamesmultiverse.threads.InsertDeathPointThread;
-import me.lucasemanuel.survivalgamesmultiverse.threads.InsertKillPointThread;
-import me.lucasemanuel.survivalgamesmultiverse.threads.InsertWinPointThread;
+import me.lucasemanuel.survivalgamesmultiverse.threading.ConcurrentInsert;
+import me.lucasemanuel.survivalgamesmultiverse.threading.InsertDeathPointThread;
+import me.lucasemanuel.survivalgamesmultiverse.threading.InsertKillPointThread;
+import me.lucasemanuel.survivalgamesmultiverse.threading.InsertWinPointThread;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
 
 public class StatsManager {
@@ -35,6 +36,8 @@ public class StatsManager {
 	private final int    port;
 	private final String database;
 	private final String tablename;
+	
+	private ConcurrentInsert insertobject = null;
 	
 	public StatsManager(Main instance) {
 		
@@ -66,6 +69,9 @@ public class StatsManager {
 		if(con != null) {
 			logger.debug("Initiated");
 			logger.info("Connected!");
+			
+			insertobject = new ConcurrentInsert(username, password, host, port, database, tablename);
+			
 			try {
 				con.close();
 			}
@@ -78,14 +84,17 @@ public class StatsManager {
 	}
 	
 	public void addWinPoints(String playername, int points) {
-		new InsertWinPointThread(username, password, host, port, database, tablename, playername, points);
+		if(insertobject != null)
+			new InsertWinPointThread(insertobject, playername, points);
 	}
 	
 	public void addKillPoints(String playername, int points) {
-		new InsertKillPointThread(username, password, host, port, database, tablename, playername, points);
+		if(insertobject != null)
+			new InsertKillPointThread(insertobject, playername, points);
 	}
 	
 	public void addDeathPoints(String playername, int points) {
-		new InsertDeathPointThread(username, password, host, port, database, tablename, playername, points);
+		if(insertobject != null)
+			new InsertDeathPointThread(insertobject, playername, points);
 	}
 }

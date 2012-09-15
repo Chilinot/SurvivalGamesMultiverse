@@ -36,9 +36,6 @@ public class Main extends JavaPlugin {
 	//TODO add command to freeze the game
 	//TODO add command to block players from entering, for maintenance purpose
 	
-	//TODO add statsmanager with connection to MySQL database for stats logging
-	//TODO add leaderboardsigns
-	
 	private ConsoleLogger logger;
 	
 	private PlayerManager   playermanager;

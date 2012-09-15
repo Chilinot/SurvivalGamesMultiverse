@@ -17,6 +17,7 @@ package me.lucasemanuel.survivalgamesmultiverse.managers;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -47,17 +48,22 @@ public class WorldManager {
 	// less locations to loop over per world, and so speed up performance.
 	private HashMap<String, HashSet<Location>> loggedblocks;
 	
+	// Key = Worldname, Value = startlocation, true|false - true = available location
+	private HashMap<String, HashMap<Location, Boolean>> locations;
+	
 	public WorldManager(Main instance) {
 		plugin = instance;
 		logger = new ConsoleLogger(instance, "WorldManager");
 		
 		worldlist    = new HashMap<World, World>();
 		loggedblocks = new HashMap<String, HashSet<Location>>();
+		locations    = new HashMap<String, HashMap<Location, Boolean>>();
 	}
 	
 	public void addWorld(World world, World template) {
 		worldlist.put(world, template);
 		loggedblocks.put(world.getName(), new HashSet<Location>());
+		locations.put(world.getName(), new HashMap<Location, Boolean>());
 	}
 	
 	public boolean isWorld(World world) {
@@ -164,5 +170,22 @@ public class WorldManager {
 
 	public void sendPlayerToSpawn(Player player) {
 		player.teleport(player.getWorld().getSpawnLocation());
+	}
+
+	public boolean tpToStart(Player player) {
+		
+		HashMap<Location, Boolean> locationlist = locations.get(player.getWorld().getName());
+		
+		for(Entry<Location, Boolean> entry : locationlist.entrySet()) {
+			if(entry.getValue()) {
+				
+				player.teleport(entry.getKey());
+				entry.setValue(false);
+				
+				return true;
+			}
+		}
+		
+		return false;
 	}
 }

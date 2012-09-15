@@ -96,6 +96,11 @@ public class LanguageManager {
 			save = true;
 		}
 		
+		if(!config.contains("gameIsFull")) {
+			config.set("gameIsFull", "Game is full!");
+			save = true;
+		}
+		
 		if(save) {
 			try {
 	            config.save(this.plugin.getDataFolder() + File.separator + "language.yml");
