@@ -6,3 +6,8 @@ commands:
   sglocation:
     description: Manages locations.
     usage: /<command> <set/save/clear> <main/arena>
+    permission: multisurvival.commands.sglocation
+  sgactivate:
+    description: Activates the game for the given world.
+    usage: /<command> <worldname>
+    permission: multisurvival.commands.sgactivate

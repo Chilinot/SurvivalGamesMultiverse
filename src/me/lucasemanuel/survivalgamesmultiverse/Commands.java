@@ -46,9 +46,25 @@ public class Commands implements CommandExecutor {
 			case "sglocation":
 				return sglocation(sender, args);
 				
+			case "sgactivate":
+				return sgactivate(sender, args);
+				
 		}
 		
 		return false;
+	}
+
+	private boolean sgactivate(CommandSender sender, String[] args) {
+		
+		if(args.length != 1) return false;
+		
+		String worldname = args[0];
+		
+		plugin.getStatusManager().setStatus(worldname, true);
+		
+		sender.sendMessage(ChatColor.GREEN + worldname + " is now activated!");
+		
+		return true;
 	}
 
 	private boolean sglocation(CommandSender sender, String[] args) {

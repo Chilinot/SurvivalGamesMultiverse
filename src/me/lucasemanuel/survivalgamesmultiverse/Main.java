@@ -74,6 +74,7 @@ public class Main extends JavaPlugin {
 		Commands commands = new Commands(this);
 		
 		this.getCommand("sglocation").setExecutor(commands);
+		this.getCommand("sgactivate").setExecutor(commands);
 		
 		logger.debug("Finished! Lets load some worlds...");
 		
