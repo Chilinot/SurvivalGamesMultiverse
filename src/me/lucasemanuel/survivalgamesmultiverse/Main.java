@@ -22,6 +22,7 @@ import me.lucasemanuel.survivalgamesmultiverse.managers.LanguageManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.LocationManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.PlayerManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.StatsManager;
+import me.lucasemanuel.survivalgamesmultiverse.managers.StatusManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.WorldManager;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
 
@@ -44,8 +45,10 @@ public class Main extends JavaPlugin {
 	private StatsManager    statsmanager;
 	private LanguageManager languagemanager;
 	private LocationManager locationmanager;
+	private StatusManager   statusmanager;
 	
 	public void onEnable() {
+		
 		logger = new ConsoleLogger(this, "Main");
 		logger.debug("Initiating startup sequence...");
 		
@@ -59,6 +62,7 @@ public class Main extends JavaPlugin {
 		statsmanager    = new StatsManager(this);
 		languagemanager = new LanguageManager(this);
 		locationmanager = new LocationManager(this);
+		statusmanager   = new StatusManager(this);
 		
 		logger.debug("Finished! Moving on to event listeners...");
 		
@@ -78,6 +82,7 @@ public class Main extends JavaPlugin {
 			worldmanager.addWorld(Bukkit.createWorld(new WorldCreator(key)), Bukkit.createWorld(new WorldCreator(getConfig().getString("worldnames." + key))));
 			playermanager.addWorld(key);
 			locationmanager.addWorld(key);
+			statusmanager.addWorld(key);
 			
 			logger.debug("Creating world - " + key + " :: template - " + getConfig().getString("worldnames." + key));
 		}
@@ -107,5 +112,9 @@ public class Main extends JavaPlugin {
 
 	public LocationManager getLocationManager() {
 		return locationmanager;
+	}
+	
+	public StatusManager getStatusManager() {
+		return statusmanager;
 	}
 }

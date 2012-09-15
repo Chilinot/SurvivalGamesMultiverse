@@ -32,6 +32,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
@@ -150,6 +151,29 @@ public class Players implements Listener {
 				
 				// Is the game over?
 				gameover(victim);
+			}
+		}
+	}
+	
+	@EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled=true)
+	public void onPlayerMove(PlayerMoveEvent event) {
+		
+		Player player = event.getPlayer();
+		
+		// If it is a SG world and the game hasnt started and the player is in the game
+		if(plugin.getWorldManager().isWorld(player.getWorld()) && 
+				plugin.getStatusManager().getStatus(player.getWorld().getName()) == false && 
+				plugin.getPlayerManager().isInGame(player.getName())) {
+			
+			double fromX = event.getFrom().getX();
+			double fromZ = event.getFrom().getZ();
+			
+			double toX   = event.getTo().getX();
+			double toZ   = event.getTo().getZ();
+			
+			if(fromX != toX && fromZ != toZ) {
+				player.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("blockedMovement"));
+				player.teleport(event.getFrom());
 			}
 		}
 	}

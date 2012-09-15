@@ -99,6 +99,11 @@ public class LanguageManager {
 			save = true;
 		}
 		
+		if(!config.contains("blockedMovement")) {
+			config.set("blockedMovement", "You are not allowed to move yet!");
+			save = true;
+		}
+		
 		if(save) {
 			try {
 	            config.save(this.plugin.getDataFolder() + File.separator + "language.yml");
