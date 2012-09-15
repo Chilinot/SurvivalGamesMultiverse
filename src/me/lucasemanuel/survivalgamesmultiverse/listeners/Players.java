@@ -20,6 +20,7 @@ import me.lucasemanuel.survivalgamesmultiverse.managers.StatsManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.WorldManager;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -195,6 +196,7 @@ public class Players implements Listener {
 			if(winner != null) {
 				worldmanager.broadcast(player.getWorld(), ChatColor.LIGHT_PURPLE + winner + ChatColor.WHITE + " " + plugin.getLanguageManager().getString("wonTheGame"));
 				statsmanager.addWinPoints(winner, 1);
+				worldmanager.sendPlayerToSpawn(Bukkit.getPlayerExact(winner));
 			}
 			
 			// Reset the world
