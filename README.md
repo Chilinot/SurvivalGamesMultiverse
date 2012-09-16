@@ -38,7 +38,7 @@ If it cant connect, no stats will be logged. But if a connection is established,
 The table containing the data has to have the following layout in the following order:
 
 
-Column ID    | Type    | Primary Key | NotNull
+Column Name  | Type    | Primary Key | NotNull
 :------------|:-------:|:-----------:|:---------:|
 playernames  | VARCHAR |     YES     |    YES    |
 wins         |   INT   |     NO      |    NO     |
