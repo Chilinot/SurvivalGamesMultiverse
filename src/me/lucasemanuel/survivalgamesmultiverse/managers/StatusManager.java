@@ -142,7 +142,7 @@ public class StatusManager {
 class PlayerCheck {
 	
 	private final String worldname;
-	private int taskID = 0;
+	private int taskID = -1;
 	
 	public PlayerCheck(String worldname) {
 		this.worldname = worldname;
@@ -168,7 +168,7 @@ class CountDown {
 	
 	private boolean started10;
 	
-	private int taskID = 0;
+	private int taskID = -1;
 	
 	public CountDown(String worldname) {
 		this.worldname = worldname;
