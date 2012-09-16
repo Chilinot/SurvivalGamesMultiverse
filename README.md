@@ -9,7 +9,7 @@ Each world has its main world and a templateworld. When the game is over the mai
 The plugin logs all block changes to the mainworld and then resets those blocks based on what it finds in the template world.
 That means that you could do pretty much anything to the mainworld without having to worry if you can reverse the changes, you can always let my plugin reset the changes or just reset it yourself with the templateworld.
 
-Using templateworlds also means that you can edit the template world while a game is ongoing in the mainworld. This means that you can just edit the templateworld and the changes will eventually be transmitted to the main world.
+Using templateworlds also means that you can edit the templateworld while a game is ongoing in the mainworld. This means that you can just edit the templateworld and the changes will eventually be transmitted to the main world.
 
 Theoretically this will also reduce the amount of RAM necessary to log all changes since the plugin only have to log what location was changed and not save the material, data etc for each block. It will just get that information from the templateworld.
 
@@ -22,7 +22,7 @@ That also enables some more fun gaming rules. For example:
 All chests in the map gets randomized the first time a player opens them when a new game has started.
 You can edit what items are going to spawn in the chests and how often they will spawn in the itemlist.yml.
 
-If a player crafts a chest in the game it will automatically be added to the log of chests to not randomize, this means that players can not craft a chest and it will be randomized when they open it. It will function just as a regular chest, and when the game resets the chest is removed.
+If a player crafts a chest in the game it will automatically be added to the log of chests to not randomize, this means that players can not craft a chest and it will be randomized when they open it. It will function just as a regular chest, and when the game resets the chest gets removed.
 Chests that already where placed in the world will not be added to the log of chests to not randomize, this means that all chests that where allready in the world gets randomized when a player first opens it.
 
 Chests will only get randomized once every game. Opening and closing a gamechest (a chest that allready was in the world and not crafted by a player) will not randomize it again when opened.
@@ -33,7 +33,7 @@ This will prevent server lag/freezes when the plugin needs to store some informa
 
 ######Stats & MySQL
 When the plugin gets loaded the first time, for example when the server starts. It automatically tries to connect to the database configured in the config.yml file.
-If it cant connect, no stats will be logged. If it can connects, it logs whenever a player wins, kills or dies and sends this information to the database.
+If it cant connect, no stats will be logged. But if a connection is established, it will log whenever a player wins, kills or dies and sends this information to the database.
 
 The table containing the data has to have the following layout in the following order:
 
@@ -54,9 +54,9 @@ In progress...
  - Description: Manages locations for the worlds.
  - Usage: /sglocation \<set/save/clear/\> \<main/arena\>
  - Example: To set a main location (starting point that players gets teleported to when they join) use this "/sglocation set main". Thats saves your location as one of the main startpoints for that world. The same goes for "/sglocation set arena" except that saves an arena locaiton.
- - permission: multisurvival.commands.sglocation
+ - Permission: multisurvival.commands.sglocation
 
 #####/sgactivate
  - Description: Activates the game for the given world.
  - Usage: /sgactivate \<worldname\>
- - permission: multisurvival.commands.sgactivate
+ - Permission: multisurvival.commands.sgactivate
