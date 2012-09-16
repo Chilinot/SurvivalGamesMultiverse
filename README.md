@@ -37,14 +37,13 @@ If it cant connect, no stats will be logged. If it can connects, it logs wheneve
 
 The table containing the data has to have the following layout in the following order:
 
-================================================
+
 Column ID    | Type    | Primary Key | NotNull
-------------------------------------------------
-playernames  | VARCHAR |     YES     |    YES
-wins         |   INT   |     NO      |    NO
-kills        |   INT   |     NO      |    NO
-deaths       |   INT   |     NO      |    NO
-================================================
+:------------|:-------:|:-----------:|:---------:|
+playernames  | VARCHAR |     YES     |    YES    |
+wins         |   INT   |     NO      |    NO     |
+kills        |   INT   |     NO      |    NO     |
+deaths       |   INT   |     NO      |    NO     |
 
 
 ##Signs:
@@ -56,7 +55,8 @@ In progress...
  - Usage: /sglocation \<set/save/clear/\> \<main/arena\>
  - Example: To set a main location (starting point that players gets teleported to when they join) use this "/sglocation set main". Thats saves your location as one of the main startpoints for that world. The same goes for "/sglocation set arena" except that saves an arena locaiton.
  - permission: multisurvival.commands.sglocation
- #####/sgactivate
+
+#####/sgactivate
  - Description: Activates the game for the given world.
  - Usage: /sgactivate \<worldname\>
  - permission: multisurvival.commands.sgactivate
