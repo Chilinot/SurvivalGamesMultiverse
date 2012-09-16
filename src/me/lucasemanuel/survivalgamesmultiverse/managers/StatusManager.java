@@ -100,7 +100,7 @@ public class StatusManager {
 			plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), ChatColor.LIGHT_PURPLE + plugin.getLanguageManager().getString("waitingForPlayers"));
 	}
 	
-	private void countDown(CountDown info) {
+	private void countDown(final CountDown info) {
 		
 		String worldname = info.getWorldname();
 		long timeOfInitiation = info.getStartTime();
@@ -111,15 +111,29 @@ public class StatusManager {
 		
 		int timeToWait = plugin.getConfig().getInt("timeoutTillStart");
 		
-		int timeleft = (int) ((System.currentTimeMillis() - timeOfInitiation) / 1000);
+		int timepassed = (int) ((System.currentTimeMillis() - timeOfInitiation) / 1000);
 		
-		if(timeleft >= timeToWait) {
-			setStatus(worldname, true);
-			plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), ChatColor.GOLD + plugin.getLanguageManager().getString("gamestarted"));
-			plugin.getServer().getScheduler().cancelTask(taskID);
+		if(timepassed >= (timeToWait - 12)) {
+			if(timepassed >= timeToWait && info.getStarted10() == true) {
+				setStatus(worldname, true);
+				plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), ChatColor.GOLD + plugin.getLanguageManager().getString("gamestarted"));
+				plugin.getServer().getScheduler().cancelTask(taskID);
+			}
+			else if(info.getStarted10() == false) {
+				plugin.getServer().getScheduler().cancelTask(taskID);
+				
+				info.setStarted10();
+				
+				info.setTaskID(plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+					public void run() {
+						countDown(info);
+					}
+				}, 20L, 20L));
+			}
 		}
-		else
-			plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), (timeToWait - timeleft) + " " + plugin.getLanguageManager().getString("timeleft"));
+		
+		if((timeToWait - timepassed) > 0)
+			plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), (timeToWait - timepassed) + " " + plugin.getLanguageManager().getString("timeleft"));
 	}
 }
 
@@ -152,11 +166,15 @@ class CountDown {
 	private final String worldname;
 	private final long timeOfInitiation;
 	
+	private boolean started10;
+	
 	private int taskID = 0;
 	
 	public CountDown(String worldname) {
 		this.worldname = worldname;
 		this.timeOfInitiation = System.currentTimeMillis();
+		
+		started10 = false;
 	}
 	
 	public synchronized String getWorldname() {
@@ -173,5 +191,13 @@ class CountDown {
 	
 	public synchronized int getTaskID() {
 		return this.taskID;
+	}
+	
+	public synchronized void setStarted10() {
+		this.started10 = true;
+	}
+	
+	public synchronized boolean getStarted10() {
+		return this.started10;
 	}
 }
