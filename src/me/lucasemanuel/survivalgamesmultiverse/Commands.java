@@ -60,9 +60,10 @@ public class Commands implements CommandExecutor {
 		
 		String worldname = args[0];
 		
-		plugin.getStatusManager().setStatus(worldname, true);
-		
-		sender.sendMessage(ChatColor.GREEN + worldname + " is now activated!");
+		if(plugin.getStatusManager().setStatus(worldname, true))
+			sender.sendMessage(ChatColor.GREEN + worldname + " is now activated!");
+		else
+			sender.sendMessage(ChatColor.RED + worldname + " could not be activated!");
 		
 		return true;
 	}

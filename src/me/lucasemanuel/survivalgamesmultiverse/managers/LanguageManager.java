@@ -104,6 +104,16 @@ public class LanguageManager {
 			save = true;
 		}
 		
+		if(!config.contains("timeleft")) {
+			config.set("timeleft","seconds left until game starts.");
+			save = true;
+		}
+		
+		if(!config.contains("gamestarted")) {
+			config.set("gamestarted", "Game started! GO GO GO!");
+			save = true;
+		}
+		
 		if(save) {
 			try {
 	            config.save(this.plugin.getDataFolder() + File.separator + "language.yml");

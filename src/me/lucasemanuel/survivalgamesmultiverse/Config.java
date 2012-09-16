@@ -36,8 +36,8 @@ public class Config {
 			save = true;
 		}
 		
-		if(!config.contains("timeoutToArena")) {
-			config.set("timeoutToArena", 120);
+		if(!config.contains("timeoutTillStart")) {
+			config.set("timeoutTillStart", 120);
 			save = true;
 		}
 		

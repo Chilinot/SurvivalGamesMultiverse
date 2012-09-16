@@ -67,9 +67,13 @@ public class Players implements Listener {
 					if(plugin.getPlayerManager().isInGame(player.getName()) == false) {
 						
 						if(plugin.getLocationManager().tpToStart(player)) {
+							
 							plugin.getPlayerManager().addPlayer(block.getWorld().getName(), player.getName());
 							player.sendMessage(ChatColor.GOLD + plugin.getLanguageManager().getString("youJoinedTheGame"));
 							plugin.getWorldManager().broadcast(block.getWorld(), ChatColor.LIGHT_PURPLE + player.getName() + ChatColor.WHITE + " " + plugin.getLanguageManager().getString("playerJoinedGame"));
+							
+							if(plugin.getPlayerManager().getPlayerAmount(player.getWorld().getName()) == 1)
+								plugin.getStatusManager().startPlayerCheck(player.getWorld().getName());
 						}
 						else
 							player.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("gameIsFull"));
@@ -202,6 +206,8 @@ public class Players implements Listener {
 			// Reset the world
 			worldmanager.resetWorld(player.getWorld());
 			locationmanager.resetLocationStatuses(player.getWorld());
+			
+			plugin.getStatusManager().setStatus(player.getWorld().getName(), false);
 		}
 	}
 }

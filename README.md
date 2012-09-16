@@ -22,6 +22,31 @@ That also enables some more fun gaming rules. For example:
 All chests in the map gets randomized the first time a player opens them when a new game has started.
 You can edit what items are going to spawn in the chests and how often they will spawn in the itemlist.yml.
 
+If a player crafts a chest in the game it will automatically be added to the log of chests to not randomize, this means that players can not craft a chest and it will be randomized when they open it. It will function just as a regular chest, and when the game resets the chest is removed.
+Chests that already where placed in the world will not be added to the log of chests to not randomize, this means that all chests that where allready in the world gets randomized when a player first opens it.
+
+Chests will only get randomized once every game. Opening and closing a gamechest (a chest that allready was in the world and not crafted by a player) will not randomize it again when opened.
+
+######Multithreaded I/O operations
+Everytime the plugin needs to talk to the database or log something in a file it happens in a seperate thread.
+This will prevent server lag/freezes when the plugin needs to store some information, like kills, wins, deaths or positions.
+
+######Stats & MySQL
+When the plugin gets loaded the first time, for example when the server starts. It automatically tries to connect to the database configured in the config.yml file.
+If it cant connect, no stats will be logged. If it can connects, it logs whenever a player wins, kills or dies and sends this information to the database.
+
+The table containing the data has to have the following layout in the following order:
+
+================================================
+Column ID    | Type    | Primary Key | NotNull
+------------------------------------------------
+playernames  | VARCHAR |     YES     |    YES
+wins         |   INT   |     NO      |    NO
+kills        |   INT   |     NO      |    NO
+deaths       |   INT   |     NO      |    NO
+================================================
+
+
 ##Signs:
 In progress...
 
@@ -30,3 +55,8 @@ In progress...
  - Description: Manages locations for the worlds.
  - Usage: /sglocation \<set/save/clear/\> \<main/arena\>
  - Example: To set a main location (starting point that players gets teleported to when they join) use this "/sglocation set main". Thats saves your location as one of the main startpoints for that world. The same goes for "/sglocation set arena" except that saves an arena locaiton.
+ - permission: multisurvival.commands.sglocation
+ #####/sgactivate
+ - Description: Activates the game for the given world.
+ - Usage: /sgactivate \<worldname\>
+ - permission: multisurvival.commands.sgactivate

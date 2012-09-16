@@ -101,4 +101,13 @@ public class PlayerManager {
 		
 		return null;
 	}
+
+	public int getPlayerAmount(String worldname) {
+		
+		if(playerlists.containsKey(worldname)) {
+			return playerlists.get(worldname).size();
+		}
+		
+		return 0;
+	}
 }
