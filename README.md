@@ -20,7 +20,7 @@ That also enables some more fun gaming rules. For example:
 
 ######Chests
 All chests in the map gets randomized the first time a player opens them when a new game has started.
-You can edit what items are going to spawn in the chests and how often they will spawn in the itemlist.yml.
+You can edit what items are going to spawn in the chests and how often they will spawn in the _itemlist.yml_.
 
 If a player crafts a chest in the game it will automatically be added to the log of chests to not randomize, this means that players can not craft a chest and it will be randomized when they open it. It will function just as a regular chest, and when the game resets the chest gets removed.
 Chests that already where placed in the world will not be added to the log of chests to not randomize, this means that all chests that where allready in the world gets randomized when a player first opens it.
@@ -45,6 +45,11 @@ wins         |   INT   |     NO      |    NO     |
 kills        |   INT   |     NO      |    NO     |
 deaths       |   INT   |     NO      |    NO     |
 
+######Multilanguage support
+Every message/broadcast in the game (except error messages for commands or in the console) can be customized.
+You can edit/translate the messages in _language.yml_. 
+This allows people from all nations to play the game in their native language without me having to do all the translations myself.
+For example, the community im the head developer for is using this plugin in swedish. All they had to do was translate the strings in the _language.yml_ file.
 
 ##Signs:
 In progress...
