@@ -47,8 +47,11 @@ deaths       |   INT   |     NO      |    NO     |
 
 ######Multilanguage support
 Every message/broadcast in the game (except error messages for commands or in the console) can be customized.
+
 You can edit/translate the messages in _language.yml_. 
+
 This allows people from all nations to play the game in their native language without me having to do all the translations myself.
+
 For example, the community im the head developer for is using this plugin in swedish. All they had to do was translate the strings in the _language.yml_ file.
 
 ##Signs:
