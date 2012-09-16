@@ -57,7 +57,7 @@ public class StatusManager {
 		return worlds.get(worldname);
 	}
 
-	private void startCountDown(String worldname) {
+	public void startCountDown(String worldname) {
 		
 		if(worlds.containsKey(worldname)) {
 			
@@ -73,8 +73,31 @@ public class StatusManager {
 	
 	public void startPlayerCheck(String worldname) {
 		
+		if(worlds.containsKey(worldname)) {
+			
+			final PlayerCheck info = new PlayerCheck(worldname);
+			
+			info.setTaskID(plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+				public void run() {
+					playerCheck(info);
+				}
+			}, 20L, 200L));
+		}
+	}
+	
+	private void playerCheck(PlayerCheck info) {
 		
+		String worldname = info.getWorldname();
+		int taskID = info.getTaskID();
 		
+		logger.debug("PlayerCheck() called for world: " + worldname + " :: taskID - " + taskID);
+		
+		if(plugin.getPlayerManager().getPlayerAmount(worldname) >= 2) {
+			startCountDown(worldname);
+			plugin.getServer().getScheduler().cancelTask(taskID);
+		}
+		else
+			plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), ChatColor.LIGHT_PURPLE + plugin.getLanguageManager().getString("waitingForPlayers"));
 	}
 	
 	private void countDown(CountDown info) {
@@ -82,7 +105,9 @@ public class StatusManager {
 		String worldname = info.getWorldname();
 		long timeOfInitiation = info.getStartTime();
 		
-		logger.debug("CountDown() called for world: " + worldname + " :: TaskID - " + info.getTaskID());
+		int taskID = info.getTaskID();
+		
+		logger.debug("CountDown() called for world: " + worldname + " :: TaskID - " + taskID);
 		
 		int timeToWait = plugin.getConfig().getInt("timeoutTillStart");
 		
@@ -91,10 +116,34 @@ public class StatusManager {
 		if(timeleft >= timeToWait) {
 			setStatus(worldname, true);
 			plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), ChatColor.GOLD + plugin.getLanguageManager().getString("gamestarted"));
-			plugin.getServer().getScheduler().cancelTask(info.getTaskID());
+			plugin.getServer().getScheduler().cancelTask(taskID);
 		}
 		else
 			plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), (timeToWait - timeleft) + " " + plugin.getLanguageManager().getString("timeleft"));
+	}
+}
+
+// Some small objects to keep track of task id's and what worlds they are working with.
+
+class PlayerCheck {
+	
+	private final String worldname;
+	private int taskID = 0;
+	
+	public PlayerCheck(String worldname) {
+		this.worldname = worldname;
+	}
+	
+	public synchronized String getWorldname() {
+		return this.worldname;
+	}
+	
+	public synchronized void setTaskID(int newID) {
+		this.taskID = newID;
+	}
+	
+	public synchronized int getTaskID() {
+		return this.taskID;
 	}
 }
 
@@ -111,11 +160,11 @@ class CountDown {
 	}
 	
 	public synchronized String getWorldname() {
-		return worldname;
+		return this.worldname;
 	}
 	
 	public synchronized long getStartTime() {
-		return timeOfInitiation;
+		return this.timeOfInitiation;
 	}
 	
 	public synchronized void setTaskID(int newID) {
@@ -123,6 +172,6 @@ class CountDown {
 	}
 	
 	public synchronized int getTaskID() {
-		return taskID;
+		return this.taskID;
 	}
 }

@@ -110,4 +110,13 @@ public class PlayerManager {
 		
 		return 0;
 	}
+
+	public void clearList(String worldname) {
+
+		HashSet<String> playerlist = playerlists.get(worldname);
+		
+		if(playerlist != null)
+			playerlist.clear();
+		
+	}
 }

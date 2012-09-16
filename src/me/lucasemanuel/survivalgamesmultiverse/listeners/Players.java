@@ -30,6 +30,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -72,6 +73,7 @@ public class Players implements Listener {
 							player.sendMessage(ChatColor.GOLD + plugin.getLanguageManager().getString("youJoinedTheGame"));
 							plugin.getWorldManager().broadcast(block.getWorld(), ChatColor.LIGHT_PURPLE + player.getName() + ChatColor.WHITE + " " + plugin.getLanguageManager().getString("playerJoinedGame"));
 							
+							// Now we have to wait for more players!
 							if(plugin.getPlayerManager().getPlayerAmount(player.getWorld().getName()) == 1)
 								plugin.getStatusManager().startPlayerCheck(player.getWorld().getName());
 						}
@@ -183,6 +185,22 @@ public class Players implements Listener {
 		}
 	}
 	
+	@EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled=true)
+	public void onEntityDamage(EntityDamageEvent event) {
+		
+		if(event.getEntity() instanceof Player) {
+			
+			Player player = (Player) event.getEntity();
+			
+			if(plugin.getWorldManager().isWorld(player.getWorld()) && 
+					plugin.getPlayerManager().isInGame(player.getName()) && 
+					plugin.getStatusManager().getStatus(player.getWorld().getName()) == false) {
+				
+				event.setCancelled(true);
+			}
+		}
+	}
+	
 	private void gameover(Player player) {
 		
 		PlayerManager   playermanager   = plugin.getPlayerManager();
@@ -206,6 +224,8 @@ public class Players implements Listener {
 			// Reset the world
 			worldmanager.resetWorld(player.getWorld());
 			locationmanager.resetLocationStatuses(player.getWorld());
+			
+			plugin.getPlayerManager().clearList(player.getWorld().getName());
 			
 			plugin.getStatusManager().setStatus(player.getWorld().getName(), false);
 		}

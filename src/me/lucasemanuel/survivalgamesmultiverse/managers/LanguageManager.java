@@ -114,6 +114,11 @@ public class LanguageManager {
 			save = true;
 		}
 		
+		if(!config.contains("waitingForPlayers")) {
+			config.set("waitingForPlayers", "Atleast one more player has to join!");
+			save = true;
+		}
+		
 		if(save) {
 			try {
 	            config.save(this.plugin.getDataFolder() + File.separator + "language.yml");
