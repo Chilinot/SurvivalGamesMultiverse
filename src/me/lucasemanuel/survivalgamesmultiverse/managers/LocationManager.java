@@ -15,11 +15,15 @@
 
 package me.lucasemanuel.survivalgamesmultiverse.managers;
 
+import java.io.File;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map.Entry;
 
 import me.lucasemanuel.survivalgamesmultiverse.Main;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
+import me.lucasemanuel.survivalgamesmultiverse.utils.SLAPI;
+import me.lucasemanuel.survivalgamesmultiverse.utils.SerializedLocation;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -27,12 +31,14 @@ import org.bukkit.entity.Player;
 
 public class LocationManager {
 	
-	private ConsoleLogger logger;
+	private Main plugin;
+	final private ConsoleLogger logger;
 	
 	// Key = Worldname, Value = Main/Arena lists, ValueOfValue = key=location, boolean=true means the location is available
 	private HashMap<String, HashMap<String, HashMap<Location, Boolean>>> locations;
 	
 	public LocationManager(Main instance) {
+		plugin = instance;
 		logger = new ConsoleLogger(instance, "LocationManager");
 		
 		locations = new HashMap<String, HashMap<String, HashMap<Location, Boolean>>>();
@@ -97,5 +103,44 @@ public class LocationManager {
 		}
 		
 		map.put(location, true);
+	}
+
+	public void saveLocationList(final String listtype, String worldname) {
+		
+		final String path = plugin.getDataFolder().getAbsolutePath() + "/locations/" + worldname;
+		
+		final HashSet<SerializedLocation> tempmap = new HashSet<SerializedLocation>();
+		
+		HashMap<Location, Boolean>  locationlist = locations.get(worldname).get(listtype);
+		
+		if(locationlist != null) {
+			for(Location location : locationlist.keySet()) {
+				tempmap.add(new SerializedLocation(location));
+			}
+		}
+		
+		if(!tempmap.isEmpty()) {
+			
+			Thread thread = new Thread() {
+				public void run() {
+					
+					File test = new File(path);
+					
+					if(!test.exists()) {
+						test.mkdirs();
+					}
+					
+					try {
+						SLAPI.save(tempmap, (path + "/" + listtype + ".dat"));
+					}
+					catch (Exception e) {
+						logger.severe("Error while saving locationlist! Message: " + e.getMessage());
+						e.printStackTrace();
+					}
+				}
+			};
+			
+			thread.start();
+		}
 	}
 }

@@ -86,11 +86,33 @@ public class Commands implements CommandExecutor {
 		switch(firstarg) {
 			
 			case "set":
-				if(secondarg.equals("main"))
+				if(secondarg.equals("main")) {
+					player.sendMessage(ChatColor.GREEN + "Adding main location for this world!");
 					plugin.getLocationManager().addLocation("main", location);
-				else if(secondarg.equals("arena"))
+					return true;
+				}
+				else if(secondarg.equals("arena")) {
+					player.sendMessage(ChatColor.GREEN + "Adding arena location for this world!");
 					plugin.getLocationManager().addLocation("arena", location);
-				return true;
+					return true;
+				}
+				return false;
+				
+			case "save":
+				String worldname = location.getWorld().getName();
+				
+				if(secondarg.equals("main")) {
+					player.sendMessage(ChatColor.GREEN + "Saving main locationlist for this world!");
+					plugin.getLocationManager().saveLocationList("main", worldname);
+					return true;
+				}
+				else if(secondarg.equals("arena")) {
+					player.sendMessage(ChatColor.GREEN + "Saving arena locationlist for this world!");
+					plugin.getLocationManager().saveLocationList("arena", worldname);
+					return true;
+				}
+				
+				return false;
 		}
 		
 		return false;
