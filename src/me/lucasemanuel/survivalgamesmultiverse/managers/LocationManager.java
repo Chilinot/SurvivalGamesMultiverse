@@ -48,6 +48,8 @@ public class LocationManager {
 	
 	public void addWorld(String worldname) {
 		locations.put(worldname, new HashMap<String, HashMap<Location, Boolean>>());
+		
+		loadLocations(worldname);
 	}
 	
 	public void resetLocationStatuses(World world) {
@@ -143,4 +145,11 @@ public class LocationManager {
 			thread.start();
 		}
 	}
+	
+	private void loadLocations(String worldname) {
+		
+		
+		
+	}
+
 }

@@ -20,9 +20,6 @@ import java.sql.SQLException;
 
 import me.lucasemanuel.survivalgamesmultiverse.Main;
 import me.lucasemanuel.survivalgamesmultiverse.threading.ConcurrentConnection;
-import me.lucasemanuel.survivalgamesmultiverse.threading.InsertDeathPointThread;
-import me.lucasemanuel.survivalgamesmultiverse.threading.InsertKillPointThread;
-import me.lucasemanuel.survivalgamesmultiverse.threading.InsertWinPointThread;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
 
 public class StatsManager {
@@ -83,18 +80,42 @@ public class StatsManager {
 			logger.severe("No connection to database! This plugin will probably not work!");
 	}
 	
-	public void addWinPoints(String playername, int points) {
-		if(insertobject != null)
-			new InsertWinPointThread(insertobject, playername, points);
+	public void addWinPoints(final String playername, final int points) {
+		if(insertobject != null) {
+			
+			Thread thread = new Thread() {
+				public void run() {
+					insertobject.update(playername, points, 0, 0);
+				}
+			};
+			
+			thread.start();
+		}
 	}
 	
-	public void addKillPoints(String playername, int points) {
-		if(insertobject != null)
-			new InsertKillPointThread(insertobject, playername, points);
+	public void addKillPoints(final String playername, final int points) {
+		if(insertobject != null) {
+			
+			Thread thread = new Thread() {
+				public void run() {
+					insertobject.update(playername, 0, points, 0);
+				}
+			};
+			
+			thread.start();
+		}
 	}
 	
-	public void addDeathPoints(String playername, int points) {
-		if(insertobject != null)
-			new InsertDeathPointThread(insertobject, playername, points);
+	public void addDeathPoints(final String playername, final int points) {
+		if(insertobject != null) {
+			
+			Thread thread = new Thread() {
+				public void run() {
+					insertobject.update(playername, 0, 0, points);
+				}
+			};
+			
+			thread.start();
+		}
 	}
 }
