@@ -123,6 +123,11 @@ public class LocationManager {
 		
 		if(!tempmap.isEmpty()) {
 			
+			/*
+			 *  This could potentially lead to several threads modifying the same save-file, which isn't a good thing!
+			 *  But hopefully no one will use this command that many times at the same time that the file would be in danger.
+			 */
+			
 			Thread thread = new Thread() {
 				public void run() {
 					
