@@ -109,11 +109,13 @@ public class StatusManager {
 		
 		if(playeramount >= 2) {
 			plugin.getServer().getScheduler().cancelTask(taskID);
+			tasks.put(worldname, -1);
 			startCountDown(worldname);
 		}
 		else if(playeramount == 0) {
 			logger.debug("Cancelling task: " + taskID);
 			plugin.getServer().getScheduler().cancelTask(taskID);
+			tasks.put(worldname, -1);
 		}
 		else
 			plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), ChatColor.LIGHT_PURPLE + plugin.getLanguageManager().getString("waitingForPlayers"));
@@ -133,16 +135,20 @@ public class StatusManager {
 		int timepassed = (int) ((System.currentTimeMillis() - timeOfInitiation) / 1000);
 		
 		if(timepassed >= (timeToWait - 12)) {
+			
 			if(timepassed >= timeToWait && info.getStarted10() == true) {
 				setStatus(worldname, true);
 				plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), ChatColor.GOLD + plugin.getLanguageManager().getString("gamestarted"));
 				plugin.getServer().getScheduler().cancelTask(taskID);
+				tasks.put(worldname, -1);
 			}
+			
 			else if(info.getStarted10() == false) {
 				
 				logger.debug("Starting 1s countdown for world: " + worldname);
 				
 				plugin.getServer().getScheduler().cancelTask(taskID);
+				tasks.put(worldname, -1);
 				
 				info.setStarted10();
 				

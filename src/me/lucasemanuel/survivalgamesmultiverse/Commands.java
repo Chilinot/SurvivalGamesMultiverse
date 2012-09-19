@@ -96,7 +96,7 @@ public class Commands implements CommandExecutor {
 					plugin.getLocationManager().addLocation("arena", location);
 					return true;
 				}
-				return false;
+				break;
 				
 			case "save":
 				String worldname = location.getWorld().getName();
@@ -111,8 +111,7 @@ public class Commands implements CommandExecutor {
 					plugin.getLocationManager().saveLocationList("arena", worldname);
 					return true;
 				}
-				
-				return false;
+				break;
 		}
 		
 		return false;
