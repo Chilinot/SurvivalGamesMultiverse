@@ -137,7 +137,6 @@ public class LocationManager {
 					}
 					catch (Exception e) {
 						logger.severe("Error while saving locationlist! Message: " + e.getMessage());
-						e.printStackTrace();
 					}
 				}
 			};
@@ -146,10 +145,42 @@ public class LocationManager {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void loadLocations(String worldname) {
 		
+		String path = plugin.getDataFolder().getAbsolutePath() + "/locations/" + worldname;
 		
-		
+		if(new File(path).exists()) {
+			
+			String mainpath  = path + "/" + "main.dat";
+			String arenapath = path + "/" + "arena.dat";
+			
+			HashSet<SerializedLocation> mainmap  = new HashSet<SerializedLocation>();
+			HashSet<SerializedLocation> arenamap = new HashSet<SerializedLocation>();
+			
+			try {
+				mainmap  = (HashSet<SerializedLocation>) SLAPI.load(mainpath);
+				arenamap = (HashSet<SerializedLocation>) SLAPI.load(arenapath);
+			}
+			catch (Exception e) {
+				logger.severe("Error while loading saved locations for world: " + worldname);
+				logger.severe("Message: " + e.getMessage());
+			}
+			
+			if(!mainmap.isEmpty()) {
+				for(SerializedLocation serialized : mainmap) {
+					addLocation("main", serialized.deserialize());
+				}
+			}
+			
+			if(!arenamap.isEmpty()) {
+				for(SerializedLocation serialized : arenamap) {
+					addLocation("arena", serialized.deserialize());
+				}
+			}
+		}
+		else
+			logger.warning("No saved locations for world: " + worldname);
 	}
 
 }
