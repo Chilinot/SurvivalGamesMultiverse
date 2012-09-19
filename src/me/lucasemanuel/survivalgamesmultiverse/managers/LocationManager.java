@@ -47,8 +47,9 @@ public class LocationManager {
 	}
 	
 	public void addWorld(String worldname) {
-		locations.put(worldname, new HashMap<String, HashMap<Location, Boolean>>());
+		logger.debug("Adding world: " + worldname);
 		
+		locations.put(worldname, new HashMap<String, HashMap<Location, Boolean>>());
 		loadLocations(worldname);
 	}
 	
@@ -71,6 +72,8 @@ public class LocationManager {
 	}
 	
 	public boolean tpToStart(Player player) {
+		
+		logger.debug("Teleporting player: " + player.getName() + " to start");
 		
 		HashMap<Location, Boolean> locationlist = locations.get(player.getWorld().getName()).get("main");
 		
@@ -108,6 +111,8 @@ public class LocationManager {
 	}
 
 	public void saveLocationList(final String listtype, String worldname) {
+		
+		logger.debug("Saving locationtype: " + listtype + " for world: " + worldname);
 		
 		final String path = plugin.getDataFolder().getAbsolutePath() + "/locations/" + worldname;
 		
@@ -153,6 +158,8 @@ public class LocationManager {
 	@SuppressWarnings("unchecked")
 	private void loadLocations(String worldname) {
 		
+		logger.debug("Loading locations for world: " + worldname);
+		
 		String path = plugin.getDataFolder().getAbsolutePath() + "/locations/" + worldname;
 		
 		if(new File(path).exists()) {
@@ -187,5 +194,4 @@ public class LocationManager {
 		else
 			logger.warning("No saved locations for world: " + worldname);
 	}
-
 }
