@@ -73,8 +73,6 @@ public class LocationManager {
 	
 	public boolean tpToStart(Player player) {
 		
-		logger.debug("Teleporting player: " + player.getName() + " to start");
-		
 		HashMap<Location, Boolean> locationlist = locations.get(player.getWorld().getName()).get("main");
 		
 		if(locationlist == null) {
@@ -84,6 +82,8 @@ public class LocationManager {
 		
 		for(Entry<Location, Boolean> entry : locationlist.entrySet()) {
 			if(entry.getValue()) {
+				
+				logger.debug("Teleporting player: " + player.getName() + " to start");
 				
 				player.teleport(entry.getKey());
 				entry.setValue(false);
@@ -118,7 +118,7 @@ public class LocationManager {
 		
 		final HashSet<SerializedLocation> tempmap = new HashSet<SerializedLocation>();
 		
-		HashMap<Location, Boolean>  locationlist = locations.get(worldname).get(listtype);
+		HashMap<Location, Boolean> locationlist = locations.get(worldname).get(listtype);
 		
 		if(locationlist != null) {
 			for(Location location : locationlist.keySet()) {
@@ -126,33 +126,33 @@ public class LocationManager {
 			}
 		}
 		
-		if(!tempmap.isEmpty()) {
-			
-			/*
-			 *  This could potentially lead to several threads modifying the same save-file, which isn't a good thing!
-			 *  But hopefully no one will use this command that many times at the same time that the file would be in danger.
-			 */
-			
-			Thread thread = new Thread() {
-				public void run() {
-					
-					File test = new File(path);
-					
-					if(!test.exists()) {
-						test.mkdirs();
-					}
-					
-					try {
-						SLAPI.save(tempmap, (path + "/" + listtype + ".dat"));
-					}
-					catch (Exception e) {
-						logger.severe("Error while saving locationlist! Message: " + e.getMessage());
-					}
+		/*
+		 *  This could potentially lead to several threads modifying the same save-file, which isn't a good thing!
+		 *  But hopefully no one will use this command that many times at the same time that the file would be in danger.
+		 */
+		
+		Thread thread = new Thread() {
+			public void run() {
+				
+				String fullpath = path + "/" + listtype + ".dat";
+				
+				File test = new File(path);
+				
+				if(!test.exists()) {
+					test.mkdirs();
 				}
-			};
-			
-			thread.start();
-		}
+				
+				try {
+					logger.debug("Saving locationtype: " + listtype + " to: " + fullpath);
+					SLAPI.save(tempmap, fullpath);
+				}
+				catch (Exception e) {
+					logger.severe("Error while saving locationlist! Message: " + e.getMessage());
+				}
+			}
+		};
+		
+		thread.start();
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -193,5 +193,13 @@ public class LocationManager {
 		}
 		else
 			logger.warning("No saved locations for world: " + worldname);
+	}
+
+	public void clearLocationList(String type, String worldname) {
+		
+		HashMap<Location, Boolean> locationlist = locations.get(worldname).get(type);
+		
+		if(locationlist != null)
+			locationlist.clear();
 	}
 }

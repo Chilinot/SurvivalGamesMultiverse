@@ -83,6 +83,8 @@ public class Commands implements CommandExecutor {
 		String firstarg  = args[0].toLowerCase();
 		String secondarg = args[1].toLowerCase();
 		
+		String worldname = location.getWorld().getName();
+		
 		switch(firstarg) {
 			
 			case "set":
@@ -99,8 +101,6 @@ public class Commands implements CommandExecutor {
 				break;
 				
 			case "save":
-				String worldname = location.getWorld().getName();
-				
 				if(secondarg.equals("main")) {
 					player.sendMessage(ChatColor.GREEN + "Saving main locationlist for this world!");
 					plugin.getLocationManager().saveLocationList("main", worldname);
@@ -109,6 +109,19 @@ public class Commands implements CommandExecutor {
 				else if(secondarg.equals("arena")) {
 					player.sendMessage(ChatColor.GREEN + "Saving arena locationlist for this world!");
 					plugin.getLocationManager().saveLocationList("arena", worldname);
+					return true;
+				}
+				break;
+				
+			case "clear":
+				if(secondarg.equals("main")) {
+					player.sendMessage(ChatColor.GREEN + "Clearing main locations for this world! Remember to save!");
+					plugin.getLocationManager().clearLocationList("main", worldname);
+					return true;
+				}
+				else if(secondarg.equals("arena")) {
+					player.sendMessage(ChatColor.GREEN + "Clearing arena locations for this world! Remember to save!");
+					plugin.getLocationManager().clearLocationList("arena", worldname);
 					return true;
 				}
 				break;
