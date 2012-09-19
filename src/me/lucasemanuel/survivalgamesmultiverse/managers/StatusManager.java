@@ -31,17 +31,22 @@ public class StatusManager {
 	// Key = worldname, Value = gamestatus / true = started
 	private HashMap<String, Boolean> worlds;
 	
+	// Key = Worldname , Value = TaskID || There should only be one task per world
+	private HashMap<String, Integer> tasks;
+	
 	public StatusManager(Main instance) {
 		plugin = instance;
 		logger = new ConsoleLogger(instance, "StatusManager");
 		
 		worlds = new HashMap<String, Boolean>();
+		tasks  = new HashMap<String, Integer>();
 		
 		logger.debug("Initiated");
 	}
 	
 	public void addWorld(String worldname) {
 		worlds.put(worldname, false);
+		tasks.put(worldname, -1); // -1 means no task
 	}
 
 	public boolean setStatus(String worldname, boolean value) {
@@ -59,7 +64,7 @@ public class StatusManager {
 
 	public void startCountDown(String worldname) {
 		
-		if(worlds.containsKey(worldname)) {
+		if(worlds.containsKey(worldname) && tasks.get(worldname) == -1) {
 			
 			final CountDown info = new CountDown(worldname);
 			
@@ -68,12 +73,16 @@ public class StatusManager {
 					countDown(info);
 				}
 			}, 20L, 200L));
+			
+			tasks.put(worldname, info.getTaskID());
+			
+			logger.debug("Started task for startCountDown in world: " + worldname + " :: taskID - " + info.getTaskID());
 		}
 	}
 	
 	public void startPlayerCheck(String worldname) {
 		
-		if(worlds.containsKey(worldname)) {
+		if(worlds.containsKey(worldname) && tasks.get(worldname) == -1) {
 			
 			final PlayerCheck info = new PlayerCheck(worldname);
 			
@@ -82,6 +91,10 @@ public class StatusManager {
 					playerCheck(info);
 				}
 			}, 20L, 200L));
+			
+			tasks.put(worldname, info.getTaskID());
+			
+			logger.debug("Started task for startPlayerCheck in world: " + worldname + " :: taskID - " + info.getTaskID());
 		}
 	}
 	
@@ -90,10 +103,16 @@ public class StatusManager {
 		String worldname = info.getWorldname();
 		int taskID = info.getTaskID();
 		
-		logger.debug("PlayerCheck() called for world: " + worldname + " :: taskID - " + taskID);
+		int playeramount = plugin.getPlayerManager().getPlayerAmount(worldname);
 		
-		if(plugin.getPlayerManager().getPlayerAmount(worldname) >= 2) {
+		logger.debug("PlayerCheck() called for world: " + worldname + " :: taskID - " + taskID + " :: Playeramount - " + playeramount);
+		
+		if(playeramount >= 2) {
+			plugin.getServer().getScheduler().cancelTask(taskID);
 			startCountDown(worldname);
+		}
+		else if(playeramount == 0) {
+			logger.debug("Cancelling task: " + taskID);
 			plugin.getServer().getScheduler().cancelTask(taskID);
 		}
 		else
@@ -120,6 +139,9 @@ public class StatusManager {
 				plugin.getServer().getScheduler().cancelTask(taskID);
 			}
 			else if(info.getStarted10() == false) {
+				
+				logger.debug("Starting 1s countdown for world: " + worldname);
+				
 				plugin.getServer().getScheduler().cancelTask(taskID);
 				
 				info.setStarted10();
@@ -129,6 +151,8 @@ public class StatusManager {
 						countDown(info);
 					}
 				}, 20L, 20L));
+				
+				tasks.put(worldname, info.getTaskID());
 			}
 		}
 		
