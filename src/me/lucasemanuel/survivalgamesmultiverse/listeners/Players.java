@@ -14,7 +14,6 @@
 package me.lucasemanuel.survivalgamesmultiverse.listeners;
 
 import me.lucasemanuel.survivalgamesmultiverse.Main;
-import me.lucasemanuel.survivalgamesmultiverse.managers.LocationManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.PlayerManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.StatsManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.WorldManager;
@@ -206,28 +205,25 @@ public class Players implements Listener {
 		PlayerManager   playermanager   = plugin.getPlayerManager();
 		WorldManager    worldmanager    = plugin.getWorldManager();
 		StatsManager    statsmanager    = plugin.getStatsManager();
-		LocationManager locationmanager = plugin.getLocationManager();
 		
 		if(playermanager.isGameOver(player.getWorld())) {
 			
-			// Broadcast a message to all players in that world that the game is over.
-			worldmanager.broadcast(player.getWorld(), plugin.getLanguageManager().getString("gameover"));
-			
-			// Do we have a winner?
-			String winner = playermanager.getWinner(player.getWorld());
-			if(winner != null) {
-				worldmanager.broadcast(player.getWorld(), ChatColor.LIGHT_PURPLE + winner + ChatColor.WHITE + " " + plugin.getLanguageManager().getString("wonTheGame"));
-				statsmanager.addWinPoints(winner, 1);
-				worldmanager.sendPlayerToSpawn(Bukkit.getPlayerExact(winner));
+			if(plugin.getStatusManager().getStatus(player.getWorld().getName())) {
+				
+				// Broadcast a message to all players in that world that the game is over.
+				worldmanager.broadcast(player.getWorld(), plugin.getLanguageManager().getString("gameover"));
+				
+				// Do we have a winner?
+				String winner = playermanager.getWinner(player.getWorld());
+				if(winner != null) {
+					worldmanager.broadcast(player.getWorld(), ChatColor.LIGHT_PURPLE + winner + ChatColor.WHITE + " " + plugin.getLanguageManager().getString("wonTheGame"));
+					statsmanager.addWinPoints(winner, 1);
+					worldmanager.sendPlayerToSpawn(Bukkit.getPlayerExact(winner));
+				}
 			}
 			
-			// Reset the world
-			worldmanager.resetWorld(player.getWorld());
-			locationmanager.resetLocationStatuses(player.getWorld());
-			
-			plugin.getPlayerManager().clearList(player.getWorld().getName());
-			
-			plugin.getStatusManager().setStatus(player.getWorld().getName(), false);
+			// Resets
+			plugin.resetWorld(player.getWorld());
 		}
 	}
 }

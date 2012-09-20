@@ -165,6 +165,18 @@ public class StatusManager {
 		if((timeToWait - timepassed) > 0)
 			plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), (timeToWait - timepassed) + " " + plugin.getLanguageManager().getString("timeleft"));
 	}
+
+	public void reset(String worldname) {
+		
+		logger.debug("Resetting world: " + worldname);
+		
+		if(tasks.get(worldname) != -1) {
+			plugin.getServer().getScheduler().cancelTask(tasks.get(worldname));
+			tasks.put(worldname, -1);
+		}
+		
+		setStatus(worldname, false);
+	}
 }
 
 // Some small objects to keep track of task id's and what worlds they are working with.

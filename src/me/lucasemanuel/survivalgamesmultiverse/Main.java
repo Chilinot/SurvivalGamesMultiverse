@@ -27,6 +27,7 @@ import me.lucasemanuel.survivalgamesmultiverse.managers.WorldManager;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
 
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -85,7 +86,7 @@ public class Main extends JavaPlugin {
 			locationmanager.addWorld(key);
 			statusmanager.addWorld(key);
 			
-			logger.debug("Creating world - " + key + " :: template - " + getConfig().getString("worldnames." + key));
+			logger.debug("Loading world - " + key + " :: template - " + getConfig().getString("worldnames." + key));
 		}
 		
 		logger.debug("Startup sequence finished!");
@@ -117,5 +118,13 @@ public class Main extends JavaPlugin {
 	
 	public StatusManager getStatusManager() {
 		return statusmanager;
+	}
+
+	public void resetWorld(World world) {
+		worldmanager.resetWorld(world);
+		locationmanager.resetLocationStatuses(world);
+		playermanager.killAndClear(world.getName());
+		statusmanager.reset(world.getName());
+		chestmanager.clearLogs(world.getName());
 	}
 }

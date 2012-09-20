@@ -16,6 +16,7 @@ package me.lucasemanuel.survivalgamesmultiverse.managers;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 
 import me.lucasemanuel.survivalgamesmultiverse.Main;
@@ -111,12 +112,23 @@ public class PlayerManager {
 		return 0;
 	}
 
-	public void clearList(String worldname) {
+	private void clearList(String worldname) {
 
 		HashSet<String> playerlist = playerlists.get(worldname);
 		
 		if(playerlist != null)
 			playerlist.clear();
 		
+	}
+
+	public void killAndClear(String worldname) {
+		
+		HashSet<String> playerlist = playerlists.get(worldname);
+		
+		for(String playername : playerlist) {
+			Bukkit.getPlayerExact(playername).setHealth(0);
+		}
+		
+		clearList(worldname);
 	}
 }

@@ -167,8 +167,8 @@ public class LocationManager {
 			String mainpath  = path + "/" + "main.dat";
 			String arenapath = path + "/" + "arena.dat";
 			
-			HashSet<SerializedLocation> mainmap  = new HashSet<SerializedLocation>();
-			HashSet<SerializedLocation> arenamap = new HashSet<SerializedLocation>();
+			HashSet<SerializedLocation> mainmap  = null;
+			HashSet<SerializedLocation> arenamap = null;
 			
 			try {
 				mainmap  = (HashSet<SerializedLocation>) SLAPI.load(mainpath);
@@ -179,13 +179,13 @@ public class LocationManager {
 				logger.severe("Message: " + e.getMessage());
 			}
 			
-			if(!mainmap.isEmpty()) {
+			if(mainmap != null) {
 				for(SerializedLocation serialized : mainmap) {
 					addLocation("main", serialized.deserialize());
 				}
 			}
 			
-			if(!arenamap.isEmpty()) {
+			if(arenamap != null) {
 				for(SerializedLocation serialized : arenamap) {
 					addLocation("arena", serialized.deserialize());
 				}

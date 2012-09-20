@@ -162,7 +162,6 @@ public class WorldManager {
 			// Reset logs
 			
 			blocksToReset.clear();
-			plugin.getChestManager().clearLogs(world.getName());
 		}
 		else
 			logger.debug("Tried to reset non registered world!");
