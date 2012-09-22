@@ -11,3 +11,7 @@ commands:
     description: Activates the game for the given world.
     usage: /<command> <worldname>
     permission: multisurvival.commands.sgactivate
+  sgreset:
+    description: Resets the game for the given world.
+    usage: /<command> <worldname>
+    permission: multisurvival.commands.sgreset

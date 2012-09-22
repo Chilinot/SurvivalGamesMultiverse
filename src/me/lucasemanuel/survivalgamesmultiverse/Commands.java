@@ -13,8 +13,10 @@
 
 package me.lucasemanuel.survivalgamesmultiverse;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -49,9 +51,33 @@ public class Commands implements CommandExecutor {
 			case "sgactivate":
 				return sgactivate(sender, args);
 				
+			case "sgreset":
+				return sgreset(sender, args);
+				
 		}
 		
 		return false;
+	}
+
+	private boolean sgreset(CommandSender sender, String[] args) {
+		
+		if(args.length != 1) { 
+			sender.sendMessage(ChatColor.RED + "You need to provide a worldname!");
+			return false;
+		}
+		
+		World world = Bukkit.getWorld(args[0]);
+		
+		if(world == null) {
+			sender.sendMessage(ChatColor.RED + "That world doesnt exist!");
+			return true;
+		}
+		
+		sender.sendMessage(ChatColor.GREEN + "Resetting world: " + world.getName());
+		
+		plugin.resetWorld(Bukkit.getWorld(world.getName()));
+		
+		return true;
 	}
 
 	private boolean sgactivate(CommandSender sender, String[] args) {
@@ -77,7 +103,7 @@ public class Commands implements CommandExecutor {
 		if(args.length != 2)
 			return false;
 		
-		Player player     = (Player) sender;
+		Player player = (Player) sender;
 		Location location = player.getLocation();
 		
 		String firstarg  = args[0].toLowerCase();

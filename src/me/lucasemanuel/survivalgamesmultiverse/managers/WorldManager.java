@@ -133,7 +133,7 @@ public class WorldManager {
 				}
 			}
 			
-			// Schedule removal of all world entitys to make sure they are all removed
+			// Schedule removal of all world entities to make sure they are all removed
 			
 			final String worldname = world.getName();
 			
