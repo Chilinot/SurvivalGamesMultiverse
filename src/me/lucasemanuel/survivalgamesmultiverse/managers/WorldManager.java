@@ -34,7 +34,6 @@ import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
 
 public class WorldManager {
 	
-	//TODO add way of setting and saving spawnpoints for gameworlds
 	
 	private Main plugin;
 	private ConsoleLogger logger;

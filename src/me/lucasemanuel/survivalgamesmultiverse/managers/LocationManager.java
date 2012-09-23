@@ -71,6 +71,29 @@ public class LocationManager {
 			}
 	}
 	
+	public void resetLocationStatus(Location playerlocation) {
+		
+		String worldname = playerlocation.getWorld().getName();
+		
+		HashMap<Location, Boolean> main = locations.get(worldname).get("main");
+		
+		int playerX = playerlocation.getBlockX();
+		int playerY = playerlocation.getBlockY();
+		int playerZ = playerlocation.getBlockZ();
+		
+		for(Entry<Location, Boolean> entry : main.entrySet()) {
+			
+			int entryX = entry.getKey().getBlockX();
+			int entryY = entry.getKey().getBlockY();
+			int entryZ = entry.getKey().getBlockZ();
+			
+			if(entryX == playerX && entryY == playerY && entryZ == playerZ) {
+				entry.setValue(true);
+				return;
+			}
+		}
+	}
+	
 	public boolean tpToStart(Player player) {
 		
 		HashMap<Location, Boolean> locationlist = locations.get(player.getWorld().getName()).get("main");

@@ -57,7 +57,8 @@ public class Config {
 		if(!config.contains("allowedCommandsInGame")) {
 			
 			ArrayList<String> allowedcommands = new ArrayList<String>() {{ 
-				add("/sgplayers"); 
+				add("/sgplayers");
+				add("/sgleave");
 			}};
 			
 			config.set("allowedCommandsInGame", allowedcommands);

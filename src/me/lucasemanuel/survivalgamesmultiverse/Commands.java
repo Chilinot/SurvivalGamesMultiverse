@@ -13,6 +13,8 @@
 
 package me.lucasemanuel.survivalgamesmultiverse;
 
+import java.util.HashSet;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -54,9 +56,63 @@ public class Commands implements CommandExecutor {
 			case "sgreset":
 				return sgreset(sender, args);
 				
+			case "sgplayers":
+				return sgplayers(sender, args);
+			
+			case "sgleave":
+				return sgleave(sender, args);
+				
 		}
 		
 		return false;
+	}
+
+	private boolean sgleave(CommandSender sender, String[] args) {
+		
+		if(!(sender instanceof Player)) {
+			sender.sendMessage(ChatColor.RED + "You have to be a player inorder to use this command!");
+			return true;
+		}
+		
+		Player player = (Player) sender;
+		
+		if(!plugin.getPlayerManager().isInGame(player.getName())) {
+			player.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("sgleaveNotIngame"));
+			return true;
+		}
+		
+		plugin.getPlayerManager().removePlayer(player.getWorld().getName(), player.getName());
+		
+		if(plugin.getStatusManager().getStatus(player.getWorld().getName())) {
+			plugin.gameover(player.getWorld());
+		}
+		else {
+			plugin.getLocationManager().resetLocationStatus(player.getLocation());
+		}
+		
+		plugin.getWorldManager().sendPlayerToSpawn(player);
+		
+		return true;
+	}
+
+	private boolean sgplayers(CommandSender sender, String[] args) {
+		
+		if(!(sender instanceof Player)) {
+			sender.sendMessage(ChatColor.RED + "You have to be a player inorder to use this command!");
+			return true;
+		}
+		
+		Player player = (Player) sender;
+		
+		HashSet<String> playerlist = plugin.getPlayerManager().getPlayerList(player.getWorld().getName());
+		
+		player.sendMessage(ChatColor.LIGHT_PURPLE + " --- " + plugin.getLanguageManager().getString("sgplayersHeading") + " --- ");
+		
+		for(String playername : playerlist) {
+			player.sendMessage(" - " + ChatColor.GREEN + playername);
+		}
+		
+		return true;
 	}
 
 	private boolean sgreset(CommandSender sender, String[] args) {

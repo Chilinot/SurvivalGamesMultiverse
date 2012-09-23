@@ -16,11 +16,22 @@ commands:
     description: Resets the game for the given world.
     usage: /<command> <worldname>
     permission: survivalgames.commands.sgreset
+  sgplayers:
+    description: Lists all remaining players for the world the sender is in.
+    usage: /<command>
+    permission: survivalgames.commands.sgplayers
+  sgleave:
+    description: Allows a player to leave the game.
+    usage: /<command>
+    permission: survivalgames.commands.sgleave
     
 permissions:
   survivalgames.ignore.outsideofspawn:
-    description: Players with this perm will not be teleported back to spawn if they arent registered.
-    default: false
+    description: Players with this perm will not be teleported back to spawn if they aren't registered.
+    default: op
   survivalgames.ignore.commandfilter:
     description: Players with this perm will be allowed to use any command while playing SG.
     default: op
+  survivalgames.ignore.stats:
+    description: Players with this perm will not recieve points in SG.
+    default: false

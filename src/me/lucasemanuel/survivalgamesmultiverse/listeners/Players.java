@@ -22,7 +22,6 @@ import me.lucasemanuel.survivalgamesmultiverse.managers.WorldManager;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
 import me.lucasemanuel.survivalgamesmultiverse.utils.WorldGuardHook;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -59,9 +58,14 @@ public class Players implements Listener {
 		
 		ArrayList<String> allowedcommands = (ArrayList<String>) plugin.getConfig().getList("allowedCommandsInGame");
 		
+		Player player  = event.getPlayer();
 		String command = event.getMessage();
 		
-		if(!allowedcommands.contains(command) && !event.getPlayer().hasPermission("survivalgames.ignore.commandfilter")) {
+		if(plugin.getPlayerManager().isInGame(player.getName()) && 
+				plugin.getWorldManager().isWorld(player.getWorld()) &&
+				!allowedcommands.contains(command) && 
+				!player.hasPermission("survivalgames.ignore.commandfilter")) {
+			
 			event.setCancelled(true);
 			event.getPlayer().sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("blockedCommand"));
 		}
@@ -137,7 +141,7 @@ public class Players implements Listener {
 			plugin.getWorldManager().broadcast(player.getWorld(), message);
 			
 			// Is the game over?
-			gameover(player);
+			plugin.gameover(player.getWorld());
 		}
 	}
 	
@@ -163,7 +167,7 @@ public class Players implements Listener {
 				
 				if(killer != null) {
 					worldmanager.broadcast(victim.getWorld(), ChatColor.LIGHT_PURPLE + victim.getName() + ChatColor.RED + " " + plugin.getLanguageManager().getString("wasKilledBy") + " " + ChatColor.BLUE + killer.getName());
-					statsmanager.addKillPoints(killer.getName(), 1);
+					if(!killer.hasPermission("survivalgames.ignore.stats")) statsmanager.addKillPoints(killer.getName(), 1);
 				}
 				else
 					worldmanager.broadcast(victim.getWorld(), ChatColor.LIGHT_PURPLE + victim.getName() + ChatColor.RED + " " + plugin.getLanguageManager().getString("isOutOfTheGame"));
@@ -171,10 +175,10 @@ public class Players implements Listener {
 				// Remove the player and give him one deathpoint
 				playermanager.removePlayer(victim.getWorld().getName(), victim.getName());
 				worldmanager.sendPlayerToSpawn(victim);
-				statsmanager.addDeathPoints(victim.getName(), 1);
+				if(!victim.hasPermission("survivalgames.ignore.stats")) statsmanager.addDeathPoints(victim.getName(), 1);
 				
 				// Is the game over?
-				gameover(victim);
+				plugin.gameover(victim.getWorld());
 			}
 		}
 	}
@@ -221,33 +225,6 @@ public class Players implements Listener {
 				
 				event.setCancelled(true);
 			}
-		}
-	}
-	
-	private void gameover(Player player) {
-		
-		PlayerManager   playermanager   = plugin.getPlayerManager();
-		WorldManager    worldmanager    = plugin.getWorldManager();
-		StatsManager    statsmanager    = plugin.getStatsManager();
-		
-		if(playermanager.isGameOver(player.getWorld())) {
-			
-			if(plugin.getStatusManager().getStatus(player.getWorld().getName())) {
-				
-				// Broadcast a message to all players in that world that the game is over.
-				worldmanager.broadcast(player.getWorld(), plugin.getLanguageManager().getString("gameover"));
-				
-				// Do we have a winner?
-				String winner = playermanager.getWinner(player.getWorld());
-				if(winner != null) {
-					worldmanager.broadcast(player.getWorld(), ChatColor.LIGHT_PURPLE + winner + ChatColor.WHITE + " " + plugin.getLanguageManager().getString("wonTheGame"));
-					statsmanager.addWinPoints(winner, 1);
-					worldmanager.sendPlayerToSpawn(Bukkit.getPlayerExact(winner));
-				}
-			}
-			
-			// Resets
-			plugin.resetWorld(player.getWorld());
 		}
 	}
 }

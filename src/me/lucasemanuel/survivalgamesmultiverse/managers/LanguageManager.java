@@ -129,6 +129,16 @@ public class LanguageManager {
 			save = true;
 		}
 		
+		if(!config.contains("sgplayersHeading")) {
+			config.set("sgplayersHeading", "Alive Players");
+			save = true;
+		}
+		
+		if(!config.contains("sgleaveNotIngame")) {
+			config.set("sgleaveNotIngame", "You are not in the game!");
+			save = true;
+		}
+		
 		if(save) {
 			try {
 	            config.save(this.plugin.getDataFolder() + File.separator + "language.yml");

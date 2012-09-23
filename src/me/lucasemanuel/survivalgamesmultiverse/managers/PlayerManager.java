@@ -24,8 +24,6 @@ import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
 
 public class PlayerManager {
 	
-	//TODO freeze players when they join
-	//TODO have a countdown unfreeze the players after a configurable time
 	//TODO teleport players to arena after configurable time
 	
 	private ConsoleLogger logger;
@@ -130,5 +128,9 @@ public class PlayerManager {
 		}
 		
 		clearList(worldname);
+	}
+
+	public HashSet<String> getPlayerList(String worldname) {
+		return playerlists.get(worldname);
 	}
 }

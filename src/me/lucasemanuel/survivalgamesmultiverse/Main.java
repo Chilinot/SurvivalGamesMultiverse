@@ -27,14 +27,14 @@ import me.lucasemanuel.survivalgamesmultiverse.managers.WorldManager;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
 	
-	//TODO add command to leave the game
-	//TODO add command to force reset the game
 	//TODO add command to freeze the game
 	//TODO add command to block players from entering, for maintenance purpose
 	
@@ -77,6 +77,8 @@ public class Main extends JavaPlugin {
 		this.getCommand("sglocation").setExecutor(commands);
 		this.getCommand("sgactivate").setExecutor(commands);
 		this.getCommand("sgreset").setExecutor(commands);
+		this.getCommand("sgplayers").setExecutor(commands);
+		this.getCommand("sgleave").setExecutor(commands);
 		
 		logger.debug("Finished! Lets load some worlds...");
 		
@@ -120,7 +122,32 @@ public class Main extends JavaPlugin {
 	public StatusManager getStatusManager() {
 		return statusmanager;
 	}
-
+	
+	public void gameover(World world) {
+		
+		if(playermanager.isGameOver(world)) {
+			
+			if(statusmanager.getStatus(world.getName())) {
+				
+				// Broadcast a message to all players in that world that the game is over.
+				worldmanager.broadcast(world, languagemanager.getString("gameover"));
+				
+				// Do we have a winner?
+				String winnername = playermanager.getWinner(world);
+				Player winner = null;
+				if(winnername != null && (winner = Bukkit.getPlayerExact(winnername)) != null) {
+					worldmanager.broadcast(world, ChatColor.LIGHT_PURPLE + winner.getName() + ChatColor.WHITE + " " + languagemanager.getString("wonTheGame"));
+					if(!winner.hasPermission("survivalgames.ignore.stats")) statsmanager.addWinPoints(winner.getName(), 1);
+					worldmanager.sendPlayerToSpawn(winner);
+					playermanager.removePlayer(winner.getWorld().getName(), winner.getName());
+				}
+			}
+			
+			// Resets
+			resetWorld(world);
+		}
+	}
+	
 	public void resetWorld(World world) {
 		worldmanager.resetWorld(world);
 		locationmanager.resetLocationStatuses(world);
