@@ -15,11 +15,14 @@
 
 package me.lucasemanuel.survivalgamesmultiverse;
 
+import java.util.ArrayList;
+
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Config {
 
+	@SuppressWarnings("serial")
 	public static void load(JavaPlugin plugin) {
 		
 		FileConfiguration config = plugin.getConfig();
@@ -48,6 +51,16 @@ public class Config {
 		
 		if(!config.contains("spawnProtectionName")) {
 			config.set("spawnProtectionName", "sgspawn");
+			save = true;
+		}
+		
+		if(!config.contains("allowedCommandsInGame")) {
+			
+			ArrayList<String> allowedcommands = new ArrayList<String>() {{ 
+				add("/sgplayers"); 
+			}};
+			
+			config.set("allowedCommandsInGame", allowedcommands);
 			save = true;
 		}
 		

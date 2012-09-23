@@ -13,6 +13,8 @@
 
 package me.lucasemanuel.survivalgamesmultiverse.listeners;
 
+import java.util.ArrayList;
+
 import me.lucasemanuel.survivalgamesmultiverse.Main;
 import me.lucasemanuel.survivalgamesmultiverse.managers.PlayerManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.StatsManager;
@@ -32,6 +34,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -48,6 +51,20 @@ public class Players implements Listener {
 		logger = new ConsoleLogger(instance, "PlayerListener");
 		
 		logger.debug("Initiated");
+	}
+	
+	@SuppressWarnings("unchecked")
+	@EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled=true)
+	public void onPlayerCommand(PlayerCommandPreprocessEvent event) {
+		
+		ArrayList<String> allowedcommands = (ArrayList<String>) plugin.getConfig().getList("allowedCommandsInGame");
+		
+		String command = event.getMessage();
+		
+		if(!allowedcommands.contains(command) && !event.getPlayer().hasPermission("survivalgames.ignore.commandfilter")) {
+			event.setCancelled(true);
+			event.getPlayer().sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("blockedCommand"));
+		}
 	}
 	
 	@EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled=true)
@@ -184,7 +201,9 @@ public class Players implements Listener {
 			}
 			else if(!WorldGuardHook.isInRegion(player.getLocation(), plugin.getConfig().getString("spawnProtectionName")) &&
 					!player.hasPermission("survivalgames.ignore.outsideofspawn")) {
+				
 				player.teleport(player.getWorld().getSpawnLocation());
+				player.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("movedOutsideOfSpawn"));
 			}
 		}
 	}

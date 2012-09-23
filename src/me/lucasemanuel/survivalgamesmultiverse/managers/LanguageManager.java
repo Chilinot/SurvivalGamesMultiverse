@@ -119,6 +119,16 @@ public class LanguageManager {
 			save = true;
 		}
 		
+		if(!config.contains("blockedCommand")) {
+			config.set("blockedCommand", "You are not allowed to use that command ingame!");
+			save = true;
+		}
+		
+		if(!config.contains("movedOutsideOfSpawn")) {
+			config.set("movedOutsideOfSpawn", "You are not allowed to be there!");
+			save = true;
+		}
+		
 		if(save) {
 			try {
 	            config.save(this.plugin.getDataFolder() + File.separator + "language.yml");

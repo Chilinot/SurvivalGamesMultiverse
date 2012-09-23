@@ -49,7 +49,7 @@ public class StatusManager {
 		tasks.put(worldname, -1); // -1 means no task
 	}
 
-	public boolean setStatus(String worldname, boolean value) {
+	private boolean setStatus(String worldname, boolean value) {
 		if(worlds.containsKey(worldname)) {
 			worlds.put(worldname, value);
 			return true;
@@ -137,10 +137,7 @@ public class StatusManager {
 		if(timepassed >= (timeToWait - 12)) {
 			
 			if(timepassed >= timeToWait && info.getStarted10() == true) {
-				setStatus(worldname, true);
-				plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), ChatColor.GOLD + plugin.getLanguageManager().getString("gamestarted"));
-				plugin.getServer().getScheduler().cancelTask(taskID);
-				tasks.put(worldname, -1);
+				activate(worldname);
 			}
 			
 			else if(info.getStarted10() == false) {
@@ -164,6 +161,24 @@ public class StatusManager {
 		
 		if((timeToWait - timepassed) > 0)
 			plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), (timeToWait - timepassed) + " " + plugin.getLanguageManager().getString("timeleft"));
+	}
+
+	public boolean activate(String worldname) {
+		
+		if(worlds.containsKey(worldname)) {
+			setStatus(worldname, true);
+			
+			plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), ChatColor.GOLD + plugin.getLanguageManager().getString("gamestarted"));
+			
+			if(tasks.get(worldname) != -1) {
+				plugin.getServer().getScheduler().cancelTask(tasks.get(worldname));
+				tasks.put(worldname, -1);
+			}
+			
+			return true;
+		}
+		else
+			return false;
 	}
 
 	public void reset(String worldname) {

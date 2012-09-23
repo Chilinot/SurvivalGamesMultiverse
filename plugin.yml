@@ -1,6 +1,7 @@
 name: SurvivalGamesMultiverse
 main: me.lucasemanuel.survivalgamesmultiverse.Main
 version: 0.1
+depend: [WorldGuard, WorldEdit]
 
 commands:
   sglocation:
@@ -20,3 +21,6 @@ permissions:
   survivalgames.ignore.outsideofspawn:
     description: Players with this perm will not be teleported back to spawn if they arent registered.
     default: false
+  survivalgames.ignore.commandfilter:
+    description: Players with this perm will be allowed to use any command while playing SG.
+    default: op
