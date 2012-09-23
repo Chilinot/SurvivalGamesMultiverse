@@ -46,6 +46,11 @@ public class Config {
 			save = true;
 		}
 		
+		if(!config.contains("spawnProtectionName")) {
+			config.set("spawnProtectionName", "sgspawn");
+			save = true;
+		}
+		
 		// Database
 		
 		if(!config.contains("database.auth.username")) {

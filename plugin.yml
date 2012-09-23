@@ -6,12 +6,17 @@ commands:
   sglocation:
     description: Manages locations.
     usage: /<command> <set/save/clear> <main/arena>
-    permission: multisurvival.commands.sglocation
+    permission: survivalgames.commands.sglocation
   sgactivate:
     description: Activates the game for the given world.
     usage: /<command> <worldname>
-    permission: multisurvival.commands.sgactivate
+    permission: survivalgames.commands.sgactivate
   sgreset:
     description: Resets the game for the given world.
     usage: /<command> <worldname>
-    permission: multisurvival.commands.sgreset
+    permission: survivalgames.commands.sgreset
+    
+permissions:
+  survivalgames.ignore.outsideofspawn:
+    description: Players with this perm will not be teleported back to spawn if they arent registered.
+    default: false
