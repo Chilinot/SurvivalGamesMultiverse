@@ -84,7 +84,7 @@ public class StatusManager {
 		
 		if(worlds.containsKey(worldname) && tasks.get(worldname) == -1) {
 			
-			final PlayerCheck info = new PlayerCheck(worldname);
+			final GeneralInfo info = new GeneralInfo(worldname);
 			
 			info.setTaskID(plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
 				public void run() {
@@ -98,7 +98,7 @@ public class StatusManager {
 		}
 	}
 	
-	private void playerCheck(PlayerCheck info) {
+	private void playerCheck(GeneralInfo info) {
 		
 		String worldname = info.getWorldname();
 		int taskID = info.getTaskID();
@@ -175,10 +175,25 @@ public class StatusManager {
 				tasks.put(worldname, -1);
 			}
 			
+			startArena(worldname);
+			
 			return true;
 		}
 		else
 			return false;
+	}
+
+	private void startArena(String worldname) {
+		
+		if(tasks.get(worldname) != -1) {
+			plugin.getServer().getScheduler().cancelTask(tasks.get(worldname));
+			tasks.put(worldname, -1);
+		}
+		
+		final GeneralInfo info = new GeneralInfo(worldname);
+		
+		//TODO finish arena crap
+		
 	}
 
 	public void reset(String worldname) {
@@ -196,12 +211,12 @@ public class StatusManager {
 
 // Some small objects to keep track of task id's and what worlds they are working with.
 
-class PlayerCheck {
+class GeneralInfo {
 	
 	private final String worldname;
 	private int taskID = -1;
 	
-	public PlayerCheck(String worldname) {
+	public GeneralInfo(String worldname) {
 		this.worldname = worldname;
 	}
 	
