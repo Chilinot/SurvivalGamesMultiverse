@@ -189,18 +189,21 @@ public class Players implements Listener {
 		Player player = event.getPlayer();
 		
 		// If it is a SG world and the game hasnt started and the player is in the game
-		if(plugin.getWorldManager().isWorld(player.getWorld()) && plugin.getStatusManager().getStatus(player.getWorld().getName()) == false) {
+		if(plugin.getWorldManager().isWorld(player.getWorld())) {
 			
 			if(plugin.getPlayerManager().isInGame(player.getName())) {
-				double fromX = event.getFrom().getX();
-				double fromZ = event.getFrom().getZ();
-				
-				double toX   = event.getTo().getX();
-				double toZ   = event.getTo().getZ();
-				
-				if(fromX != toX && fromZ != toZ) {
-					player.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("blockedMovement"));
-					player.teleport(event.getFrom());
+				if(plugin.getStatusManager().getStatus(player.getWorld().getName()) == false) {
+					
+					double fromX = event.getFrom().getX();
+					double fromZ = event.getFrom().getZ();
+					
+					double toX   = event.getTo().getX();
+					double toZ   = event.getTo().getZ();
+					
+					if(fromX != toX && fromZ != toZ) {
+						player.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("blockedMovement"));
+						player.teleport(event.getFrom());
+					}
 				}
 			}
 			else if(!WorldGuardHook.isInRegion(player.getLocation(), plugin.getConfig().getString("spawnProtectionName")) &&
