@@ -53,7 +53,7 @@ public class ConsoleLogger {
 	 * 
 	 * @param msg - Info message
 	 */
-	public void info(String msg) {
+	public synchronized void info(String msg) {
 		this.logger.info(Ansi.ansi().fg(Ansi.Color.GREEN) + ConsoleLogger.template + "[" + this.name + "] - " + msg + Ansi.ansi().fg(Ansi.Color.WHITE));
 		
 		broadcastToListeners("info", msg);
@@ -64,7 +64,7 @@ public class ConsoleLogger {
 	 * 
 	 * @param msg - Warning message
 	 */
-	public void warning(String msg) {
+	public synchronized void warning(String msg) {
 		this.logger.warning(Ansi.ansi().fg(Ansi.Color.YELLOW) + ConsoleLogger.template + "[" + this.name + "] - " + msg + Ansi.ansi().fg(Ansi.Color.WHITE));
 		
 		broadcastToListeners("warning", msg);
@@ -75,7 +75,7 @@ public class ConsoleLogger {
 	 * 
 	 * @param msg - Severe message
 	 */
-	public void severe(String msg) {
+	public synchronized void severe(String msg) {
 		this.logger.severe(Ansi.ansi().fg(Ansi.Color.RED) + ConsoleLogger.template + "[" + this.name + "] - " + msg + Ansi.ansi().fg(Ansi.Color.WHITE));
 		
 		broadcastToListeners("severe", msg);
@@ -87,14 +87,14 @@ public class ConsoleLogger {
 	 * 
 	 * @param msg - Debug message
 	 */
-	public void debug(String msg) {
+	public synchronized void debug(String msg) {
 		if (debug == true)
 			this.logger.info(Ansi.ansi().fg(Ansi.Color.CYAN) + ConsoleLogger.template + "DEBUG [" + this.name + "] - " + msg + Ansi.ansi().fg(Ansi.Color.WHITE));
 		
 		broadcastToListeners("debug", msg);
 	}
 	
-	private void broadcastToListeners(String level, String msg) {
+	private synchronized void broadcastToListeners(String level, String msg) {
 		
 		String label = null;
 		
@@ -137,7 +137,7 @@ public class ConsoleLogger {
 	 * 
 	 * @param newstate - True to output, otherwise false.
 	 */
-	public static void setDebug(boolean newstate) {
+	public synchronized static void setDebug(boolean newstate) {
 		ConsoleLogger.debug = newstate;
 		plugin.getConfig().set("debug", newstate);
 		plugin.saveConfig();
@@ -148,7 +148,7 @@ public class ConsoleLogger {
 	 * 
 	 * @param playername - Name of the player
 	 */
-	public static void addListener(String playername) {
+	public synchronized static void addListener(String playername) {
 		listeners.add(playername);
 	}
 	
@@ -157,7 +157,7 @@ public class ConsoleLogger {
 	 * 
 	 * @param playername - Name of the player to remove
 	 */
-	public static void removeListener(String playername) {
+	public synchronized static void removeListener(String playername) {
 		listeners.remove(playername);
 	}
 }
