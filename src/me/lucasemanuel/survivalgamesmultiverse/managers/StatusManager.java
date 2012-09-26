@@ -19,6 +19,7 @@ import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 
 import me.lucasemanuel.survivalgamesmultiverse.Main;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
@@ -84,7 +85,7 @@ public class StatusManager {
 		
 		if(worlds.containsKey(worldname) && tasks.get(worldname) == -1) {
 			
-			final GeneralInfo info = new GeneralInfo(worldname);
+			final GeneralTaskInfo info = new GeneralTaskInfo(worldname);
 			
 			info.setTaskID(plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
 				public void run() {
@@ -98,7 +99,7 @@ public class StatusManager {
 		}
 	}
 	
-	private void playerCheck(GeneralInfo info) {
+	private void playerCheck(GeneralTaskInfo info) {
 		
 		String worldname = info.getWorldname();
 		int taskID = info.getTaskID();
@@ -175,7 +176,7 @@ public class StatusManager {
 				tasks.put(worldname, -1);
 			}
 			
-			startArena(worldname);
+			startArenaCountdown(worldname);
 			
 			return true;
 		}
@@ -183,17 +184,52 @@ public class StatusManager {
 			return false;
 	}
 
-	private void startArena(String worldname) {
+	private void startArenaCountdown(String worldname) {
+		
+		logger.debug("Starting arena countdown for world: " + worldname);
 		
 		if(tasks.get(worldname) != -1) {
 			plugin.getServer().getScheduler().cancelTask(tasks.get(worldname));
 			tasks.put(worldname, -1);
 		}
 		
-		final GeneralInfo info = new GeneralInfo(worldname);
+		final GeneralTaskInfo info = new GeneralTaskInfo(worldname);
 		
-		//TODO finish arena crap
+		info.setTaskID(plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+			public void run() {
+				sendEveryoneToArena(info);
+			}
+		}, (long) (plugin.getConfig().getInt("timeoutTillArenaInSeconds") * 20)));
 		
+		tasks.put(worldname, info.getTaskID());
+	}
+	
+	private void sendEveryoneToArena(GeneralTaskInfo info) {
+		
+		int taskID = info.getTaskID();
+		
+		logger.debug("sendEveryoneToArena() called by task: " + taskID);
+		
+		// Is the task that called this method registered?
+		if(tasks.get(info.getWorldname()) == taskID) {
+			
+			plugin.getWorldManager().broadcast(Bukkit.getWorld(info.getWorldname()), ChatColor.LIGHT_PURPLE + plugin.getLanguageManager().getString("sendingEveryoneToArena"));
+			
+			for(String playername : plugin.getPlayerManager().getPlayerList(info.getWorldname())) {
+				
+				Player player = Bukkit.getPlayerExact(playername);
+				
+				if(player != null) {
+					if(plugin.getLocationManager().tpToArena(player)) {
+						player.sendMessage(ChatColor.GOLD + plugin.getLanguageManager().getString("sentYouToArena"));
+					}
+					else {
+						player.setHealth(0);
+						player.sendMessage(ChatColor.BLUE + plugin.getLanguageManager().getString("killedSendingArena"));
+					}
+				}
+			}
+		}
 	}
 
 	public void reset(String worldname) {
@@ -211,12 +247,12 @@ public class StatusManager {
 
 // Some small objects to keep track of task id's and what worlds they are working with.
 
-class GeneralInfo {
+class GeneralTaskInfo {
 	
 	private final String worldname;
 	private int taskID = -1;
 	
-	public GeneralInfo(String worldname) {
+	public GeneralTaskInfo(String worldname) {
 		this.worldname = worldname;
 	}
 	

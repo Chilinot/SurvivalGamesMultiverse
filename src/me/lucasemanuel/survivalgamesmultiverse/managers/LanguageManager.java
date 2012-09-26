@@ -139,6 +139,21 @@ public class LanguageManager {
 			save = true;
 		}
 		
+		if(!config.contains("sendingEveryoneToArena")) {
+			config.set("sendingEveryoneToArena", "The game took to long to finish! Sending everyone to the arena!");
+			save = true;
+		}
+		
+		if(!config.contains("sentYouToArena")) {
+			config.set("sentYouToArena", "You where sent to the arena!");
+			save = true;
+		}
+		
+		if(!config.contains("killedSendingArena")) {
+			config.set("killedSendingArena", "No locations left in the arena! You where killed.");
+			save = true;
+		}
+		
 		if(save) {
 			try {
 	            config.save(this.plugin.getDataFolder() + File.separator + "language.yml");

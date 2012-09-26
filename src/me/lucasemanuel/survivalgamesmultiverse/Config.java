@@ -54,6 +54,11 @@ public class Config {
 			save = true;
 		}
 		
+		if(!config.contains("timeoutTillArenaInSeconds")) {
+			config.set("timeoutTillArenaInSeconds", 300);
+			save = true;
+		}
+		
 		if(!config.contains("allowedCommandsInGame")) {
 			
 			ArrayList<String> allowedcommands = new ArrayList<String>() {{ 

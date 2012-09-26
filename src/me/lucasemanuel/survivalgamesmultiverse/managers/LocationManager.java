@@ -119,6 +119,33 @@ public class LocationManager {
 		return false;
 	}
 	
+	public boolean tpToArena(Player player) {
+		
+		logger.debug("tpToArena() called for player: " + player.getName());
+		
+		HashMap<Location, Boolean> locationlist = locations.get(player.getWorld().getName()).get("arena");
+		
+		if(locationlist == null) {
+			logger.severe("No saved arenalocations for world: " + player.getWorld().getName());
+			return false;
+		}
+		
+		for(Entry<Location, Boolean> entry : locationlist.entrySet()) {
+			if(entry.getValue()) {
+				
+				logger.debug("Sending player to arenalocation!");
+				
+				player.teleport(entry.getKey());
+				entry.setValue(false);
+				
+				return true;
+			}
+		}
+		
+		logger.debug("No arenalocations left for world: " + player.getWorld().getName());
+		return false;
+	}
+	
 	public void addLocation(String type, Location location) {
 		
 		logger.debug("Adding locationtype: " + type + ", to world: " + location.getWorld().getName());
