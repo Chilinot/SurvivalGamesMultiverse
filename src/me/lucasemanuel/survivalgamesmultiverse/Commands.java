@@ -124,10 +124,6 @@ public class Commands implements CommandExecutor {
 					ConsoleLogger.removeListener(player.getName());
 					sender.sendMessage(ChatColor.GREEN + "You are no longer listening to messages from SurvivalGames!");
 				}
-				else {
-					sender.sendMessage(ChatColor.RED + "You need to provide a boolean!");
-					return false;
-				}
 				
 				break;
 		}
