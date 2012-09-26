@@ -1,6 +1,6 @@
 /**
  *  Name: ConsoleLogger.java
- *  Date: 15:16:11
+ *  Updated: 2012-09-26 - 20:17
  * 
  *  Author: LucasEmanuel @ bukkit forums
  *  
