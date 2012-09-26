@@ -229,6 +229,8 @@ public class StatusManager {
 					}
 				}
 			}
+			
+			tasks.put(info.getWorldname(), -1);
 		}
 	}
 

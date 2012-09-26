@@ -47,6 +47,14 @@ public class Commands implements CommandExecutor {
 		
 		switch(command) {
 			
+			case "sginfo":
+				sender.sendMessage(ChatColor.GREEN + "SurvivalGamesMultiverse v." + plugin.getDescription().getVersion() + " is up and running!");
+				if(sender instanceof Player) sender.sendMessage(ChatColor.GREEN + "You are in world: " +((Player) sender).getWorld().getName());
+				return true;
+				
+			case "sgdebug":
+				return sgdebug(sender, args);
+			
 			case "sglocation":
 				return sglocation(sender, args);
 				
@@ -65,6 +73,66 @@ public class Commands implements CommandExecutor {
 		}
 		
 		return false;
+	}
+
+	private boolean sgdebug(CommandSender sender, String[] args) {
+		
+		if(args.length != 2) {
+			sender.sendMessage(ChatColor.RED + "Incorrect usage!");
+			return false;
+		}
+		
+		String firstarg  = args[0].toLowerCase();
+
+		boolean secondarg = false;
+		
+		switch(args[1].toLowerCase()) {
+			
+			case "true":
+				secondarg = true;
+				break;
+			
+			case "false":
+				secondarg = false;
+				break;
+				
+			default:
+				sender.sendMessage(ChatColor.RED + "You need to provide a boolean!");
+				return false;
+		}
+		
+		switch(firstarg) {
+			
+			case "set":
+				ConsoleLogger.setDebug(secondarg);
+				break;
+				
+			case "listen":
+				
+				if(!(sender instanceof Player)) {
+					sender.sendMessage(ChatColor.RED + "You need to be a player to use this command!");
+					break;
+				}
+				
+				Player player = (Player) sender;
+				
+				if(secondarg == true) {
+					ConsoleLogger.addListener(player.getName());
+					sender.sendMessage(ChatColor.GREEN + "You are now listening to messages from SurvivalGames!");
+				}
+				else if(secondarg == false) {
+					ConsoleLogger.removeListener(player.getName());
+					sender.sendMessage(ChatColor.GREEN + "You are no longer listening to messages from SurvivalGames!");
+				}
+				else {
+					sender.sendMessage(ChatColor.RED + "You need to provide a boolean!");
+					return false;
+				}
+				
+				break;
+		}
+		
+		return true;
 	}
 
 	private boolean sgleave(CommandSender sender, String[] args) {

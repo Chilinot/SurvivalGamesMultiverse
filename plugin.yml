@@ -1,9 +1,17 @@
 name: SurvivalGamesMultiverse
 main: me.lucasemanuel.survivalgamesmultiverse.Main
-version: 0.1
+version: 0.2
 depend: [WorldGuard, WorldEdit]
 
 commands:
+  sginfo:
+    description: Shows what version the server is running.
+    usage: /<command>
+    permission: survivalgames.commands.sginfo
+  sgdebug:
+    description: Manages debug settings.
+    usage: /<command> <set/listen> <true/false>
+    permission: survivalgames.commands.sgdebug
   sglocation:
     description: Manages locations.
     usage: /<command> <set/save/clear> <main/arena>

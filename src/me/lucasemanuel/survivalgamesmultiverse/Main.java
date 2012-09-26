@@ -74,6 +74,8 @@ public class Main extends JavaPlugin {
 		
 		Commands commands = new Commands(this);
 		
+		this.getCommand("sginfo").setExecutor(commands);
+		this.getCommand("sgdebug").setExecutor(commands);
 		this.getCommand("sglocation").setExecutor(commands);
 		this.getCommand("sgactivate").setExecutor(commands);
 		this.getCommand("sgreset").setExecutor(commands);
