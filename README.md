@@ -61,35 +61,35 @@ In progress...
 #####/sginfo
  - Description: Displays version and worldname.
  - Usage: /sginfo
- - Permission: multisurvival.commands.sginfo
+ - Permission: survivalgames.commands.sginfo
  
 #####/sgdebug
  - Description: Manages debug settings.
  - Usage:  /sgdebug \<set/listen\> \<true/false\>
- - Permission: multisurvival.commands.sgdebug
+ - Permission: survivalgames.commands.sgdebug
  
 #####/sgplayers
  - Description: Lists all remaining players for the world the sender is in.
  - Usage: /sgplayers
- - Permission: multisurvival.commands.sgplayers
+ - Permission: survivalgames.commands.sgplayers
  
 #####/sgleave
  - Description: Allows a player to leave the game.
  - Usage: /sgleave
- - Permission: multisurvival.commands.sgleave
+ - Permission: survivalgames.commands.sgleave
  
 #####/sgreset
  - Description: Activates the game for the given world.
  - Usage: /sgactivate \<worldname\>
- - Permission: multisurvival.commands.sgactivate
+ - Permission: survivalgames.commands.sgactivate
 
 #####/sglocation
  - Description: Manages locations for the worlds.
  - Usage: /sglocation \<set/save/clear/\> \<main/arena\>
  - Example: To set a main location (starting point that players gets teleported to when they join) use this "/sglocation set main". Thats saves your location as one of the main startpoints for that world. The same goes for "/sglocation set arena" except that saves an arena locaiton.
- - Permission: multisurvival.commands.sglocation
+ - Permission: survivalgames.commands.sglocation
 
 #####/sgactivate
  - Description: Activates the game for the given world.
  - Usage: /sgactivate \<worldname\>
- - Permission: multisurvival.commands.sgactivate
+ - Permission: survivalgames.commands.sgactivate
