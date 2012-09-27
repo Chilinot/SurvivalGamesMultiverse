@@ -24,8 +24,6 @@ import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
 
 public class PlayerManager {
 	
-	//TODO teleport players to arena after configurable time
-	
 	private ConsoleLogger logger;
 	
 	private HashMap<String, HashSet<String>> playerlists;

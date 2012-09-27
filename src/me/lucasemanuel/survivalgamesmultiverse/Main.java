@@ -137,9 +137,13 @@ public class Main extends JavaPlugin {
 				// Do we have a winner?
 				String winnername = playermanager.getWinner(world);
 				Player winner = null;
+				
 				if(winnername != null && (winner = Bukkit.getPlayerExact(winnername)) != null) {
+					
 					worldmanager.broadcast(world, ChatColor.LIGHT_PURPLE + winner.getName() + ChatColor.WHITE + " " + languagemanager.getString("wonTheGame"));
+					
 					if(!winner.hasPermission("survivalgames.ignore.stats")) statsmanager.addWinPoints(winner.getName(), 1);
+					
 					worldmanager.sendPlayerToSpawn(winner);
 					playermanager.removePlayer(winner.getWorld().getName(), winner.getName());
 				}
