@@ -58,6 +58,31 @@ For example, the community im the head developer for is using this plugin in swe
 In progress...
 
 ##Commands:
+#####/sginfo
+ - Description: Displays version and worldname.
+ - Usage: /sginfo
+ - Permission: multisurvival.commands.sginfo
+ 
+#####/sgdebug
+ - Description: Manages debug settings.
+ - Usage:  /sgdebug \<set/listen\> \<true/false\>
+ - Permission: multisurvival.commands.sgdebug
+ 
+#####/sgplayers
+ - Description: Lists all remaining players for the world the sender is in.
+ - Usage: /sgplayers
+ - Permission: multisurvival.commands.sgplayers
+ 
+#####/sgleave
+ - Description: Allows a player to leave the game.
+ - Usage: /sgleave
+ - Permission: multisurvival.commands.sgleave
+ 
+#####/sgreset
+ - Description: Activates the game for the given world.
+ - Usage: /sgactivate \<worldname\>
+ - Permission: multisurvival.commands.sgactivate
+
 #####/sglocation
  - Description: Manages locations for the worlds.
  - Usage: /sglocation \<set/save/clear/\> \<main/arena\>

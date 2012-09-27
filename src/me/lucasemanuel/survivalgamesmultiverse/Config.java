@@ -44,11 +44,6 @@ public class Config {
 			save = true;
 		}
 		
-		if(!config.contains("playersToWaitForUntilCountdown")) {
-			config.set("playersToWaitForUntilCountdown", 20);
-			save = true;
-		}
-		
 		if(!config.contains("spawnProtectionName")) {
 			config.set("spawnProtectionName", "sgspawn");
 			save = true;
