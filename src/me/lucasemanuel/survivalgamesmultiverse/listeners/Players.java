@@ -90,7 +90,7 @@ public class Players implements Listener {
 						
 						if(plugin.getLocationManager().tpToStart(player)) {
 							
-							plugin.getPlayerManager().addPlayer(block.getWorld().getName(), player.getName());
+							plugin.getPlayerManager().addPlayer(block.getWorld().getName(), player);
 							player.sendMessage(ChatColor.GOLD + plugin.getLanguageManager().getString("youJoinedTheGame"));
 							plugin.getWorldManager().broadcast(block.getWorld(), ChatColor.LIGHT_PURPLE + player.getName() + ChatColor.WHITE + " " + plugin.getLanguageManager().getString("playerJoinedGame"));
 							

@@ -34,6 +34,10 @@ public class Config {
 			config.set("debug", false);
 		}
 		
+		if(!config.contains("halloween")) {
+			config.set("halloween", false);
+		}
+		
 		if(!config.contains("worldnames")) {
 			config.set("worldnames.survivalgames1", "survivalgames1_template");
 			save = true;
