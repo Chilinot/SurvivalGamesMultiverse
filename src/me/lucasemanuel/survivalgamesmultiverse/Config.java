@@ -35,8 +35,12 @@ public class Config {
 			save = true;
 		}
 		
-		if(!config.contains("halloween")) {
+		if(!config.contains("halloween.enabled")) {
 			config.set("halloween.enabled", false);
+			save = true;
+		}
+		
+		if(!config.contains("halloween.forcepumpkin")) {
 			config.set("halloween.forcepumpkin", false);
 			save = true;
 		}
