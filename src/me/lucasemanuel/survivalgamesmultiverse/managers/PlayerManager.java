@@ -62,6 +62,7 @@ public class PlayerManager {
 			logger.warning("Error! Tried to add player to non existing worldname! - " + worldname);
 	}
 
+	@SuppressWarnings("deprecation")
 	private void resetPlayer(Player player) {
 		
 		logger.debug("Resetting player: " + player.getName());
@@ -80,8 +81,11 @@ public class PlayerManager {
 		player.setLevel(0);
 		player.setTotalExperience(0);
 		
-		if(plugin.getConfig().getBoolean("halloween"))
+		if(plugin.getConfig().getBoolean("halloween.enabled"))
 			player.getInventory().setHelmet(new ItemStack(Material.PUMPKIN));
+		
+		// Doesn't work without this!
+		player.updateInventory();
 	}
 
 	public boolean isInGame(String playername) {

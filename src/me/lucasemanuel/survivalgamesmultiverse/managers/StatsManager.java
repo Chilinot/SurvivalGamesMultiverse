@@ -77,7 +77,7 @@ public class StatsManager {
 			}
 		}
 		else
-			logger.severe("No connection to database! This plugin will probably not work!");
+			logger.severe("No connection to database! Stats will not be saved!");
 	}
 	
 	public void addWinPoints(final String playername, final int points) {

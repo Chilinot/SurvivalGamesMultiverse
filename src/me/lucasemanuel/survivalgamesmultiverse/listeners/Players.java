@@ -33,6 +33,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -50,6 +52,23 @@ public class Players implements Listener {
 		logger = new ConsoleLogger(instance, "PlayerListener");
 		
 		logger.debug("Initiated");
+	}
+	
+	@EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled=true)
+	public void onInventoryClick(InventoryClickEvent event) {
+		
+		Player player = (Player) event.getWhoClicked();
+		
+		if(plugin.getWorldManager().isWorld(player.getWorld()) &&
+				plugin.getPlayerManager().isInGame(player.getName()) && 
+				plugin.getConfig().getBoolean("halloween.forcepumpkin") &&
+				!player.hasPermission("survivalgames.ignore.forcepumpkin") &&
+				event.getSlotType().equals(SlotType.ARMOR) &&
+				event.getCurrentItem().getType().equals(Material.PUMPKIN)) {
+			
+			player.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("forcedPumpkin"));
+			event.setCancelled(true);
+		}
 	}
 	
 	@SuppressWarnings("unchecked")

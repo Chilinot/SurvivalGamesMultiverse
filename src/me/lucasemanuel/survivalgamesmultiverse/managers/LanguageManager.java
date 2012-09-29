@@ -154,6 +154,11 @@ public class LanguageManager {
 			save = true;
 		}
 		
+		if(!config.contains("forcedPumpkin")) {
+			config.set("forcedPumpkin", "You have to wear that pumpkin!");
+			save = true;
+		}
+		
 		if(save) {
 			try {
 	            config.save(this.plugin.getDataFolder() + File.separator + "language.yml");

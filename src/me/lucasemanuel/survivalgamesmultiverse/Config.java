@@ -32,10 +32,13 @@ public class Config {
 		
 		if(!config.contains("debug")) {
 			config.set("debug", false);
+			save = true;
 		}
 		
 		if(!config.contains("halloween")) {
-			config.set("halloween", false);
+			config.set("halloween.enabled", false);
+			config.set("halloween.forcepumpkin", false);
+			save = true;
 		}
 		
 		if(!config.contains("worldnames")) {

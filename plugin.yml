@@ -43,3 +43,6 @@ permissions:
   survivalgames.ignore.stats:
     description: Players with this perm will not recieve points in SG.
     default: false
+  survivalgames.ignore.forcepumpkin:
+    description: Players with this perm can remove their pumpkin helmet even if forcepumpkin is enabled in the config.
+    default: false
