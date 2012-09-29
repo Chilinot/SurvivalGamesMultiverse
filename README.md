@@ -57,6 +57,9 @@ For example, the community im the head developer for is using this plugin in swe
 ##Signs:
 In progress...
 
+##Dependencies:
+In progress...
+
 ##Commands:
 #####/sginfo
  - Description: Displays version and worldname.
@@ -93,3 +96,6 @@ In progress...
  - Description: Activates the game for the given world.
  - Usage: /sgactivate \<worldname\>
  - Permission: survivalgames.commands.sgactivate
+
+##Permissions:
+In progress...
