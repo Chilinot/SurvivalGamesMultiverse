@@ -59,12 +59,12 @@ public class Players implements Listener {
 		
 		Player player = (Player) event.getWhoClicked();
 		
-		if(plugin.getWorldManager().isWorld(player.getWorld()) &&
-				plugin.getPlayerManager().isInGame(player.getName()) && 
-				plugin.getConfig().getBoolean("halloween.forcepumpkin") &&
-				!player.hasPermission("survivalgames.ignore.forcepumpkin") &&
-				event.getSlotType().equals(SlotType.ARMOR) &&
-				event.getCurrentItem().getType().equals(Material.PUMPKIN)) {
+		if(plugin.getWorldManager().isWorld(player.getWorld())
+				&& plugin.getPlayerManager().isInGame(player.getName())
+				&& plugin.getConfig().getBoolean("halloween.forcepumpkin")
+				&& !player.hasPermission("survivalgames.ignore.forcepumpkin")
+				&& event.getSlotType().equals(SlotType.ARMOR)
+				&& event.getCurrentItem().getType().equals(Material.PUMPKIN)) {
 			
 			player.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("forcedPumpkin"));
 			event.setCancelled(true);
@@ -80,10 +80,10 @@ public class Players implements Listener {
 		Player player  = event.getPlayer();
 		String command = event.getMessage();
 		
-		if(plugin.getPlayerManager().isInGame(player.getName()) && 
-				plugin.getWorldManager().isWorld(player.getWorld()) &&
-				!allowedcommands.contains(command) && 
-				!player.hasPermission("survivalgames.ignore.commandfilter")) {
+		if(plugin.getPlayerManager().isInGame(player.getName())
+				&& plugin.getWorldManager().isWorld(player.getWorld())
+				&& !allowedcommands.contains(command)
+				&& !player.hasPermission("survivalgames.ignore.commandfilter")) {
 			
 			event.setCancelled(true);
 			event.getPlayer().sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("blockedCommand"));
@@ -241,9 +241,9 @@ public class Players implements Listener {
 			
 			Player player = (Player) event.getEntity();
 			
-			if(plugin.getWorldManager().isWorld(player.getWorld()) && 
-					plugin.getPlayerManager().isInGame(player.getName()) && 
-					plugin.getStatusManager().getStatus(player.getWorld().getName()) == false) {
+			if(plugin.getWorldManager().isWorld(player.getWorld())
+					&& plugin.getPlayerManager().isInGame(player.getName())
+					&& plugin.getStatusManager().getStatus(player.getWorld().getName()) == false) {
 				
 				event.setCancelled(true);
 			}
