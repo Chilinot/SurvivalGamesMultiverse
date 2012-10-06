@@ -19,6 +19,7 @@ import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import me.lucasemanuel.survivalgamesmultiverse.Main;
@@ -26,7 +27,7 @@ import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
 
 public class StatusManager {
 	
-	private Main plugin;
+	private final Main plugin;
 	private ConsoleLogger logger;
 	
 	// Key = worldname, Value = gamestatus / true = started
@@ -231,7 +232,26 @@ public class StatusManager {
 			}
 			
 			tasks.put(info.getWorldname(), -1);
+			
+			startEndGameCountdown(info.getWorldname());
 		}
+	}
+
+	private void startEndGameCountdown(final String worldname) {
+		
+		logger.debug("Starting endgame countdown!");
+		
+		int timeout = plugin.getConfig().getInt("timeoutAfterArena");
+		
+		// Broadcast time left
+		plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), timeout + " " + plugin.getLanguageManager().getString("secondsTillTheGameEnds"));
+		
+		// Schedule world reset
+		tasks.put(worldname, plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+			public void run() {
+				plugin.resetWorld(Bukkit.getWorld(worldname));
+			}
+		}, (long) (timeout * 20)));
 	}
 
 	public void reset(String worldname) {

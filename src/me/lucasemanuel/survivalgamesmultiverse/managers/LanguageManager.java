@@ -149,6 +149,11 @@ public class LanguageManager {
 			save = true;
 		}
 		
+		if(!config.contains("secondsTillTheGameEnds")) {
+			config.set("secondsTillTheGameEnds", "seconds until the game is cancelled!");
+			save = true;
+		}
+		
 		if(!config.contains("killedSendingArena")) {
 			config.set("killedSendingArena", "No locations left in the arena! You where killed.");
 			save = true;

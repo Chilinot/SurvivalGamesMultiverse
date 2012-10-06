@@ -155,10 +155,10 @@ public class Main extends JavaPlugin {
 	}
 	
 	public void resetWorld(World world) {
+		playermanager.killAndClear(world.getName());
 		worldmanager.resetWorld(world);
 		locationmanager.resetLocationStatuses(world);
-		playermanager.killAndClear(world.getName());
-		statusmanager.reset(world.getName());
 		chestmanager.clearLogs(world.getName());
+		statusmanager.reset(world.getName());
 	}
 }
