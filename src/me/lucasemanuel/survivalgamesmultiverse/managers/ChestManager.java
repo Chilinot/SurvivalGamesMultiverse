@@ -66,73 +66,114 @@ public class ChestManager {
 		
 		if(!this.randomizedchests.contains(chest.getLocation())) {
 			
-			logger.debug("Randomizing inventory of a chest!");
+			int spawnchance = itemConfig.getInt("blankChestChance-OneOutOf");
 			
-			Inventory inventory = chest.getInventory();
-			inventory.clear();
+			if(spawnchance > generator.nextInt(spawnchance + 1)) {
 			
-			int items = this.generator.nextInt(itemConfig.getInt("maxAmountOfItems")) + 1;
-			
-			for(int i = 0 ; i < items ; i++) {
+				logger.debug("Randomizing inventory of a chest!");
 				
-				Enchantment enchantment = null;
-				String itemname = this.itemlist.next();
+				Inventory inventory = chest.getInventory();
+				inventory.clear();
 				
-				ItemStack item = new ItemStack(Material.getMaterial(itemname.toUpperCase()), 1);
+				logger.debug("Retrieving maxAmountOfItems");
+				int items = this.generator.nextInt(itemConfig.getInt("maxAmountOfItems")) + 1;
 				
-				if(this.enchable.containsKey(itemname)) {
+				logger.debug("Starting firstloop");
+				for(int i = 0 ; i < items ; i++) {
 					
-					String itemtype = this.enchable.get(itemname);
+					Enchantment enchantment = null;
+					String itemname = this.itemlist.next();
 					
-					// Get the specified enchantchance for the item
-					double enchantchance = 0.0d;
+					logger.debug("Creating itemstack");
+					ItemStack item = new ItemStack(Material.getMaterial(itemname.toUpperCase()), 1);
 					
-					if(itemtype.equals("swords") || itemtype.equals("bow")) {
-						enchantchance = this.itemConfig.getDouble("weapons." + itemname + ".enchantmentchance");
-					} else if (itemtype.equals("armors")) {
-						enchantchance = this.itemConfig.getDouble("armors." + itemname + ".enchantmentchance");
-					}
-					
-					// Generate a random double and retrieve an enchantment if the generated value is less or equal to the enchantchance
-					if(this.generator.nextDouble() <= enchantchance) {
+					logger.debug("Checking if enchable");
+					if(this.enchable.containsKey(itemname)) {
 						
-						// Keep getting a new enchantment from the list until we find one that can enchant the specified item
-						while(true) {
-							enchantment = Enchantment.getByName(this.enchantmentlists.get(itemtype).next().toUpperCase());
-							if(enchantment.canEnchantItem(item))
-								break;
+						logger.debug("Enchable");
+						
+						logger.debug("Getting itemtype");
+						String itemtype = this.enchable.get(itemname);
+						
+						// Get the specified enchantchance for the item
+						double enchantchance = 0.0d;
+						
+						if(itemtype.equals("swords") || itemtype.equals("bow")) {
+							enchantchance = this.itemConfig.getDouble("weapons." + itemname + ".enchantmentchance");
+						} else if (itemtype.equals("armors")) {
+							enchantchance = this.itemConfig.getDouble("armors." + itemname + ".enchantmentchance");
+						}
+						
+						// Generate a random double and retrieve an enchantment if the generated value is less or equal to the enchantchance
+						if(this.generator.nextDouble() <= enchantchance) {
+							
+							// Keep getting a new enchantment from the list until we find one that can enchant the specified item
+							int tries = 0;
+							
+							while(true) {
+								logger.debug("Entering possible endless loop #1");
+								
+								if(tries < 5) {
+									enchantment = Enchantment.getByName(this.enchantmentlists.get(itemtype).next().toUpperCase());
+									
+									if(enchantment.canEnchantItem(item))
+										break;
+									
+									tries++;
+									enchantment = null;
+								}
+								else {
+									logger.debug("Too many tries!");
+									break;
+								}
+							}
 						}
 					}
-				}
-				
-				// If we have an enchantment, enchant the item
-				if(enchantment != null) {
 					
-					// Generate a random level for the enchantment based on the items maxlevel + 1
-					int level = this.generator.nextInt(enchantment.getMaxLevel() + 1 );
+					// If we have an enchantment, enchant the item
+					if(enchantment != null) {
+						
+						logger.debug("We have an enchantment");
+						
+						// Generate a random level for the enchantment based on the items maxlevel + 1
+						int level = this.generator.nextInt(enchantment.getMaxLevel() + 1 );
+						
+						logger.debug("Random level = " + level);
+						// If the level is above the maxlevel, decrease the value by one
+						if(level > enchantment.getMaxLevel())
+							level--;
+						// If the level is beneath or equal to zero increase the level by one
+						else if (level <= 0)
+							level++;
+						
+						logger.debug("Level after check = " + level);
 					
-					// If the level is above the maxlevel, decrease the value by one
-					if(level > enchantment.getMaxLevel())
-						level--;
-					// If the level is beneath or equal to zero increase the level by one
-					else if (level <= 0)
-						level++;
-				
-					item.addEnchantment(enchantment, level);
+						logger.debug("Enchanting");
+						item.addEnchantment(enchantment, level);
+						logger.debug("Enchanted");
+					}
+					
+					// Place the item in a random slot of the inventory, get a new slot if the previous one where occupied
+					int place;
+					while(true) {
+						logger.debug("Looping through possible endless loop #2");
+						place = this.generator.nextInt(inventory.getSize());
+						if(inventory.getItem(place) == null)
+							break;
+					}
+					
+					logger.debug("Setting item to place " + place);
+					inventory.setItem(place, item);
 				}
 				
-				// Place the item in a random slot of the inventory, get a new slot if the previous one where occupied
-				int place;
-				while(true) {
-					place = this.generator.nextInt(inventory.getSize());
-					if(inventory.getItem(place) == null)
-						break;
-				}
-				
-				inventory.setItem(place, item);
+				logger.debug("Updating chest");
+				chest.update();
+			}
+			else {
+				logger.debug("Spawnchance less or equal to random number, skipping randomization...");
 			}
 			
-			chest.update();
+			logger.debug("Logging chest");
 			this.randomizedchests.add(chest.getLocation());
 		}
 	}
@@ -234,6 +275,13 @@ public class ChestManager {
 			save = true;
 		}
 		
+		if(!itemConfig.contains("blankChestChance-OneOutOf")) {
+			
+			itemConfig.set("blankChestChance-OneOutOf", 5);
+			
+			save = true;
+		}
+		
 		if(!itemConfig.contains("weapons")) {
 			
 			itemConfig.set("weapons.wood_sword.enchantmentchance", 0.3);
@@ -309,6 +357,10 @@ public class ChestManager {
 		}
 	}
 }
+
+/**
+ * Below this line is not my work
+ */
 
 class RandomCollection<E> {
     private final NavigableMap<Double, E> map = new TreeMap<Double, E>();
