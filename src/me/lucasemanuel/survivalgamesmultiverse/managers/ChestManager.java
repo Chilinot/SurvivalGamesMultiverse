@@ -98,11 +98,14 @@ public class ChestManager {
 						// Get the specified enchantchance for the item
 						double enchantchance = 0.0d;
 						
+						logger.debug("Retrieving enchantmentchance");
 						if(itemtype.equals("swords") || itemtype.equals("bow")) {
 							enchantchance = this.itemConfig.getDouble("weapons." + itemname + ".enchantmentchance");
 						} else if (itemtype.equals("armors")) {
 							enchantchance = this.itemConfig.getDouble("armors." + itemname + ".enchantmentchance");
 						}
+						
+						logger.debug("Enchantmentchance = " + enchantchance);
 						
 						// Generate a random double and retrieve an enchantment if the generated value is less or equal to the enchantchance
 						if(this.generator.nextDouble() <= enchantchance) {
