@@ -107,25 +107,14 @@ public class ChestManager {
 						// Generate a random double and retrieve an enchantment if the generated value is less or equal to the enchantchance
 						if(this.generator.nextDouble() <= enchantchance) {
 							
-							// Keep getting a new enchantment from the list until we find one that can enchant the specified item
-							int tries = 0;
-							
-							while(true) {
-								logger.debug("Entering possible endless loop #1");
+							// Try to find a random enchantment with a maximum of 5 tries
+							for(int j = 0 ; j < 5 ; j++) {
+								enchantment = Enchantment.getByName(this.enchantmentlists.get(itemtype).next().toUpperCase());
 								
-								if(tries < 5) {
-									enchantment = Enchantment.getByName(this.enchantmentlists.get(itemtype).next().toUpperCase());
-									
-									if(enchantment.canEnchantItem(item))
-										break;
-									
-									tries++;
-									enchantment = null;
-								}
-								else {
-									logger.debug("Too many tries!");
+								if(enchantment.canEnchantItem(item))
 									break;
-								}
+								
+								enchantment = null;
 							}
 						}
 					}
@@ -154,10 +143,12 @@ public class ChestManager {
 					}
 					
 					// Place the item in a random slot of the inventory, get a new slot if the previous one where occupied
-					int place;
-					while(true) {
-						logger.debug("Looping through possible endless loop #2");
+					int place = 0;
+					
+					for(int j = 0 ; j < inventory.getSize() ; j++) {
+						
 						place = this.generator.nextInt(inventory.getSize());
+						
 						if(inventory.getItem(place) == null)
 							break;
 					}
