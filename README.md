@@ -82,9 +82,9 @@ In progress...
  - Permission: survivalgames.commands.sgleave
  
 #####/sgreset
- - Description: Activates the game for the given world.
+ - Description: Resets the game for the given world.
  - Usage: /sgactivate \<worldname\>
- - Permission: survivalgames.commands.sgactivate
+ - Permission: survivalgames.commands.sgreset
 
 #####/sglocation
  - Description: Manages locations for the worlds.
