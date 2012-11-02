@@ -83,7 +83,7 @@ In progress...
  
 #####/sgreset
  - Description: Resets the game for the given world.
- - Usage: /sgactivate \<worldname\>
+ - Usage: /sgreset \<worldname\>
  - Permission: survivalgames.commands.sgreset
 
 #####/sglocation
