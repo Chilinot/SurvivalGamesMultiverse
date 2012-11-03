@@ -249,26 +249,26 @@ public class Commands implements CommandExecutor {
 				
 			case "save":
 				if(secondarg.equals("main")) {
-					player.sendMessage(ChatColor.GREEN + "Saving main locationlist for this world!");
-					plugin.getLocationManager().saveLocationList("main", worldname);
+					if(plugin.getLocationManager().saveLocationList("main", worldname)) player.sendMessage(ChatColor.GREEN + "Saving main locationlist for this world!");
+					else player.sendMessage(ChatColor.RED + "This world is not registered!");
 					return true;
 				}
 				else if(secondarg.equals("arena")) {
-					player.sendMessage(ChatColor.GREEN + "Saving arena locationlist for this world!");
-					plugin.getLocationManager().saveLocationList("arena", worldname);
+					if(plugin.getLocationManager().saveLocationList("arena", worldname)) player.sendMessage(ChatColor.GREEN + "Saving arena locationlist for this world!");
+					else player.sendMessage(ChatColor.RED + "This world is not registered!");
 					return true;
 				}
 				break;
 				
 			case "clear":
 				if(secondarg.equals("main")) {
-					player.sendMessage(ChatColor.GREEN + "Clearing main locations for this world! Remember to save!");
-					plugin.getLocationManager().clearLocationList("main", worldname);
+					if(plugin.getLocationManager().clearLocationList("main", worldname)) player.sendMessage(ChatColor.GREEN + "Clearing main locations for this world! Remember to save!");
+					else player.sendMessage(ChatColor.RED + "This world is not registered!");
 					return true;
 				}
 				else if(secondarg.equals("arena")) {
-					player.sendMessage(ChatColor.GREEN + "Clearing arena locations for this world! Remember to save!");
-					plugin.getLocationManager().clearLocationList("arena", worldname);
+					if(plugin.getLocationManager().clearLocationList("arena", worldname)) player.sendMessage(ChatColor.GREEN + "Clearing arena locations for this world! Remember to save!");
+					else player.sendMessage(ChatColor.RED + "This world is not registered!");
 					return true;
 				}
 				break;

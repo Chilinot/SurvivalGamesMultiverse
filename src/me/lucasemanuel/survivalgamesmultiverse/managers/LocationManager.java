@@ -168,49 +168,56 @@ public class LocationManager {
 		}
 	}
 
-	public void saveLocationList(final String listtype, String worldname) {
+	public boolean saveLocationList(final String listtype, String worldname) {
 		
-		logger.debug("Saving locationtype: " + listtype + " for world: " + worldname);
-		
-		final String path = plugin.getDataFolder().getAbsolutePath() + "/locations/" + worldname;
-		
-		final HashSet<SerializedLocation> tempmap = new HashSet<SerializedLocation>();
-		
-		HashMap<Location, Boolean> locationlist = locations.get(worldname).get(listtype);
-		
-		if(locationlist != null) {
-			for(Location location : locationlist.keySet()) {
-				tempmap.add(new SerializedLocation(location));
+		if(locations.containsKey(worldname)) {
+			
+			logger.debug("Saving locationtype: " + listtype + " for world: " + worldname);
+			
+			final String path = plugin.getDataFolder().getAbsolutePath() + "/locations/" + worldname;
+			
+			final HashSet<SerializedLocation> tempmap = new HashSet<SerializedLocation>();
+			
+			HashMap<Location, Boolean> locationlist = locations.get(worldname).get(listtype);
+			
+			if(locationlist != null) {
+				for(Location location : locationlist.keySet()) {
+					tempmap.add(new SerializedLocation(location));
+				}
 			}
+			
+			/*
+			 *  This could potentially lead to several threads modifying the same save-file, which isn't a good thing!
+			 *  But hopefully no one will use this command that many times at the same time that the file would be in danger.
+			 */
+			
+			Thread thread = new Thread() {
+				public void run() {
+					
+					String fullpath = path + "/" + listtype + ".dat";
+					
+					File test = new File(path);
+					
+					if(!test.exists()) {
+						test.mkdirs();
+					}
+					
+					try {
+						logger.debug("Saving locationtype: " + listtype + " to: " + fullpath);
+						SLAPI.save(tempmap, fullpath);
+					}
+					catch (Exception e) {
+						logger.severe("Error while saving locationlist! Message: " + e.getMessage());
+					}
+				}
+			};
+			
+			thread.start();
+			
+			return true;
 		}
 		
-		/*
-		 *  This could potentially lead to several threads modifying the same save-file, which isn't a good thing!
-		 *  But hopefully no one will use this command that many times at the same time that the file would be in danger.
-		 */
-		
-		Thread thread = new Thread() {
-			public void run() {
-				
-				String fullpath = path + "/" + listtype + ".dat";
-				
-				File test = new File(path);
-				
-				if(!test.exists()) {
-					test.mkdirs();
-				}
-				
-				try {
-					logger.debug("Saving locationtype: " + listtype + " to: " + fullpath);
-					SLAPI.save(tempmap, fullpath);
-				}
-				catch (Exception e) {
-					logger.severe("Error while saving locationlist! Message: " + e.getMessage());
-				}
-			}
-		};
-		
-		thread.start();
+		return false;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -253,11 +260,18 @@ public class LocationManager {
 			logger.warning("No saved locations for world: " + worldname);
 	}
 
-	public void clearLocationList(String type, String worldname) {
+	public boolean clearLocationList(String type, String worldname) {
 		
-		HashMap<Location, Boolean> locationlist = locations.get(worldname).get(type);
+		if(locations.containsKey(worldname)) {
+			
+			HashMap<Location, Boolean> locationlist = locations.get(worldname).get(type);
+			
+			if(locationlist != null)
+				locationlist.clear();
+			
+			return true;
+		}
 		
-		if(locationlist != null)
-			locationlist.clear();
+		return false;
 	}
 }
