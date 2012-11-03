@@ -49,6 +49,12 @@ public class WorldManager {
 	// Key = Worldname, Value = Main/Arena lists, ValueOfValue = key=location, boolean=true means the location is available
 	private HashMap<String, HashMap<String, HashMap<Location, Boolean>>> locations;
 	
+	// Entities that shouldn't be removed on world reset
+	private final EntityType[] nonremovable = new EntityType[] { 
+			EntityType.PLAYER, 
+			EntityType.PAINTING 
+	};
+	
 	public WorldManager(Main instance) {
 		plugin = instance;
 		logger = new ConsoleLogger(instance, "WorldManager");
@@ -92,7 +98,7 @@ public class WorldManager {
 		}
 	}
 
-	public void resetWorld(World world) {
+	public void resetWorld(final World world) {
 		
 		logger.debug("Resetting world: " + world.getName());
 		
@@ -134,14 +140,10 @@ public class WorldManager {
 			
 			// Schedule removal of all world entities to make sure they are all removed
 			
-			final String worldname = world.getName();
-			
 			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 				public void run() {
 					
-					EntityType[] nonremovable = new EntityType[] { EntityType.PLAYER, EntityType.PAINTING };
-					
-					for(Entity entity : Bukkit.getWorld(worldname).getEntities()) {
+					for(Entity entity : world.getEntities()) {
 						
 						boolean remove = true;
 						
