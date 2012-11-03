@@ -236,13 +236,13 @@ public class Commands implements CommandExecutor {
 			
 			case "set":
 				if(secondarg.equals("main")) {
-					player.sendMessage(ChatColor.GREEN + "Adding main location for this world!");
-					plugin.getLocationManager().addLocation("main", location);
+					if(plugin.getLocationManager().addLocation("main", location)) player.sendMessage(ChatColor.GREEN + "Adding main location for this world!");
+					else player.sendMessage(ChatColor.RED + "This world is not registered!");
 					return true;
 				}
 				else if(secondarg.equals("arena")) {
-					player.sendMessage(ChatColor.GREEN + "Adding arena location for this world!");
-					plugin.getLocationManager().addLocation("arena", location);
+					if(plugin.getLocationManager().addLocation("arena", location)) player.sendMessage(ChatColor.GREEN + "Adding arena location for this world!");
+					else player.sendMessage(ChatColor.RED + "This world is not registered!");
 					return true;
 				}
 				break;

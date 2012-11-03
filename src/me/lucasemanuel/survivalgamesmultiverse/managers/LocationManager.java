@@ -146,18 +146,26 @@ public class LocationManager {
 		return false;
 	}
 	
-	public void addLocation(String type, Location location) {
+	public boolean addLocation(String type, Location location) {
 		
-		logger.debug("Adding locationtype: " + type + ", to world: " + location.getWorld().getName());
-		
-		HashMap<Location, Boolean> map = locations.get(location.getWorld().getName()).get(type);
-		
-		if(map == null) {
-			map = new HashMap<Location, Boolean>();
-			locations.get(location.getWorld().getName()).put(type, map);
+		if(locations.containsKey(location.getWorld().getName())) {
+			
+			logger.debug("Adding locationtype: " + type + ", to world: " + location.getWorld().getName());
+			
+			HashMap<Location, Boolean> map = locations.get(location.getWorld().getName()).get(type);
+			
+			if(map == null) {
+				map = new HashMap<Location, Boolean>();
+				locations.get(location.getWorld().getName()).put(type, map);
+			}
+			
+			map.put(location, true);
+			
+			return true;
 		}
-		
-		map.put(location, true);
+		else {
+			return false;
+		}
 	}
 
 	public void saveLocationList(final String listtype, String worldname) {
