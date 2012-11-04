@@ -31,6 +31,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -93,10 +94,11 @@ public class Players implements Listener {
 	@EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled=true)
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		
-		Block block = event.getClickedBlock();
+		Block block   = event.getClickedBlock();
 		Player player = event.getPlayer();
 		
-		if(plugin.getWorldManager().isWorld(block.getWorld())) {
+		if(event.getAction().equals(Action.RIGHT_CLICK_BLOCK) 
+				&& plugin.getWorldManager().isWorld(block.getWorld())) {
 		
 			if(block.getType().equals(Material.SIGN_POST) || block.getType().equals(Material.WALL_SIGN)) {
 				
