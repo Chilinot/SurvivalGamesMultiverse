@@ -80,6 +80,8 @@ public class WorldManager {
 	public void broadcast(World world, String msg) {
 		if(worldlist.containsKey(world)) {
 			
+			//TODO will this lag the server with ~100 players?
+			
 			for(Player player : Bukkit.getOnlinePlayers()) {
 				if(player.getWorld().equals(world)) {
 					player.sendMessage(ChatColor.GREEN + "[SurvivalGames] - " + ChatColor.WHITE + msg);
