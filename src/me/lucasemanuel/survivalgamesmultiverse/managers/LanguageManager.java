@@ -164,6 +164,11 @@ public class LanguageManager {
 			save = true;
 		}
 		
+		if(!config.contains("gameHasNotStartedYet")) {
+			config.set("gameHasNotStartedYet", "The game hasn't started yet!");
+			save = true;
+		}
+		
 		if(save) {
 			try {
 	            config.save(this.plugin.getDataFolder() + File.separator + "language.yml");

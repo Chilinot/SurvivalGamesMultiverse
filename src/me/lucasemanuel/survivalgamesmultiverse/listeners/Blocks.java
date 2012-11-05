@@ -15,6 +15,7 @@
 
 package me.lucasemanuel.survivalgamesmultiverse.listeners;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
@@ -47,12 +48,18 @@ public class Blocks implements Listener {
 		
 		Block block = event.getBlock();
 		
-		if(plugin.getWorldManager().isWorld(block.getWorld())) {
-			
-			plugin.getWorldManager().logBlock(block.getLocation());
-			
-			if(block.getType().equals(Material.CHEST))
-				plugin.getChestManager().addChestToLog(block.getLocation());
+		if(plugin.getStatusManager().getStatus(block.getWorld().getName())) {
+			if(plugin.getWorldManager().isWorld(block.getWorld())) {
+				
+				plugin.getWorldManager().logBlock(block.getLocation());
+				
+				if(block.getType().equals(Material.CHEST))
+					plugin.getChestManager().addChestToLog(block.getLocation());
+			}
+		}
+		else {
+			event.getPlayer().sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("gameHasNotStartedYet"));
+			event.setCancelled(true);
 		}
 	}
 	
@@ -61,8 +68,14 @@ public class Blocks implements Listener {
 		
 		Block block = event.getBlock();
 		
-		if(plugin.getWorldManager().isWorld(block.getWorld())) {
-			plugin.getWorldManager().logBlock(block.getLocation());
+		if(plugin.getStatusManager().getStatus(block.getWorld().getName())) {
+			if(plugin.getWorldManager().isWorld(block.getWorld())) {
+				plugin.getWorldManager().logBlock(block.getLocation());
+			}
+		}
+		else {
+			event.getPlayer().sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("gameHasNotStartedYet"));
+			event.setCancelled(true);
 		}
 	}
 	
