@@ -18,7 +18,6 @@ package me.lucasemanuel.survivalgamesmultiverse.managers;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -80,12 +79,8 @@ public class WorldManager {
 	public void broadcast(World world, String msg) {
 		if(worldlist.containsKey(world)) {
 			
-			//TODO will this lag the server with ~100 players?
-			
-			for(Player player : Bukkit.getOnlinePlayers()) {
-				if(player.getWorld().equals(world)) {
-					player.sendMessage(ChatColor.GREEN + "[SurvivalGames] - " + ChatColor.WHITE + msg);
-				}
+			for(Player player : world.getPlayers()) {
+				player.sendMessage(ChatColor.GREEN + "[SurvivalGames] - " + ChatColor.WHITE + msg);
 			}
 			
 		}
