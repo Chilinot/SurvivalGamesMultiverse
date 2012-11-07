@@ -75,30 +75,22 @@ public class ChestManager {
 				Inventory inventory = chest.getInventory();
 				inventory.clear();
 				
-				logger.debug("Retrieving maxAmountOfItems");
 				int items = this.generator.nextInt(itemConfig.getInt("maxAmountOfItems")) + 1;
 				
-				logger.debug("Starting firstloop");
 				for(int i = 0 ; i < items ; i++) {
 					
 					Enchantment enchantment = null;
 					String itemname = this.itemlist.next();
 					
-					logger.debug("Creating itemstack");
 					ItemStack item = new ItemStack(Material.getMaterial(itemname.toUpperCase()), 1);
 					
-					logger.debug("Checking if enchable");
 					if(this.enchable.containsKey(itemname)) {
 						
-						logger.debug("Enchable");
-						
-						logger.debug("Getting itemtype");
 						String itemtype = this.enchable.get(itemname);
 						
 						// Get the specified enchantchance for the item
 						double enchantchance = 0.0d;
 						
-						logger.debug("Retrieving enchantmentchance");
 						if(itemtype.equals("swords") || itemtype.equals("bow")) {
 							enchantchance = this.itemConfig.getDouble("weapons." + itemname + ".enchantmentchance");
 						} else if (itemtype.equals("armors")) {
@@ -125,12 +117,11 @@ public class ChestManager {
 					// If we have an enchantment, enchant the item
 					if(enchantment != null) {
 						
-						logger.debug("We have an enchantment");
-						
 						// Generate a random level for the enchantment based on the items maxlevel + 1
 						int level = this.generator.nextInt(enchantment.getMaxLevel() + 1 );
 						
 						logger.debug("Random level = " + level);
+						
 						// If the level is above the maxlevel, set it to max level
 						if(level > enchantment.getMaxLevel())
 							level = enchantment.getMaxLevel();
@@ -140,9 +131,7 @@ public class ChestManager {
 						
 						logger.debug("Level after check = " + level);
 					
-						logger.debug("Enchanting");
 						item.addEnchantment(enchantment, level);
-						logger.debug("Enchanted");
 					}
 					
 					// Place the item in a random slot of the inventory, get a new slot if the previous one where occupied
