@@ -70,7 +70,7 @@ public class WorldManager {
 		locations.put(world.getName(), new HashMap<String, HashMap<Location, Boolean>>());
 	}
 	
-	public boolean isWorld(World world) {
+	public boolean isRegistered(World world) {
 		if(worldlist.containsKey(world))
 			return true;
 		else
