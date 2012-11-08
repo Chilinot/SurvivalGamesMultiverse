@@ -83,6 +83,11 @@ public class Config {
 		
 		// Database
 		
+		if(!config.contains("database.enabled")) {
+			config.set("database.enabled", false);
+			save = true;
+		}
+		
 		if(!config.contains("database.auth.username")) {
 			config.set("database.auth.username", "username");
 			save = true;
