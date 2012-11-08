@@ -71,10 +71,13 @@ public class WorldManager {
 	}
 	
 	public boolean isRegistered(World world) {
-		if(worldlist.containsKey(world))
-			return true;
-		else
-			return false;
+		
+		boolean thecase = false;
+		
+		if(worldlist.containsKey(world) || worldlist.containsValue(world))
+			thecase = true;
+		
+		return thecase;
 	}
 	
 	public void broadcast(World world, String msg) {
