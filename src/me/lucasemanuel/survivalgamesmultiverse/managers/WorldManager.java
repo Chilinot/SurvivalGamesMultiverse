@@ -46,9 +46,6 @@ public class WorldManager {
 	// less locations to loop over per world, and so speed up performance.
 	private HashMap<String, HashSet<Location>> loggedblocks;
 	
-	// Key = Worldname, Value = Main/Arena lists, ValueOfValue = key=location, boolean=true means the location is available
-	private HashMap<String, HashMap<String, HashMap<Location, Boolean>>> locations;
-	
 	// Entities that shouldn't be removed on world reset
 	private final EntityType[] nonremovable = new EntityType[] { 
 			EntityType.PLAYER, 
@@ -61,13 +58,11 @@ public class WorldManager {
 		
 		worldlist    = new HashMap<World, World>();
 		loggedblocks = new HashMap<String, HashSet<Location>>();
-		locations    = new HashMap<String, HashMap<String, HashMap<Location, Boolean>>>();
 	}
 	
 	public void addWorld(World world, World template) {
 		worldlist.put(world, template);
 		loggedblocks.put(world.getName(), new HashSet<Location>());
-		locations.put(world.getName(), new HashMap<String, HashMap<Location, Boolean>>());
 	}
 	
 	public boolean isGameWorld(World world) {
