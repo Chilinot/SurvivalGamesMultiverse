@@ -227,7 +227,7 @@ public class Commands implements CommandExecutor {
 		
 		sender.sendMessage(ChatColor.GREEN + "Resetting world: " + world.getName());
 		
-		plugin.resetWorld(Bukkit.getWorld(world.getName()));
+		plugin.resetWorld(world);
 		
 		return true;
 	}
