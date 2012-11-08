@@ -5,8 +5,8 @@ depend: [WorldGuard, WorldEdit]
 
 commands:
   sginfo:
-    description: Shows what version the server is running.
-    usage: /<command>
+    description: Show info concerning the plugin.
+    usage: /<command> [worlds]
     permission: survivalgames.commands.sginfo
   sgdebug:
     description: Manages debug settings.

@@ -14,6 +14,7 @@
 package me.lucasemanuel.survivalgamesmultiverse;
 
 import java.util.HashSet;
+import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -48,9 +49,7 @@ public class Commands implements CommandExecutor {
 		switch(command) {
 			
 			case "sginfo":
-				sender.sendMessage(ChatColor.GREEN + "SurvivalGamesMultiverse v." + plugin.getDescription().getVersion() + " is up and running!");
-				if(sender instanceof Player) sender.sendMessage(ChatColor.GREEN + "You are in world: " +((Player) sender).getWorld().getName());
-				return true;
+				return sginfo(sender, args);
 				
 			case "sgdebug":
 				return sgdebug(sender, args);
@@ -70,6 +69,39 @@ public class Commands implements CommandExecutor {
 			case "sgleave":
 				return sgleave(sender, args);
 				
+		}
+		
+		return false;
+	}
+
+	private boolean sginfo(CommandSender sender, String[] args) {
+		
+		if(args.length == 0) {
+			sender.sendMessage(ChatColor.GREEN + "SurvivalGamesMultiverse v." + plugin.getDescription().getVersion() + " is up and running!");
+			
+			if(sender instanceof Player) 
+				sender.sendMessage(ChatColor.GREEN + "You are in world: " +((Player) sender).getWorld().getName());
+			
+			return true;
+		}
+		else if(args.length == 1) {
+			
+			String arg = args[0].toLowerCase();
+			
+			switch(arg) {
+				
+				case "worlds":
+					sender.sendMessage(ChatColor.LIGHT_PURPLE + " -- Registered worlds:");
+					sender.sendMessage(ChatColor.YELLOW + " -- Gamworld -- Templateworld");
+					
+					for(Entry<String, String> entry : this.plugin.getWorldManager().getRegisteredWorldNames().entrySet()) {
+						
+						sender.sendMessage(" - " + ChatColor.GREEN + entry.getKey() + ChatColor.WHITE + " -- " + ChatColor.LIGHT_PURPLE + entry.getValue());
+						
+					}
+					
+					return true;
+			}
 		}
 		
 		return false;

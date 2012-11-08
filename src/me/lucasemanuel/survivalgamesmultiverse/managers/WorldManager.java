@@ -17,6 +17,7 @@ package me.lucasemanuel.survivalgamesmultiverse.managers;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map.Entry;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -167,5 +168,16 @@ public class WorldManager {
 
 	public void sendPlayerToSpawn(Player player) {
 		player.teleport(player.getWorld().getSpawnLocation());
+	}
+
+	public HashMap<String, String> getRegisteredWorldNames() {
+		
+		HashMap<String, String> worlds = new HashMap<String, String>();
+		
+		for(Entry<World, World> entry : worldlist.entrySet()) {
+			worlds.put(entry.getKey().getName(), entry.getValue().getName());
+		}
+		
+		return worlds;
 	}
 }
