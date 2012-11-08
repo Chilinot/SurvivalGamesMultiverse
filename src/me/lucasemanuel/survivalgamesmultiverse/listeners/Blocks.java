@@ -49,7 +49,7 @@ public class Blocks implements Listener {
 		Block block = event.getBlock();
 		
 		if(plugin.getStatusManager().getStatus(block.getWorld().getName())) {
-			if(plugin.getWorldManager().isRegistered(block.getWorld())) {
+			if(plugin.getWorldManager().isGameWorld(block.getWorld())) {
 				
 				plugin.getWorldManager().logBlock(block.getLocation());
 				
@@ -69,7 +69,7 @@ public class Blocks implements Listener {
 		Block block = event.getBlock();
 		
 		if(plugin.getStatusManager().getStatus(block.getWorld().getName())) {
-			if(plugin.getWorldManager().isRegistered(block.getWorld())) {
+			if(plugin.getWorldManager().isGameWorld(block.getWorld())) {
 				plugin.getWorldManager().logBlock(block.getLocation());
 			}
 		}
@@ -82,7 +82,7 @@ public class Blocks implements Listener {
 	@EventHandler(priority=EventPriority.MONITOR, ignoreCancelled=true)
 	public void onEntityExplode(EntityExplodeEvent event) {
 		
-		if(plugin.getWorldManager().isRegistered(event.getLocation().getWorld())) {
+		if(plugin.getWorldManager().isGameWorld(event.getLocation().getWorld())) {
 			for(Block block : event.blockList()) {
 				plugin.getWorldManager().logBlock(block.getLocation());
 			}
@@ -94,7 +94,7 @@ public class Blocks implements Listener {
 		
 		Block block = event.getBlock();
 		
-		if(plugin.getWorldManager().isRegistered(block.getWorld())) {
+		if(plugin.getWorldManager().isGameWorld(block.getWorld())) {
 			plugin.getWorldManager().logBlock(block.getLocation());
 		}
 	}
@@ -104,7 +104,7 @@ public class Blocks implements Listener {
 		
 		Block block = event.getBlock();
 		
-		if(plugin.getWorldManager().isRegistered(block.getWorld())) {
+		if(plugin.getWorldManager().isGameWorld(block.getWorld())) {
 			plugin.getWorldManager().logBlock(block.getLocation());
 		}
 	}
@@ -114,7 +114,7 @@ public class Blocks implements Listener {
 
 		Block block = event.getBlock();
 		
-		if(plugin.getWorldManager().isRegistered(block.getWorld())) {
+		if(plugin.getWorldManager().isGameWorld(block.getWorld())) {
 			plugin.getWorldManager().logBlock(block.getLocation());
 		}
 	}

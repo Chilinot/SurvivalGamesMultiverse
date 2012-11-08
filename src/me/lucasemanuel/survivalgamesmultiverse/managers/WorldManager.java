@@ -70,14 +70,20 @@ public class WorldManager {
 		locations.put(world.getName(), new HashMap<String, HashMap<Location, Boolean>>());
 	}
 	
+	public boolean isGameWorld(World world) {
+		
+		if(worldlist.containsKey(world))
+			return true;
+		else
+			return false;
+	}
+	
 	public boolean isRegistered(World world) {
 		
-		boolean thecase = false;
-		
 		if(worldlist.containsKey(world) || worldlist.containsValue(world))
-			thecase = true;
-		
-		return thecase;
+			return true;
+		else
+			return false;
 	}
 	
 	public void broadcast(World world, String msg) {

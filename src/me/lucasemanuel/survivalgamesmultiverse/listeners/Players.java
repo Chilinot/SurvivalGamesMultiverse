@@ -60,7 +60,7 @@ public class Players implements Listener {
 		
 		Player player = (Player) event.getWhoClicked();
 		
-		if(plugin.getWorldManager().isRegistered(player.getWorld())
+		if(plugin.getWorldManager().isGameWorld(player.getWorld())
 				&& plugin.getPlayerManager().isInGame(player.getName())
 				&& plugin.getConfig().getBoolean("halloween.forcepumpkin")
 				&& !player.hasPermission("survivalgames.ignore.forcepumpkin")
@@ -82,7 +82,7 @@ public class Players implements Listener {
 		String command = event.getMessage();
 		
 		if(plugin.getPlayerManager().isInGame(player.getName())
-				&& plugin.getWorldManager().isRegistered(player.getWorld())
+				&& plugin.getWorldManager().isGameWorld(player.getWorld())
 				&& !allowedcommands.contains(command)
 				&& !player.hasPermission("survivalgames.ignore.commandfilter")) {
 			
@@ -98,7 +98,7 @@ public class Players implements Listener {
 		Player player = event.getPlayer();
 		
 		if(event.getAction().equals(Action.RIGHT_CLICK_BLOCK) 
-				&& plugin.getWorldManager().isRegistered(block.getWorld())) {
+				&& plugin.getWorldManager().isGameWorld(block.getWorld())) {
 		
 			if(block.getType().equals(Material.SIGN_POST) || block.getType().equals(Material.WALL_SIGN)) {
 				
@@ -136,7 +136,7 @@ public class Players implements Listener {
 	@EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled=true)
 	public void onPlayerRespawn(PlayerRespawnEvent event) {
 		
-		if(plugin.getWorldManager().isRegistered(event.getRespawnLocation().getWorld())) {
+		if(plugin.getWorldManager().isGameWorld(event.getRespawnLocation().getWorld())) {
 			event.setRespawnLocation(event.getRespawnLocation().getWorld().getSpawnLocation());
 		}
 	}
@@ -144,7 +144,7 @@ public class Players implements Listener {
 	@EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled=true)
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		
-		if(plugin.getWorldManager().isRegistered(event.getPlayer().getWorld())) {
+		if(plugin.getWorldManager().isGameWorld(event.getPlayer().getWorld())) {
 			event.getPlayer().teleport(event.getPlayer().getWorld().getSpawnLocation());
 		}
 	}
@@ -154,7 +154,7 @@ public class Players implements Listener {
 		
 		Player player = event.getPlayer();
 		
-		if(plugin.getWorldManager().isRegistered(player.getWorld()) && plugin.getPlayerManager().isInGame(player.getName())) {
+		if(plugin.getWorldManager().isGameWorld(player.getWorld()) && plugin.getPlayerManager().isInGame(player.getName())) {
 			
 			String message = ChatColor.RED + "[SGAnti-Cheat]" + ChatColor.WHITE + " :: " + ChatColor.BLUE + player.getName() + ChatColor.WHITE + " - " + plugin.getLanguageManager().getString("anticheatRemoval");
 			
@@ -171,7 +171,7 @@ public class Players implements Listener {
 		
 		Player victim = event.getEntity();
 		
-		if(plugin.getWorldManager().isRegistered(victim.getWorld())) {
+		if(plugin.getWorldManager().isGameWorld(victim.getWorld())) {
 			
 			PlayerManager playermanager = plugin.getPlayerManager();
 			
@@ -210,7 +210,7 @@ public class Players implements Listener {
 		Player player = event.getPlayer();
 		
 		// If it is a SG world and the game hasnt started and the player is in the game
-		if(plugin.getWorldManager().isRegistered(player.getWorld())) {
+		if(plugin.getWorldManager().isGameWorld(player.getWorld())) {
 			
 			if(plugin.getPlayerManager().isInGame(player.getName())) {
 				if(plugin.getStatusManager().getStatus(player.getWorld().getName()) == false) {
@@ -243,7 +243,7 @@ public class Players implements Listener {
 			
 			Player player = (Player) event.getEntity();
 			
-			if(plugin.getWorldManager().isRegistered(player.getWorld())
+			if(plugin.getWorldManager().isGameWorld(player.getWorld())
 					&& plugin.getPlayerManager().isInGame(player.getName())
 					&& plugin.getStatusManager().getStatus(player.getWorld().getName()) == false) {
 				
