@@ -17,6 +17,7 @@ package me.lucasemanuel.survivalgamesmultiverse;
 
 import me.lucasemanuel.survivalgamesmultiverse.listeners.Blocks;
 import me.lucasemanuel.survivalgamesmultiverse.listeners.Players;
+import me.lucasemanuel.survivalgamesmultiverse.listeners.Worlds;
 import me.lucasemanuel.survivalgamesmultiverse.managers.ChestManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.LanguageManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.LocationManager;
@@ -69,6 +70,7 @@ public class Main extends JavaPlugin {
 		
 		this.getServer().getPluginManager().registerEvents(new Players(this), this);
 		this.getServer().getPluginManager().registerEvents(new Blocks(this), this);
+		this.getServer().getPluginManager().registerEvents(new Worlds(this), this);
 		
 		logger.debug("Finished! Registering commands...");
 		
