@@ -22,6 +22,7 @@ import me.lucasemanuel.survivalgamesmultiverse.managers.ChestManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.LanguageManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.LocationManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.PlayerManager;
+import me.lucasemanuel.survivalgamesmultiverse.managers.SignManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.StatsManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.StatusManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.WorldManager;
@@ -48,6 +49,7 @@ public class Main extends JavaPlugin {
 	private LanguageManager languagemanager;
 	private LocationManager locationmanager;
 	private StatusManager   statusmanager;
+	private SignManager     signmanager;
 	
 	public void onEnable() {
 		
@@ -65,6 +67,7 @@ public class Main extends JavaPlugin {
 		languagemanager = new LanguageManager(this);
 		locationmanager = new LocationManager(this);
 		statusmanager   = new StatusManager(this);
+		signmanager     = new SignManager(this);
 		
 		logger.debug("Finished! Moving on to event listeners...");
 		
@@ -125,6 +128,10 @@ public class Main extends JavaPlugin {
 	
 	public StatusManager getStatusManager() {
 		return statusmanager;
+	}
+	
+	public SignManager getSignManager() {
+		return signmanager;
 	}
 	
 	public void gameover(World world) {
