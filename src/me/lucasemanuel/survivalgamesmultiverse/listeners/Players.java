@@ -126,7 +126,7 @@ public class Players implements Listener {
 						player.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("alreadyPlaying"));
 				}
 				
-				else if(((Sign) block.getState()).getLine(0).equalsIgnoreCase("[sginfo]")) {
+				else if(((Sign) block.getState()).getLine(0).equalsIgnoreCase("[sginfo]") && player.hasPermission("survivalgames.signs.sginfo")) {
 					plugin.getSignManager().registerSign(block);
 				}
 			}

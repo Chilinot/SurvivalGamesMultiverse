@@ -49,3 +49,6 @@ permissions:
   survivalgames.ignore.blockfilter:
     description: Allows a player to break/place blocks in a game world that hasnt started.
     default: op
+  survivalgames.signs.sginfo:
+    description: Allows a player to register an sginfo sign.
+    default: op
