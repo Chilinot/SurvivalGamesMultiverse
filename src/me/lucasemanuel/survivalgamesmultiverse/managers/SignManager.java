@@ -25,11 +25,13 @@ import org.bukkit.block.Sign;
 
 import me.lucasemanuel.survivalgamesmultiverse.Main;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
+import me.lucasemanuel.survivalgamesmultiverse.utils.SLAPI;
+import me.lucasemanuel.survivalgamesmultiverse.utils.SerializedLocation;
 
 public class SignManager {
 	
-	private Main plugin;
-	private ConsoleLogger logger;
+	private final Main plugin;
+	private final ConsoleLogger logger;
 	
 	private HashMap<String, Location> signs;
 	
@@ -42,18 +44,53 @@ public class SignManager {
 		logger.debug("Initiated");
 	}
 
+	@SuppressWarnings("unchecked")
 	private void loadsigns() {
-
-		//TODO loadsigns
+		
+		logger.debug("Loading signlocations...");
 		
 		signs = new HashMap<String, Location>();
 		
+		HashMap<String, SerializedLocation> tempmap = null;
+		
+		try {
+			tempmap = (HashMap<String, SerializedLocation>) SLAPI.load(plugin.getDataFolder() + "/" + "signlocations.dat");
+		}
+		catch(Exception e) {
+			logger.severe("Error while loading signlocations! Message: " + e.getMessage());
+		}
+		
+		if(tempmap != null)
+			for(Entry<String, SerializedLocation> entry : tempmap.entrySet()) {
+				signs.put(entry.getKey(), entry.getValue().deserialize());
+			}
 	}
 	
 	private void saveSigns() {
 		
-		//TODO save signs
+		logger.debug("Saving signlocations...");
 		
+		final HashMap<String, SerializedLocation> tempmap = new HashMap<String, SerializedLocation>();
+		
+		for(Entry<String, Location> entry : signs.entrySet()) {
+			tempmap.put(entry.getKey(), new SerializedLocation(entry.getValue()));
+		}
+		
+		Thread thread = new Thread() {
+			public void run() {
+				
+				try {
+					SLAPI.save(tempmap, plugin.getDataFolder() + "/" + "signlocations.dat");
+				}
+				catch(Exception e) {
+					logger.severe("Error while saving signlocations! Message: " + e.getMessage());
+				}
+				
+				logger.debug("Finished");
+			}
+		};
+		
+		thread.start();
 	}
 
 	public void updateSigns(String worldname) {
