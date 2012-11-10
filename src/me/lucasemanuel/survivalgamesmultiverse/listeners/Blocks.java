@@ -43,43 +43,47 @@ public class Blocks implements Listener {
 		logger.debug("Initiated");
 	}
 
-	@EventHandler(priority=EventPriority.MONITOR, ignoreCancelled=true)
+	@EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled=true)
 	public void onBlockPlace(BlockPlaceEvent event) {
 		
 		Block block = event.getBlock();
 		
-		if(plugin.getStatusManager().getStatus(block.getWorld().getName())) {
-			if(plugin.getWorldManager().isGameWorld(block.getWorld())) {
-				
-				plugin.getWorldManager().logBlock(block.getLocation());
-				
-				if(block.getType().equals(Material.CHEST))
-					plugin.getChestManager().addChestToLog(block.getLocation());
+		if(plugin.getWorldManager().isGameWorld(block.getWorld())) {
+			if(plugin.getStatusManager().getStatus(block.getWorld().getName()) || event.getPlayer().hasPermission("survivalgames.ignore.blockfilter")) {
+				if(plugin.getWorldManager().isGameWorld(block.getWorld())) {
+					
+					plugin.getWorldManager().logBlock(block.getLocation());
+					
+					if(block.getType().equals(Material.CHEST))
+						plugin.getChestManager().addChestToLog(block.getLocation());
+				}
 			}
-		}
-		else {
-			event.getPlayer().sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("gameHasNotStartedYet"));
-			event.setCancelled(true);
+			else {
+				event.getPlayer().sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("gameHasNotStartedYet"));
+				event.setCancelled(true);
+			}
 		}
 	}
 	
-	@EventHandler(priority=EventPriority.MONITOR, ignoreCancelled=true)
+	@EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled=true)
 	public void onBlockBreak(BlockBreakEvent event) {
 		
 		Block block = event.getBlock();
 		
-		if(plugin.getStatusManager().getStatus(block.getWorld().getName())) {
-			if(plugin.getWorldManager().isGameWorld(block.getWorld())) {
-				plugin.getWorldManager().logBlock(block.getLocation());
+		if(plugin.getWorldManager().isGameWorld(block.getWorld())) {
+			if(plugin.getStatusManager().getStatus(block.getWorld().getName()) || event.getPlayer().hasPermission("survivalgames.ignore.blockfilter")) {
+				if(plugin.getWorldManager().isGameWorld(block.getWorld())) {
+					plugin.getWorldManager().logBlock(block.getLocation());
+				}
 			}
-		}
-		else {
-			event.getPlayer().sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("gameHasNotStartedYet"));
-			event.setCancelled(true);
+			else {
+				event.getPlayer().sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("gameHasNotStartedYet"));
+				event.setCancelled(true);
+			}
 		}
 	}
 	
-	@EventHandler(priority=EventPriority.MONITOR, ignoreCancelled=true)
+	@EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled=true)
 	public void onEntityExplode(EntityExplodeEvent event) {
 		
 		if(plugin.getWorldManager().isGameWorld(event.getLocation().getWorld())) {

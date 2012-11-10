@@ -22,6 +22,7 @@ import me.lucasemanuel.survivalgamesmultiverse.managers.WorldManager;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
 import me.lucasemanuel.survivalgamesmultiverse.utils.WorldGuardHook;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -94,30 +95,29 @@ public class Players implements Listener {
 	@EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled=true)
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		
-		Block block   = event.getClickedBlock();
+		Block  block  = event.getClickedBlock();
 		Player player = event.getPlayer();
 		
-		if(event.getAction().equals(Action.RIGHT_CLICK_BLOCK) 
-				&& plugin.getWorldManager().isGameWorld(block.getWorld())) {
-		
+		if(event.getAction().equals(Action.RIGHT_CLICK_BLOCK) || event.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
 			if(block.getType().equals(Material.SIGN_POST) || block.getType().equals(Material.WALL_SIGN)) {
 				
-				Sign sign = (Sign) block.getState();
-				String firstline = sign.getLine(0).toLowerCase();
+				String worldname = plugin.getSignManager().getGameworldName(block);
 				
-				if(firstline.equals("survivalgames")) {
-					
+				if(worldname != null && plugin.getWorldManager().isGameWorld(Bukkit.getWorld(worldname))) {
 					if(plugin.getPlayerManager().isInGame(player.getName()) == false) {
 						
-						if(plugin.getLocationManager().tpToStart(player)) {
+						if(plugin.getLocationManager().tpToStart(player, worldname)) {
 							
-							plugin.getPlayerManager().addPlayer(block.getWorld().getName(), player);
+							plugin.getPlayerManager().addPlayer(worldname, player);
+							
 							player.sendMessage(ChatColor.GOLD + plugin.getLanguageManager().getString("youJoinedTheGame"));
-							plugin.getWorldManager().broadcast(block.getWorld(), ChatColor.LIGHT_PURPLE + player.getName() + ChatColor.WHITE + " " + plugin.getLanguageManager().getString("playerJoinedGame"));
+							plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), ChatColor.LIGHT_PURPLE + player.getName() + ChatColor.WHITE + " " + plugin.getLanguageManager().getString("playerJoinedGame"));
+							
+							plugin.getSignManager().updateSigns(worldname);
 							
 							// Now we have to wait for more players!
-							if(plugin.getPlayerManager().getPlayerAmount(player.getWorld().getName()) == 1)
-								plugin.getStatusManager().startPlayerCheck(player.getWorld().getName());
+							if(plugin.getPlayerManager().getPlayerAmount(worldname) == 1)
+								plugin.getStatusManager().startPlayerCheck(worldname);
 						}
 						else
 							player.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("gameIsFull"));
@@ -125,9 +125,13 @@ public class Players implements Listener {
 					else
 						player.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("alreadyPlaying"));
 				}
+				
+				else if(((Sign) block.getState()).getLine(0).equalsIgnoreCase("[sginfo]")) {
+					plugin.getSignManager().registerSign(block);
+				}
 			}
 			
-			else if(block.getType().equals(Material.CHEST)) {
+			else if(block.getType().equals(Material.CHEST) && plugin.getWorldManager().isGameWorld(block.getWorld())) {
 				plugin.getChestManager().randomizeChest((Chest)block.getState());
 			}
 		}
@@ -137,7 +141,7 @@ public class Players implements Listener {
 	public void onPlayerRespawn(PlayerRespawnEvent event) {
 		
 		if(plugin.getWorldManager().isGameWorld(event.getRespawnLocation().getWorld())) {
-			event.setRespawnLocation(event.getRespawnLocation().getWorld().getSpawnLocation());
+			event.setRespawnLocation(Bukkit.getWorld(plugin.getConfig().getString("lobbyworld")).getSpawnLocation());
 		}
 	}
 	
@@ -145,7 +149,7 @@ public class Players implements Listener {
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		
 		if(plugin.getWorldManager().isGameWorld(event.getPlayer().getWorld())) {
-			event.getPlayer().teleport(event.getPlayer().getWorld().getSpawnLocation());
+			event.getPlayer().teleport(Bukkit.getWorld(plugin.getConfig().getString("lobbyworld")).getSpawnLocation());
 		}
 	}
 	
@@ -160,6 +164,8 @@ public class Players implements Listener {
 			
 			plugin.getPlayerManager().removePlayer(player.getWorld().getName(), player.getName());
 			plugin.getWorldManager().broadcast(player.getWorld(), message);
+			
+			plugin.getSignManager().updateSigns(player.getWorld().getName());
 			
 			// Is the game over?
 			plugin.gameover(player.getWorld());
@@ -197,6 +203,8 @@ public class Players implements Listener {
 				playermanager.removePlayer(victim.getWorld().getName(), victim.getName());
 				worldmanager.sendPlayerToSpawn(victim);
 				if(!victim.hasPermission("survivalgames.ignore.stats")) statsmanager.addDeathPoints(victim.getName(), 1);
+				
+				plugin.getSignManager().updateSigns(victim.getWorld().getName());
 				
 				// Is the game over?
 				plugin.gameover(victim.getWorld());

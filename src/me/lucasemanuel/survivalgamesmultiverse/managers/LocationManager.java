@@ -94,12 +94,12 @@ public class LocationManager {
 		}
 	}
 	
-	public boolean tpToStart(Player player) {
+	public boolean tpToStart(Player player, String worldname) {
 		
-		HashMap<Location, Boolean> locationlist = locations.get(player.getWorld().getName()).get("main");
+		HashMap<Location, Boolean> locationlist = locations.get(worldname).get("main");
 		
 		if(locationlist == null) {
-			logger.severe("No saved locations for world: " + player.getWorld().getName());
+			logger.severe("No saved locations for world: " + worldname);
 			return false;
 		}
 		
@@ -115,7 +115,7 @@ public class LocationManager {
 			}
 		}
 		
-		logger.debug("No locations left for world: " + player.getWorld().getName());
+		logger.debug("No locations left for world: " + worldname);
 		return false;
 	}
 	
@@ -273,5 +273,9 @@ public class LocationManager {
 		}
 		
 		return false;
+	}
+
+	public int getLocationAmount(String worldname) {
+		return locations.get(worldname).get("main").size();
 	}
 }

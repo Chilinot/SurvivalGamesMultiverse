@@ -45,7 +45,7 @@ public class LanguageManager {
 		
 		checkDefaults(config);
 		
-		for(String key : config.getKeys(false)) {
+		for(String key : config.getKeys(true)) {
 			language.put(key, config.getString(key));
 		}
 	}
@@ -166,6 +166,21 @@ public class LanguageManager {
 		
 		if(!config.contains("gameHasNotStartedYet")) {
 			config.set("gameHasNotStartedYet", "The game hasn't started yet!");
+			save = true;
+		}
+		
+		if(!config.contains("signs.started")) {
+			config.set("signs.started", "Started");
+			save = true;
+		}
+		
+		if(!config.contains("signs.waiting")) {
+			config.set("signs.waiting", "Waiting");
+			save = true;
+		}
+		
+		if(!config.contains("signs.playersIngame")) {
+			config.set("signs.playersIngame", "Players Ingame");
 			save = true;
 		}
 		

@@ -169,5 +169,6 @@ public class Main extends JavaPlugin {
 		locationmanager.resetLocationStatuses(world);
 		chestmanager.clearLogs(world.getName());
 		statusmanager.reset(world.getName());
+		signmanager.updateSigns(world.getName());
 	}
 }

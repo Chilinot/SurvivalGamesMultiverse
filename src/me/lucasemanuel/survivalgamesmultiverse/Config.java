@@ -35,6 +35,11 @@ public class Config {
 			save = true;
 		}
 		
+		if(!config.contains("lobbyworld")) {
+			config.set("lobbyworld", "world");
+			save = true;
+		}
+		
 		if(!config.contains("halloween.enabled")) {
 			config.set("halloween.enabled", false);
 			save = true;

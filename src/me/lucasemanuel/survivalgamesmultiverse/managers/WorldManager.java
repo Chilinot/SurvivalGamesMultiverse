@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -171,7 +172,7 @@ public class WorldManager {
 	}
 
 	public void sendPlayerToSpawn(Player player) {
-		player.teleport(player.getWorld().getSpawnLocation());
+		player.teleport(Bukkit.getWorld(plugin.getConfig().getString("lobbyworld")).getSpawnLocation());
 	}
 
 	public HashMap<String, String> getRegisteredWorldNames() {

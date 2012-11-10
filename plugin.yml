@@ -46,3 +46,6 @@ permissions:
   survivalgames.ignore.forcepumpkin:
     description: Players with this perm can remove their pumpkin helmet even if forcepumpkin is enabled in the config.
     default: op
+  survivalgames.ignore.blockfilter:
+    description: Allows a player to break/place blocks in a game world that hasnt started.
+    default: op
