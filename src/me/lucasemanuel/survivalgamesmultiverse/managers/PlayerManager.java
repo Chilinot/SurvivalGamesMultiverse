@@ -47,14 +47,18 @@ public class PlayerManager {
 		playerlists.put(worldname, new HashSet<String>());
 	}
 
-	public void addPlayer(String worldname, Player player) {
+	public void addPlayer(String worldname, final Player player) {
 		
 		if(playerlists.containsKey(worldname)) {
 			HashSet<String> playerlist = playerlists.get(worldname);
 			
 			playerlist.add(player.getName());
 			
-			resetPlayer(player);
+			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+				public void run() {
+					resetPlayer(player);
+				}
+			}, 60L);
 			
 			logger.debug("Added - " + player.getName() + " - to world - " + worldname);
 		}
