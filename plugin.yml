@@ -1,6 +1,6 @@
 name: SurvivalGamesMultiverse
 main: me.lucasemanuel.survivalgamesmultiverse.Main
-version: 0.6.1
+version: 0.6.2
 depend: [WorldGuard, WorldEdit]
 
 commands:
@@ -48,6 +48,9 @@ permissions:
     default: op
   survivalgames.ignore.blockfilter:
     description: Allows a player to break/place blocks in a game world that hasnt started.
+    default: op
+  survivalgames.ignore.clearinv:
+    description: Allows player to ignore inventory clearing upon joining SurvivalGames
     default: op
   survivalgames.signs.sginfo:
     description: Allows a player to register an sginfo sign.
