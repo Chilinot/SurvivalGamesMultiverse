@@ -71,23 +71,25 @@ public class PlayerManager {
 		
 		logger.debug("Resetting player: " + player.getName());
 		
-		PlayerInventory inventory = player.getInventory();
+		if(!player.hasPermission("survivalgames.ignore.clearinv")){
+			PlayerInventory inventory = player.getInventory();
+			
+			inventory.clear();
+			
+			inventory.setHelmet(null);
+			inventory.setChestplate(null);
+			inventory.setLeggings(null);
+			inventory.setBoots(null);
 		
-		inventory.clear();
-		
-		inventory.setHelmet(null);
-		inventory.setChestplate(null);
-		inventory.setLeggings(null);
-		inventory.setBoots(null);
+			
+			if(plugin.getConfig().getBoolean("halloween.enabled"))
+				player.getInventory().setHelmet(new ItemStack(Material.PUMPKIN));
+		}
 		
 		player.setHealth(20);
 		player.setFoodLevel(20);
 		player.setLevel(0);
 		player.setTotalExperience(0);
-		
-		if(plugin.getConfig().getBoolean("halloween.enabled"))
-			player.getInventory().setHelmet(new ItemStack(Material.PUMPKIN));
-		
 		// Doesn't work without this!
 		player.updateInventory();
 	}
