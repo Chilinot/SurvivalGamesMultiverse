@@ -20,6 +20,7 @@ import java.util.Map.Entry;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 
@@ -102,19 +103,23 @@ public class SignManager {
 		Location location = signs.get(worldname);
 		
 		if(location != null) {
-			
-			Sign sign = (Sign) location.getBlock().getState();
-			
-			String status = plugin.getStatusManager().getStatus(worldname) ? 
-					ChatColor.BLUE  + plugin.getLanguageManager().getString("signs.started") : 
-					ChatColor.GREEN + plugin.getLanguageManager().getString("signs.waiting");
-			
-			sign.setLine(0, ChatColor.GOLD + worldname);
-			sign.setLine(1, status);
-			sign.setLine(2, ChatColor.LIGHT_PURPLE + plugin.getLanguageManager().getString("signs.playersIngame"));
-			sign.setLine(3, plugin.getPlayerManager().getPlayerList(worldname).size() + "/" + plugin.getLocationManager().getLocationAmount(worldname));
-			
-			sign.update();
+			if(location.getBlock().getType().equals(Material.SIGN_POST) || location.getBlock().getType().equals(Material.WALL_SIGN)) {
+				
+				Sign sign = (Sign) location.getBlock().getState();
+				
+				String status = plugin.getStatusManager().getStatus(worldname) ? 
+						ChatColor.BLUE  + plugin.getLanguageManager().getString("signs.started") : 
+						ChatColor.GREEN + plugin.getLanguageManager().getString("signs.waiting");
+				
+				sign.setLine(0, ChatColor.GOLD + worldname);
+				sign.setLine(1, status);
+				sign.setLine(2, ChatColor.LIGHT_PURPLE + plugin.getLanguageManager().getString("signs.playersIngame"));
+				sign.setLine(3, plugin.getPlayerManager().getPlayerList(worldname).size() + "/" + plugin.getLocationManager().getLocationAmount(worldname));
+				
+				sign.update();
+			}
+			else
+				logger.warning("Saved block not a sign! World: " + worldname);
 		}
 		else
 			logger.warning("No info-sign for world " + worldname);
