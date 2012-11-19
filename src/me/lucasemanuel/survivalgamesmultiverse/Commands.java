@@ -179,7 +179,7 @@ public class Commands implements CommandExecutor {
 		
 		plugin.getPlayerManager().removePlayer(player.getWorld().getName(), player.getName());
 		
-		plugin.getSignManager().updateSigns(player.getWorld().getName());
+		plugin.getSignManager().updateSigns();
 		
 		if(plugin.getStatusManager().getStatus(player.getWorld().getName())) {
 			plugin.gameover(player.getWorld());

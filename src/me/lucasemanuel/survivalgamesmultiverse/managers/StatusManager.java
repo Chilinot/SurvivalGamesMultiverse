@@ -171,7 +171,7 @@ public class StatusManager {
 			
 			plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), ChatColor.GOLD + plugin.getLanguageManager().getString("gamestarted"));
 			
-			plugin.getSignManager().updateSigns(worldname);
+			plugin.getSignManager().updateSigns();
 			
 			if(tasks.get(worldname) != -1) {
 				plugin.getServer().getScheduler().cancelTask(tasks.get(worldname));

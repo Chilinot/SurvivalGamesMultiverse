@@ -18,9 +18,10 @@ package me.lucasemanuel.survivalgamesmultiverse.managers;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 
@@ -34,7 +35,7 @@ public class SignManager {
 	private final Main plugin;
 	private final ConsoleLogger logger;
 	
-	private HashMap<String, Location> signs;
+	private HashMap<Sign, String> signs;
 	
 	public SignManager(Main instance) {
 		plugin = instance;
@@ -50,31 +51,52 @@ public class SignManager {
 		
 		logger.debug("Loading signlocations...");
 		
-		signs = new HashMap<String, Location>();
+		this.signs = new HashMap<Sign, String>();
 		
-		HashMap<String, SerializedLocation> tempmap = null;
+		HashMap<SerializedLocation, String> tempmap = new HashMap<SerializedLocation, String>();
 		
 		try {
-			tempmap = (HashMap<String, SerializedLocation>) SLAPI.load(plugin.getDataFolder() + "/" + "signlocations.dat");
+			tempmap = (HashMap<SerializedLocation, String>) SLAPI.load(plugin.getDataFolder() + "/" + "signlocations.dat");
 		}
 		catch(Exception e) {
 			logger.severe("Error while loading signlocations! Message: " + e.getMessage());
 		}
 		
-		if(tempmap != null)
-			for(Entry<String, SerializedLocation> entry : tempmap.entrySet()) {
-				signs.put(entry.getKey(), entry.getValue().deserialize());
+		if(tempmap != null) {
+			logger.debug("Saved amount: " + tempmap.size());
+			
+			Block block = null;
+			
+			for(Entry<SerializedLocation, String> entry : tempmap.entrySet()) {
+				
+				block = entry.getKey().deserialize().getBlock();
+				
+				if(block != null) {
+					if(block.getType().equals(Material.SIGN_POST) || block.getType().equals(Material.WALL_SIGN)) {
+						signs.put((Sign) block.getState(), entry.getValue());
+					}
+					else
+						logger.warning("Loaded block not a sign! Material: " + block.getType());
+				}
+				else
+					logger.warning("Loaded block is null!");
+				
+				
 			}
+		}
+		else {
+			logger.debug("No saved signs!");
+		}
 	}
 	
 	private void saveSigns() {
 		
 		logger.debug("Saving signlocations...");
 		
-		final HashMap<String, SerializedLocation> tempmap = new HashMap<String, SerializedLocation>();
+		final HashMap<SerializedLocation, String> tempmap = new HashMap<SerializedLocation, String>();
 		
-		for(Entry<String, Location> entry : signs.entrySet()) {
-			tempmap.put(entry.getKey(), new SerializedLocation(entry.getValue()));
+		for(Entry<Sign, String> entry : signs.entrySet()) {
+			tempmap.put(new SerializedLocation(entry.getKey().getLocation()), entry.getValue());
 		}
 		
 		Thread thread = new Thread() {
@@ -94,62 +116,73 @@ public class SignManager {
 		thread.start();
 	}
 
-	public void updateSigns(String worldname) {
-		updateInfoSign(worldname);
+	public void updateSigns() {
+		for(String worldname : signs.values()) {
+			updateInfoSign(worldname);
+		}
 	}
 
 	private void updateInfoSign(String worldname) {
 		
-		Location location = signs.get(worldname);
+		Sign sign = getSign(worldname);
 		
-		if(location != null) {
-			if(location.getBlock().getType().equals(Material.SIGN_POST) || location.getBlock().getType().equals(Material.WALL_SIGN)) {
-				
-				Sign sign = (Sign) location.getBlock().getState();
-				
-				String status = plugin.getStatusManager().getStatus(worldname) ? 
-						ChatColor.BLUE  + plugin.getLanguageManager().getString("signs.started") : 
-						ChatColor.GREEN + plugin.getLanguageManager().getString("signs.waiting");
-				
-				sign.setLine(0, ChatColor.GOLD + worldname);
-				sign.setLine(1, status);
-				sign.setLine(2, ChatColor.LIGHT_PURPLE + plugin.getLanguageManager().getString("signs.playersIngame"));
-				sign.setLine(3, plugin.getPlayerManager().getPlayerList(worldname).size() + "/" + plugin.getLocationManager().getLocationAmount(worldname));
-				
-				sign.update();
-			}
-			else
-				logger.warning("Saved block not a sign! World: " + worldname);
+		if(sign != null) {
+			
+			String status = plugin.getStatusManager().getStatus(worldname) ? 
+					ChatColor.BLUE  + plugin.getLanguageManager().getString("signs.started") : 
+					ChatColor.GREEN + plugin.getLanguageManager().getString("signs.waiting");
+			
+			sign.setLine(0, ChatColor.GOLD + worldname);
+			sign.setLine(1, status);
+			sign.setLine(2, ChatColor.LIGHT_PURPLE + plugin.getLanguageManager().getString("signs.playersIngame"));
+			sign.setLine(3, plugin.getPlayerManager().getPlayerList(worldname).size() + "/" + plugin.getLocationManager().getLocationAmount(worldname));
+			
+			sign.update();
+			
 		}
 		else
-			logger.warning("No info-sign for world " + worldname);
+			logger.warning("Sign is null! Worldname: " + worldname);
 	}
 
-	public String getGameworldName(Block block) {
+	private Sign getSign(String worldname) {
 		
-		Location location = block.getLocation();
-		
-		for(Entry<String, Location> entry : signs.entrySet()) {
-			if(entry.getValue().equals(location))
+		for(Entry<Sign, String> entry : signs.entrySet()) {
+			if(entry.getValue().equals(worldname))
 				return entry.getKey();
 		}
 		
 		return null;
 	}
 
-	public void registerSign(Block block) {
+	public String getGameworldName(Sign sign) {
 		
-		Sign sign = (Sign) block.getState();
+		for(Entry<Sign, String> entry : signs.entrySet()) {
+			if(entry.getKey().equals(sign))
+				return entry.getValue();
+		}
 		
-		String firstline  = sign.getLine(0);
-		String secondline = sign.getLine(1);
+		return null;
+	}
+
+	public void registerSign(Sign sign) {
 		
-		if(firstline.equalsIgnoreCase("[sginfo]") && secondline != null) {
-			signs.put(secondline, block.getLocation());
+		if(sign != null) {
 			
-			updateInfoSign(secondline);
+			String firstline  = sign.getLine(0);
+			String secondline = sign.getLine(1);
 			
-			saveSigns();
+			if(firstline.equalsIgnoreCase("[sginfo]") && secondline != null) {
+				
+				World world = Bukkit.getWorld(secondline);
+				
+				if(world != null) {
+					signs.put(sign, world.getName());
+					updateInfoSign(world.getName());
+					saveSigns();
+				}
+				else
+					logger.warning("Tried to register sign for null world! Worldname used: " + secondline);
+			}
 		}
 	}
 }

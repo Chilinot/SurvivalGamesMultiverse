@@ -24,26 +24,17 @@ import org.bukkit.block.Sign;
 
 public class SerialSign implements Serializable {
 	private static final long serialVersionUID = 8162439091234189617L;
-
-	private final String gameworld;
 	
 	private final String worldname;
 	private final int x;
 	private final int y;
 	private final int z;
 	
-	public SerialSign(Block block, String gameworld) {
-		
-		this.gameworld = gameworld;
-		
+	public SerialSign(Block block) {
 		this.worldname = block.getWorld().getName();
 		this.x = block.getX();
 		this.y = block.getY();
 		this.z = block.getZ();
-	}
-	
-	public String getGameworld() {
-		return this.gameworld;
 	}
 	
 	public Sign getSign() {
@@ -55,5 +46,13 @@ public class SerialSign implements Serializable {
 		}
 		
 		return null;
+	}
+	
+	public boolean equals(Block block) {
+		
+		if(block.getX() == x && block.getY() == y && block.getZ() == z)
+			return true;
+		
+		return false;
 	}
 }

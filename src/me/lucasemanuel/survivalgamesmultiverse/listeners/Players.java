@@ -98,10 +98,12 @@ public class Players implements Listener {
 		Block  block  = event.getClickedBlock();
 		Player player = event.getPlayer();
 		
-		if(event.getAction().equals(Action.RIGHT_CLICK_BLOCK) || event.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
+		if(event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 			if(block.getType().equals(Material.SIGN_POST) || block.getType().equals(Material.WALL_SIGN)) {
 				
-				String worldname = plugin.getSignManager().getGameworldName(block);
+				Sign sign = (Sign) block.getState();
+				
+				String worldname = plugin.getSignManager().getGameworldName(sign);
 				
 				if(worldname != null && plugin.getWorldManager().isGameWorld(Bukkit.getWorld(worldname))) {
 					if(plugin.getPlayerManager().isInGame(player.getName()) == false) {
@@ -113,7 +115,7 @@ public class Players implements Listener {
 							player.sendMessage(ChatColor.GOLD + plugin.getLanguageManager().getString("youJoinedTheGame"));
 							plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), ChatColor.LIGHT_PURPLE + player.getName() + ChatColor.WHITE + " " + plugin.getLanguageManager().getString("playerJoinedGame"));
 							
-							plugin.getSignManager().updateSigns(worldname);
+							plugin.getSignManager().updateSigns();
 							
 							// Now we have to wait for more players!
 							if(plugin.getPlayerManager().getPlayerAmount(worldname) == 1)
@@ -126,8 +128,8 @@ public class Players implements Listener {
 						player.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("alreadyPlaying"));
 				}
 				
-				else if(((Sign) block.getState()).getLine(0).equalsIgnoreCase("[sginfo]") && player.hasPermission("survivalgames.signs.sginfo")) {
-					plugin.getSignManager().registerSign(block);
+				else if(sign.getLine(0).equalsIgnoreCase("[sginfo]") && player.hasPermission("survivalgames.signs.sginfo")) {
+					plugin.getSignManager().registerSign(sign);
 				}
 			}
 			
@@ -165,7 +167,7 @@ public class Players implements Listener {
 			plugin.getPlayerManager().removePlayer(player.getWorld().getName(), player.getName());
 			plugin.getWorldManager().broadcast(player.getWorld(), message);
 			
-			plugin.getSignManager().updateSigns(player.getWorld().getName());
+			plugin.getSignManager().updateSigns();
 			
 			// Is the game over?
 			plugin.gameover(player.getWorld());
@@ -204,7 +206,7 @@ public class Players implements Listener {
 				worldmanager.sendPlayerToSpawn(victim);
 				if(!victim.hasPermission("survivalgames.ignore.stats")) statsmanager.addDeathPoints(victim.getName(), 1);
 				
-				plugin.getSignManager().updateSigns(victim.getWorld().getName());
+				plugin.getSignManager().updateSigns();
 				
 				// Is the game over?
 				plugin.gameover(victim.getWorld());

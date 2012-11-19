@@ -99,6 +99,12 @@ public class Main extends JavaPlugin {
 			logger.debug("Loading world - " + key + " :: template - " + getConfig().getString("worldnames." + key));
 		}
 		
+		this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+			public void run() {
+				signmanager.updateSigns();
+			}
+		}, 40L);
+		
 		logger.debug("Startup sequence finished!");
 	}
 	
@@ -169,6 +175,6 @@ public class Main extends JavaPlugin {
 		locationmanager.resetLocationStatuses(world);
 		chestmanager.clearLogs(world.getName());
 		statusmanager.reset(world.getName());
-		signmanager.updateSigns(world.getName());
+		signmanager.updateSigns();
 	}
 }
