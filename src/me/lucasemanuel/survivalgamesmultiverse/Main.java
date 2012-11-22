@@ -99,6 +99,8 @@ public class Main extends JavaPlugin {
 			logger.debug("Loading world - " + key + " :: template - " + getConfig().getString("worldnames." + key));
 		}
 		
+		logger.debug("Finished! Schedules sign update...");
+		
 		this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
 			public void run() {
 				signmanager.updateSigns();
