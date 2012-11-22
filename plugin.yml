@@ -1,6 +1,6 @@
 name: SurvivalGamesMultiverse
 main: me.lucasemanuel.survivalgamesmultiverse.Main
-version: 0.7
+version: 0.8
 depend: [WorldGuard, WorldEdit]
 
 commands:
