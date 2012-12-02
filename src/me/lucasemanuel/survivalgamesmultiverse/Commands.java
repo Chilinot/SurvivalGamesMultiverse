@@ -202,15 +202,32 @@ public class Commands implements CommandExecutor {
 		
 		Player player = (Player) sender;
 		
-		HashSet<String> playerlist = plugin.getPlayerManager().getPlayerList(player.getWorld().getName());
+		HashSet<String> playerlist = null;
 		
-		player.sendMessage(ChatColor.LIGHT_PURPLE + " --- " + plugin.getLanguageManager().getString("sgplayersHeading") + " --- ");
+		if(args.length == 1) {
+			
+			World world = Bukkit.getWorld(args[0]);
+			
+			if(world != null && plugin.getWorldManager().isGameWorld(world))
+				playerlist = plugin.getPlayerManager().getPlayerList(world.getName());
+		}
+		else if(playerlist == null && plugin.getWorldManager().isGameWorld(player.getWorld())) {
+			playerlist = plugin.getPlayerManager().getPlayerList(player.getWorld().getName());
+		}
+		else
+			player.sendMessage(ChatColor.RED + "You need to be in a gameworld, or enter the name of one!");
 		
-		for(String playername : playerlist) {
-			player.sendMessage(" - " + ChatColor.GREEN + playername);
+		if(playerlist != null) {
+			player.sendMessage(ChatColor.LIGHT_PURPLE + " --- " + plugin.getLanguageManager().getString("sgplayersHeading") + " --- ");
+			
+			for(String playername : playerlist) {
+				player.sendMessage(" - " + ChatColor.GREEN + playername);
+			}
+			
+			return true;
 		}
 		
-		return true;
+		return false;
 	}
 
 	private boolean sgreset(CommandSender sender, String[] args) {
