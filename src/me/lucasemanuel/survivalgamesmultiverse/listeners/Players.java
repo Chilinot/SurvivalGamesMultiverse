@@ -106,26 +106,29 @@ public class Players implements Listener {
 				String worldname = plugin.getSignManager().getGameworldName(sign);
 				
 				if(worldname != null && plugin.getWorldManager().isGameWorld(Bukkit.getWorld(worldname))) {
-					if(plugin.getPlayerManager().isInGame(player.getName()) == false) {
-						
-						if(plugin.getLocationManager().tpToStart(player, worldname)) {
-							
-							plugin.getPlayerManager().addPlayer(worldname, player);
-							
-							player.sendMessage(ChatColor.GOLD + plugin.getLanguageManager().getString("youJoinedTheGame"));
-							plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), ChatColor.LIGHT_PURPLE + player.getName() + ChatColor.WHITE + " " + plugin.getLanguageManager().getString("playerJoinedGame"));
-							
-							plugin.getSignManager().updateSigns();
-							
-							// Now we have to wait for more players!
-							if(plugin.getPlayerManager().getPlayerAmount(worldname) == 1)
-								plugin.getStatusManager().startPlayerCheck(worldname);
+					if(plugin.getStatusManager().getStatus(worldname) == false) {
+						if(plugin.getPlayerManager().isInGame(player.getName()) == false) {
+							if(plugin.getLocationManager().tpToStart(player, worldname)) {
+								
+								plugin.getPlayerManager().addPlayer(worldname, player);
+								
+								player.sendMessage(ChatColor.GOLD + plugin.getLanguageManager().getString("youJoinedTheGame"));
+								plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), ChatColor.LIGHT_PURPLE + player.getName() + ChatColor.WHITE + " " + plugin.getLanguageManager().getString("playerJoinedGame"));
+								
+								plugin.getSignManager().updateSigns();
+								
+								// Now we have to wait for more players!
+								if(plugin.getPlayerManager().getPlayerAmount(worldname) == 1)
+									plugin.getStatusManager().startPlayerCheck(worldname);
+							}
+							else
+								player.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("gameIsFull"));
 						}
 						else
-							player.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("gameIsFull"));
+							player.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("alreadyPlaying"));
 					}
 					else
-						player.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("alreadyPlaying"));
+						player.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("gameHasAlreadyStarted"));
 				}
 				
 				else if(sign.getLine(0).equalsIgnoreCase("[sginfo]") && player.hasPermission("survivalgames.signs.sginfo")) {

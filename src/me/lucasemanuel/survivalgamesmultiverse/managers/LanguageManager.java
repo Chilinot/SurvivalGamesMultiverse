@@ -169,6 +169,11 @@ public class LanguageManager {
 			save = true;
 		}
 		
+		if(!config.contains("gameHasAlreadyStarted")) {
+			config.set("gameHasAlreadyStarted", "The game has already started, try another world!");
+			save = true;
+		}
+		
 		if(!config.contains("signs.started")) {
 			config.set("signs.started", "Started");
 			save = true;
