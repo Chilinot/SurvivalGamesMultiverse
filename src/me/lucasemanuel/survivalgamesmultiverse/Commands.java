@@ -13,8 +13,8 @@
 
 package me.lucasemanuel.survivalgamesmultiverse;
 
-import java.util.HashSet;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -202,7 +202,7 @@ public class Commands implements CommandExecutor {
 		
 		Player player = (Player) sender;
 		
-		HashSet<String> playerlist = null;
+		Set<String> playerlist = null;
 		
 		if(args.length == 1) {
 			

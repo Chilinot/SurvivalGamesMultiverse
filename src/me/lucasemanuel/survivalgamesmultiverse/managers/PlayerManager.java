@@ -13,8 +13,10 @@
 
 package me.lucasemanuel.survivalgamesmultiverse.managers;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -31,26 +33,26 @@ public class PlayerManager {
 	private Main plugin;
 	private ConsoleLogger logger;
 	
-	private HashMap<String, HashSet<String>> playerlists;
+	private ConcurrentHashMap<String, Set<String>> playerlists;
 	
 	public PlayerManager(Main instance) {
 		plugin = instance;
 		logger = new ConsoleLogger(instance, "PlayerManager");
 		
-		playerlists = new HashMap<String, HashSet<String>>();
+		playerlists = new ConcurrentHashMap<String, Set<String>>();
 		
 		logger.debug("Initiated");
 	}
 	
 	public void addWorld(String worldname) {
 		logger.debug("Adding world - " + worldname);
-		playerlists.put(worldname, new HashSet<String>());
+		playerlists.put(worldname, Collections.synchronizedSet(new HashSet<String>()));
 	}
 
 	public void addPlayer(String worldname, final Player player) {
 		
 		if(playerlists.containsKey(worldname)) {
-			HashSet<String> playerlist = playerlists.get(worldname);
+			Set<String> playerlist = playerlists.get(worldname);
 			
 			playerlist.add(player.getName());
 			
@@ -96,7 +98,7 @@ public class PlayerManager {
 
 	public boolean isInGame(String playername) {
 		
-		for(HashSet<String> playerlist : playerlists.values()) {
+		for(Set<String> playerlist : playerlists.values()) {
 			if(playerlist.contains(playername))
 				return true;
 		}
@@ -116,7 +118,7 @@ public class PlayerManager {
 
 	public boolean isGameOver(World world) {
 		
-		HashSet<String> playerlist = playerlists.get(world.getName());
+		Set<String> playerlist = playerlists.get(world.getName());
 		
 		if(playerlist != null && playerlist.size() <= 1) {
 			return true;
@@ -129,7 +131,7 @@ public class PlayerManager {
 		
 		if(isGameOver(world)) {
 			
-			HashSet<String> playerlist = playerlists.get(world.getName());
+			Set<String> playerlist = playerlists.get(world.getName());
 			
 			if(playerlist != null && playerlist.isEmpty() == false) {
 				return (String) playerlist.toArray()[0];
@@ -150,7 +152,7 @@ public class PlayerManager {
 
 	private void clearList(String worldname) {
 
-		HashSet<String> playerlist = playerlists.get(worldname);
+		Set<String> playerlist = playerlists.get(worldname);
 		
 		if(playerlist != null)
 			playerlist.clear();
@@ -159,7 +161,7 @@ public class PlayerManager {
 
 	public void killAndClear(String worldname) {
 		
-		HashSet<String> playerlist = playerlists.get(worldname);
+		Set<String> playerlist = playerlists.get(worldname);
 		
 		for(String playername : playerlist) {
 			Bukkit.getPlayerExact(playername).setHealth(0);
@@ -168,7 +170,7 @@ public class PlayerManager {
 		clearList(worldname);
 	}
 
-	public HashSet<String> getPlayerList(String worldname) {
+	public Set<String> getPlayerList(String worldname) {
 		return playerlists.get(worldname);
 	}
 }
