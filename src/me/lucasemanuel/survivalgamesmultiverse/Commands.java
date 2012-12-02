@@ -215,14 +215,19 @@ public class Commands implements CommandExecutor {
 			playerlist = plugin.getPlayerManager().getPlayerList(player.getWorld().getName());
 		}
 		else
-			player.sendMessage(ChatColor.RED + "You need to be in a gameworld, or enter the name of one!");
+			player.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("sgplayersIncorrect"));
 		
 		if(playerlist != null) {
-			player.sendMessage(ChatColor.LIGHT_PURPLE + " --- " + plugin.getLanguageManager().getString("sgplayersHeading") + " --- ");
 			
-			for(String playername : playerlist) {
-				player.sendMessage(" - " + ChatColor.GREEN + playername);
+			if(playerlist.size() > 0) {
+				player.sendMessage(ChatColor.LIGHT_PURPLE + " --- " + plugin.getLanguageManager().getString("sgplayersHeading") + " --- ");
+				
+				for(String playername : playerlist) {
+					player.sendMessage(" - " + ChatColor.GREEN + playername);
+				}
 			}
+			else
+				player.sendMessage(ChatColor.LIGHT_PURPLE + plugin.getLanguageManager().getString("sgplayersNoonealive"));
 			
 			return true;
 		}

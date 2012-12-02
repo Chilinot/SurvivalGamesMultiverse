@@ -174,6 +174,16 @@ public class LanguageManager {
 			save = true;
 		}
 		
+		if(!config.contains("sgplayersNoonealive")) {
+			config.set("sgplayersNoonealive", "No players alive!");
+			save = true;
+		}
+		
+		if(!config.contains("sgplayersIncorrect")) {
+			config.set("sgplayersIncorrect", "You need to be in a gameworld, or enter the name of one!");
+			save = true;
+		}
+		
 		if(!config.contains("signs.started")) {
 			config.set("signs.started", "Started");
 			save = true;
