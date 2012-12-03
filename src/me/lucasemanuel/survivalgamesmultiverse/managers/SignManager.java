@@ -41,13 +41,11 @@ public class SignManager {
 		plugin = instance;
 		logger = new ConsoleLogger(instance, "SignManager");
 		
-		loadsigns();
-		
 		logger.debug("Initiated");
 	}
 
 	@SuppressWarnings("unchecked")
-	private void loadsigns() {
+	public void loadsigns() {
 		
 		logger.debug("Loading signlocations...");
 		

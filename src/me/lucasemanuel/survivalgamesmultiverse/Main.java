@@ -103,6 +103,7 @@ public class Main extends JavaPlugin {
 		
 		this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
 			public void run() {
+				signmanager.loadsigns();
 				signmanager.updateSigns();
 			}
 		}, 40L);
