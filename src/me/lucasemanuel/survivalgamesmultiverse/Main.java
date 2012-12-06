@@ -162,8 +162,8 @@ public class Main extends JavaPlugin {
 					
 					if(!winner.hasPermission("survivalgames.ignore.stats")) statsmanager.addWinPoints(winner.getName(), 1);
 					
-					worldmanager.sendPlayerToSpawn(winner);
 					playermanager.removePlayer(winner.getWorld().getName(), winner.getName());
+					worldmanager.sendPlayerToSpawn(winner);
 				}
 			}
 			
