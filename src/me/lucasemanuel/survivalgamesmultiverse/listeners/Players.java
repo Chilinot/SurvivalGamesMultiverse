@@ -206,7 +206,7 @@ public class Players implements Listener {
 				
 				// Remove the player and give him one deathpoint
 				playermanager.removePlayer(victim.getWorld().getName(), victim.getName());
-				worldmanager.sendPlayerToSpawn(victim);
+//				worldmanager.sendPlayerToSpawn(victim);
 				if(!victim.hasPermission("survivalgames.ignore.stats")) statsmanager.addDeathPoints(victim.getName(), 1);
 				
 				plugin.getSignManager().updateSigns();
