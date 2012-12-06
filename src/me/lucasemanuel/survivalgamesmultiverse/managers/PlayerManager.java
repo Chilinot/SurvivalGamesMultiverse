@@ -188,7 +188,11 @@ public class PlayerManager {
 			Iterator<String> i = playerlist.iterator();
 			
 			while(i.hasNext()) {
-				Bukkit.getPlayerExact(i.next()).setHealth(0);
+				
+				Player player = Bukkit.getPlayerExact(i.next());
+				
+				resetPlayer(player);
+				player.setHealth(0);
 			}
 		}
 		
