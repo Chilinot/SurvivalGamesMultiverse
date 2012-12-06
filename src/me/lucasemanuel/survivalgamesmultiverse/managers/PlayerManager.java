@@ -15,6 +15,7 @@ package me.lucasemanuel.survivalgamesmultiverse.managers;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -144,7 +145,12 @@ public class PlayerManager {
 	public int getPlayerAmount(String worldname) {
 		
 		if(playerlists.containsKey(worldname)) {
-			return playerlists.get(worldname).size();
+			
+			Set<String> playerlist = playerlists.get(worldname);
+			
+			synchronized(playerlist) {
+				return playerlist.size();
+			}
 		}
 		
 		return 0;
@@ -154,17 +160,22 @@ public class PlayerManager {
 
 		Set<String> playerlist = playerlists.get(worldname);
 		
-		if(playerlist != null)
+		synchronized(playerlist) {
 			playerlist.clear();
-		
+		}
 	}
 
 	public void killAndClear(String worldname) {
 		
 		Set<String> playerlist = playerlists.get(worldname);
 		
-		for(String playername : playerlist) {
-			Bukkit.getPlayerExact(playername).setHealth(0);
+		synchronized(playerlist) {
+			
+			Iterator<String> i = playerlist.iterator();
+			
+			while(i.hasNext()) {
+				Bukkit.getPlayerExact(i.next()).setHealth(0);
+			}
 		}
 		
 		clearList(worldname);
