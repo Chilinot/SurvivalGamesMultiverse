@@ -55,7 +55,9 @@ public class PlayerManager {
 		if(playerlists.containsKey(worldname)) {
 			Set<String> playerlist = playerlists.get(worldname);
 			
-			playerlist.add(player.getName());
+			synchronized(playerlist) {
+				playerlist.add(player.getName());
+			}
 			
 			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 				public void run() {
@@ -100,8 +102,10 @@ public class PlayerManager {
 	public boolean isInGame(String playername) {
 		
 		for(Set<String> playerlist : playerlists.values()) {
-			if(playerlist.contains(playername))
-				return true;
+			synchronized(playerlist) {
+				if(playerlist.contains(playername))
+					return true;
+			}
 		}
 		
 		return false;
@@ -110,8 +114,13 @@ public class PlayerManager {
 	public void removePlayer(String worldname, String name) {
 		
 		if(playerlists.containsKey(worldname)) {
-			if(playerlists.get(worldname).remove(name) == false)
-				logger.debug("Tried to remove player from world where he was not listed! Worldname = " + worldname + " - Playername = " + name);
+			
+			Set<String> playerlist = playerlists.get(worldname);
+			
+			synchronized(playerlist) {
+				if(playerlist.remove(name) == false)
+					logger.debug("Tried to remove player from world where he was not listed! Worldname = " + worldname + " - Playername = " + name);
+			}
 		}
 		else
 			logger.warning("Tried to remove player '" + name + "' from incorrect world '" + worldname + "'!");
@@ -121,8 +130,11 @@ public class PlayerManager {
 		
 		Set<String> playerlist = playerlists.get(world.getName());
 		
-		if(playerlist != null && playerlist.size() <= 1) {
-			return true;
+		synchronized(playerlist) {
+			if(playerlist != null && playerlist.size() <= 1) {
+				return true;
+			}
+			
 		}
 		
 		return false;
@@ -134,8 +146,10 @@ public class PlayerManager {
 			
 			Set<String> playerlist = playerlists.get(world.getName());
 			
-			if(playerlist != null && playerlist.isEmpty() == false) {
-				return (String) playerlist.toArray()[0];
+			synchronized(playerlist) {
+				if(playerlist != null && playerlist.isEmpty() == false) {
+					return (String) playerlist.toArray()[0];
+				}
 			}
 		}
 		
