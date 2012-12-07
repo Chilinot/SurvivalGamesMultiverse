@@ -111,39 +111,39 @@ public class Main extends JavaPlugin {
 		logger.debug("Startup sequence finished!");
 	}
 	
-	public PlayerManager getPlayerManager() {
+	public synchronized PlayerManager getPlayerManager() {
 		return playermanager;
 	}
 	
-	public WorldManager getWorldManager() {
+	public synchronized WorldManager getWorldManager() {
 		return worldmanager;
 	}
 	
-	public ChestManager getChestManager() {
+	public synchronized ChestManager getChestManager() {
 		return chestmanager;
 	}
 	
-	public StatsManager getStatsManager() {
+	public synchronized StatsManager getStatsManager() {
 		return statsmanager;
 	}
 	
-	public LanguageManager getLanguageManager() {
+	public synchronized LanguageManager getLanguageManager() {
 		return languagemanager;
 	}
 
-	public LocationManager getLocationManager() {
+	public synchronized LocationManager getLocationManager() {
 		return locationmanager;
 	}
 	
-	public StatusManager getStatusManager() {
+	public synchronized StatusManager getStatusManager() {
 		return statusmanager;
 	}
 	
-	public SignManager getSignManager() {
+	public synchronized SignManager getSignManager() {
 		return signmanager;
 	}
 	
-	public void gameover(World world) {
+	public synchronized void gameover(World world) {
 		
 		if(playermanager.isGameOver(world)) {
 			
@@ -171,7 +171,7 @@ public class Main extends JavaPlugin {
 		}
 	}
 	
-	public void resetWorld(World world) {
+	public synchronized void resetWorld(World world) {
 		playermanager.killAndClear(world.getName());
 		worldmanager.resetWorld(world);
 		locationmanager.resetLocationStatuses(world);
