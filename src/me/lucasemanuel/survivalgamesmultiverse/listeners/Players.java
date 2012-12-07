@@ -24,6 +24,7 @@ import me.lucasemanuel.survivalgamesmultiverse.utils.WorldGuardHook;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
@@ -43,6 +44,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class Players implements Listener {
 	
@@ -89,6 +91,31 @@ public class Players implements Listener {
 			
 			event.setCancelled(true);
 			event.getPlayer().sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("blockedCommand"));
+		}
+	}
+	
+	@EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled=true)
+	public void onPlayerTeleport(PlayerTeleportEvent event) {
+		
+		Player   player = event.getPlayer();
+		Location from   = event.getFrom();
+		Location to     = event.getTo();
+		
+		if(plugin.getWorldManager().isGameWorld(from.getWorld()) && !plugin.getWorldManager().isGameWorld(to.getWorld()) && plugin.getPlayerManager().isInGame(player)) {
+			
+			logger.debug("Removing player " + player.getName() + " due to teleportation!");
+			
+			plugin.getPlayerManager().removePlayer(from.getWorld().getName(), player);
+			
+			String message = ChatColor.RED + "[SGAnti-Cheat]"
+					+ ChatColor.WHITE + " :: " 
+					+ ChatColor.BLUE + player.getName() 
+					+ ChatColor.WHITE + " - " 
+					+ plugin.getLanguageManager().getString("anticheatRemoval.teleported");
+			
+			plugin.getWorldManager().broadcast(from.getWorld(), message);
+			
+			plugin.getSignManager().updateSigns();
 		}
 	}
 	
@@ -165,7 +192,11 @@ public class Players implements Listener {
 		
 		if(plugin.getWorldManager().isGameWorld(player.getWorld()) && plugin.getPlayerManager().isInGame(player)) {
 			
-			String message = ChatColor.RED + "[SGAnti-Cheat]" + ChatColor.WHITE + " :: " + ChatColor.BLUE + player.getName() + ChatColor.WHITE + " - " + plugin.getLanguageManager().getString("anticheatRemoval");
+			String message = ChatColor.RED + "[SGAnti-Cheat]" 
+					+ ChatColor.WHITE + " :: " 
+					+ ChatColor.BLUE + player.getName() 
+					+ ChatColor.WHITE + " - " 
+					+ plugin.getLanguageManager().getString("anticheatRemoval.disconnect");
 			
 			plugin.getPlayerManager().removePlayer(player.getWorld().getName(), player);
 			plugin.getWorldManager().broadcast(player.getWorld(), message);

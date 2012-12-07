@@ -89,8 +89,13 @@ public class LanguageManager {
 			save = true;
 		}
 		
-		if(!config.contains("anticheatRemoval")) {
-			config.set("anticheatRemoval", "was removed due to disconnect!");
+		if(!config.contains("anticheatRemoval.disconnect")) {
+			config.set("anticheatRemoval.disconnect", "was removed due to disconnect!");
+			save = true;
+		}
+		
+		if(!config.contains("anticheatRemoval.teleported")) {
+			config.set("anticheatRemoval.teleported", "was removed due to teleportation!");
 			save = true;
 		}
 		
