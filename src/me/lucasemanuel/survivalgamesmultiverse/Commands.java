@@ -13,6 +13,7 @@
 
 package me.lucasemanuel.survivalgamesmultiverse;
 
+import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -172,12 +173,12 @@ public class Commands implements CommandExecutor {
 		
 		Player player = (Player) sender;
 		
-		if(!plugin.getPlayerManager().isInGame(player.getName())) {
+		if(!plugin.getPlayerManager().isInGame(player)) {
 			player.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("sgleaveNotIngame"));
 			return true;
 		}
 		
-		plugin.getPlayerManager().removePlayer(player.getWorld().getName(), player.getName());
+		plugin.getPlayerManager().removePlayer(player.getWorld().getName(), player);
 		
 		plugin.getSignManager().updateSigns();
 		
@@ -202,7 +203,7 @@ public class Commands implements CommandExecutor {
 		
 		Player player = (Player) sender;
 		
-		Set<String> playerlist = null;
+		Set<Player> playerlist = null;
 		
 		if(args.length == 1) {
 			
@@ -223,8 +224,13 @@ public class Commands implements CommandExecutor {
 				if(playerlist.size() > 0) {
 					player.sendMessage(ChatColor.LIGHT_PURPLE + " --- " + plugin.getLanguageManager().getString("sgplayersHeading") + " --- ");
 					
-					for(String playername : playerlist) {
-						player.sendMessage(" - " + ChatColor.GREEN + playername);
+					Iterator<Player> i = playerlist.iterator();
+					
+					while(i.hasNext()) {
+						
+						Player tempplayer = i.next();
+						
+						player.sendMessage(" - " + ChatColor.GREEN + tempplayer.getName());
 					}
 				}
 				else

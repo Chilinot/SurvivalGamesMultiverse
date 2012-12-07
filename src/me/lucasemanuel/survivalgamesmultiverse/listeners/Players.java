@@ -62,7 +62,7 @@ public class Players implements Listener {
 		Player player = (Player) event.getWhoClicked();
 		
 		if(plugin.getWorldManager().isGameWorld(player.getWorld())
-				&& plugin.getPlayerManager().isInGame(player.getName())
+				&& plugin.getPlayerManager().isInGame(player)
 				&& plugin.getConfig().getBoolean("halloween.forcepumpkin")
 				&& !player.hasPermission("survivalgames.ignore.forcepumpkin")
 				&& event.getSlotType().equals(SlotType.ARMOR)
@@ -82,7 +82,7 @@ public class Players implements Listener {
 		Player player  = event.getPlayer();
 		String command = event.getMessage();
 		
-		if(plugin.getPlayerManager().isInGame(player.getName())
+		if(plugin.getPlayerManager().isInGame(player)
 				&& plugin.getWorldManager().isGameWorld(player.getWorld())
 				&& !allowedcommands.contains(command)
 				&& !player.hasPermission("survivalgames.ignore.commandfilter")) {
@@ -107,7 +107,7 @@ public class Players implements Listener {
 				
 				if(worldname != null && plugin.getWorldManager().isGameWorld(Bukkit.getWorld(worldname))) {
 					if(plugin.getStatusManager().getStatus(worldname) == false) {
-						if(plugin.getPlayerManager().isInGame(player.getName()) == false) {
+						if(plugin.getPlayerManager().isInGame(player) == false) {
 							if(plugin.getLocationManager().tpToStart(player, worldname)) {
 								
 								plugin.getPlayerManager().addPlayer(worldname, player);
@@ -163,11 +163,11 @@ public class Players implements Listener {
 		
 		Player player = event.getPlayer();
 		
-		if(plugin.getWorldManager().isGameWorld(player.getWorld()) && plugin.getPlayerManager().isInGame(player.getName())) {
+		if(plugin.getWorldManager().isGameWorld(player.getWorld()) && plugin.getPlayerManager().isInGame(player)) {
 			
 			String message = ChatColor.RED + "[SGAnti-Cheat]" + ChatColor.WHITE + " :: " + ChatColor.BLUE + player.getName() + ChatColor.WHITE + " - " + plugin.getLanguageManager().getString("anticheatRemoval");
 			
-			plugin.getPlayerManager().removePlayer(player.getWorld().getName(), player.getName());
+			plugin.getPlayerManager().removePlayer(player.getWorld().getName(), player);
 			plugin.getWorldManager().broadcast(player.getWorld(), message);
 			
 			plugin.getSignManager().updateSigns();
@@ -189,7 +189,7 @@ public class Players implements Listener {
 			// Block all deathmessages in the SG worlds
 			event.setDeathMessage(null);
 			
-			if(playermanager.isInGame(victim.getName())) {
+			if(playermanager.isInGame(victim)) {
 				
 				WorldManager worldmanager = plugin.getWorldManager();
 				StatsManager statsmanager = plugin.getStatsManager();
@@ -205,7 +205,7 @@ public class Players implements Listener {
 					worldmanager.broadcast(victim.getWorld(), ChatColor.LIGHT_PURPLE + victim.getName() + ChatColor.RED + " " + plugin.getLanguageManager().getString("isOutOfTheGame"));
 				
 				// Remove the player and give him one deathpoint
-				playermanager.removePlayer(victim.getWorld().getName(), victim.getName());
+				playermanager.removePlayer(victim.getWorld().getName(), victim);
 //				worldmanager.sendPlayerToSpawn(victim);
 				if(!victim.hasPermission("survivalgames.ignore.stats")) statsmanager.addDeathPoints(victim.getName(), 1);
 				
@@ -225,7 +225,7 @@ public class Players implements Listener {
 		// If it is a SG world and the game hasnt started and the player is in the game
 		if(plugin.getWorldManager().isGameWorld(player.getWorld())) {
 			
-			if(plugin.getPlayerManager().isInGame(player.getName())) {
+			if(plugin.getPlayerManager().isInGame(player)) {
 				if(plugin.getStatusManager().getStatus(player.getWorld().getName()) == false) {
 					
 					double fromX = event.getFrom().getX();
@@ -257,7 +257,7 @@ public class Players implements Listener {
 			Player player = (Player) event.getEntity();
 			
 			if(plugin.getWorldManager().isGameWorld(player.getWorld())
-					&& plugin.getPlayerManager().isInGame(player.getName())
+					&& plugin.getPlayerManager().isInGame(player)
 					&& plugin.getStatusManager().getStatus(player.getWorld().getName()) == false) {
 				
 				event.setCancelled(true);

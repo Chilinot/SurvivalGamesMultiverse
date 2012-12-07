@@ -25,6 +25,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.Player;
 
 import me.lucasemanuel.survivalgamesmultiverse.Main;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
@@ -131,7 +132,7 @@ public class SignManager {
 					ChatColor.GRAY  + plugin.getLanguageManager().getString("signs.started") : 
 					ChatColor.GREEN + plugin.getLanguageManager().getString("signs.waiting");
 					
-			Set<String> playerlist = plugin.getPlayerManager().getPlayerList(worldname);
+			Set<Player> playerlist = plugin.getPlayerManager().getPlayerList(worldname);
 			
 			synchronized(playerlist) {
 				
