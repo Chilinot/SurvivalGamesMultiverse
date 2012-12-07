@@ -46,14 +46,14 @@ public class LocationManager {
 		logger.debug("Initiated");
 	}
 	
-	public void addWorld(String worldname) {
+	public synchronized void addWorld(String worldname) {
 		logger.debug("Adding world: " + worldname);
 		
 		locations.put(worldname, new HashMap<String, HashMap<Location, Boolean>>());
 		loadLocations(worldname);
 	}
 	
-	public void resetLocationStatuses(World world) {
+	public synchronized void resetLocationStatuses(World world) {
 		
 		String worldname = world.getName();
 		
@@ -71,7 +71,7 @@ public class LocationManager {
 			}
 	}
 	
-	public void resetLocationStatus(Location playerlocation) {
+	public synchronized void resetLocationStatus(Location playerlocation) {
 		
 		String worldname = playerlocation.getWorld().getName();
 		
@@ -94,7 +94,7 @@ public class LocationManager {
 		}
 	}
 	
-	public boolean tpToStart(Player player, String worldname) {
+	public synchronized boolean tpToStart(Player player, String worldname) {
 		
 		HashMap<Location, Boolean> locationlist = locations.get(worldname).get("main");
 		
@@ -119,7 +119,7 @@ public class LocationManager {
 		return false;
 	}
 	
-	public boolean tpToArena(Player player) {
+	public synchronized boolean tpToArena(Player player) {
 		
 		logger.debug("tpToArena() called for player: " + player.getName());
 		
@@ -146,7 +146,7 @@ public class LocationManager {
 		return false;
 	}
 	
-	public boolean addLocation(String type, Location location) {
+	public synchronized boolean addLocation(String type, Location location) {
 		
 		if(locations.containsKey(location.getWorld().getName())) {
 			
@@ -168,7 +168,7 @@ public class LocationManager {
 		}
 	}
 
-	public boolean saveLocationList(final String listtype, String worldname) {
+	public synchronized boolean saveLocationList(final String listtype, String worldname) {
 		
 		if(locations.containsKey(worldname)) {
 			
@@ -221,7 +221,7 @@ public class LocationManager {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private void loadLocations(String worldname) {
+	private synchronized void loadLocations(String worldname) {
 		
 		logger.debug("Loading locations for world: " + worldname);
 		
@@ -260,7 +260,7 @@ public class LocationManager {
 			logger.warning("No saved locations for world: " + worldname);
 	}
 
-	public boolean clearLocationList(String type, String worldname) {
+	public synchronized boolean clearLocationList(String type, String worldname) {
 		
 		if(locations.containsKey(worldname)) {
 			
@@ -275,7 +275,7 @@ public class LocationManager {
 		return false;
 	}
 
-	public int getLocationAmount(String worldname) {
+	public synchronized int getLocationAmount(String worldname) {
 		return locations.get(worldname).get("main").size();
 	}
 }

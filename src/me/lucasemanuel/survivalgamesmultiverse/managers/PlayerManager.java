@@ -44,12 +44,12 @@ public class PlayerManager {
 		logger.debug("Initiated");
 	}
 	
-	public void addWorld(String worldname) {
+	public synchronized void addWorld(String worldname) {
 		logger.debug("Adding world - " + worldname);
 		playerlists.put(worldname, Collections.synchronizedSet(new HashSet<Player>()));
 	}
 
-	public void addPlayer(String worldname, final Player player) {
+	public synchronized void addPlayer(String worldname, final Player player) {
 		
 		if(playerlists.containsKey(worldname)) {
 			Set<Player> playerlist = playerlists.get(worldname);
@@ -71,7 +71,7 @@ public class PlayerManager {
 	}
 
 	@SuppressWarnings("deprecation")
-	private void resetPlayer(Player player) {
+	private synchronized void resetPlayer(Player player) {
 		
 		logger.debug("Resetting player: " + player.getName());
 		
@@ -98,7 +98,7 @@ public class PlayerManager {
 		player.updateInventory();
 	}
 
-	public boolean isInGame(Player player) {
+	public synchronized boolean isInGame(Player player) {
 		
 		for(Set<Player> playerlist : playerlists.values()) {
 			synchronized(playerlist) {
@@ -110,7 +110,7 @@ public class PlayerManager {
 		return false;
 	}
 
-	public void removePlayer(String worldname, Player player) {
+	public synchronized void removePlayer(String worldname, Player player) {
 		
 		if(playerlists.containsKey(worldname)) {
 			
@@ -125,7 +125,7 @@ public class PlayerManager {
 			logger.warning("Tried to remove player '" + player.getName() + "' from incorrect world '" + worldname + "'!");
 	}
 
-	public boolean isGameOver(World world) {
+	public synchronized boolean isGameOver(World world) {
 		
 		Set<Player> playerlist = playerlists.get(world.getName());
 		
@@ -139,7 +139,7 @@ public class PlayerManager {
 		return false;
 	}
 
-	public Player getWinner(World world) {
+	public synchronized Player getWinner(World world) {
 		
 		if(isGameOver(world)) {
 			
@@ -155,7 +155,7 @@ public class PlayerManager {
 		return null;
 	}
 
-	public int getPlayerAmount(String worldname) {
+	public synchronized int getPlayerAmount(String worldname) {
 		
 		if(playerlists.containsKey(worldname)) {
 			
@@ -169,7 +169,7 @@ public class PlayerManager {
 		return 0;
 	}
 
-	private void clearList(String worldname) {
+	private synchronized void clearList(String worldname) {
 
 		Set<Player> playerlist = playerlists.get(worldname);
 		
@@ -178,7 +178,7 @@ public class PlayerManager {
 		}
 	}
 
-	public void killAndClear(String worldname) {
+	public synchronized void killAndClear(String worldname) {
 		
 		logger.debug("Initated killAndClear on world: " + worldname);
 		
@@ -204,7 +204,7 @@ public class PlayerManager {
 		clearList(worldname);
 	}
 
-	public Set<Player> getPlayerList(String worldname) {
+	public synchronized Set<Player> getPlayerList(String worldname) {
 		return playerlists.get(worldname);
 	}
 }

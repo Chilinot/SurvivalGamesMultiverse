@@ -61,12 +61,12 @@ public class WorldManager {
 		loggedblocks = new HashMap<String, HashSet<Location>>();
 	}
 	
-	public void addWorld(World world, World template) {
+	public synchronized void addWorld(World world, World template) {
 		worldlist.put(world, template);
 		loggedblocks.put(world.getName(), new HashSet<Location>());
 	}
 	
-	public boolean isGameWorld(World world) {
+	public synchronized boolean isGameWorld(World world) {
 		
 		if(worldlist.containsKey(world))
 			return true;
@@ -74,7 +74,7 @@ public class WorldManager {
 			return false;
 	}
 	
-	public boolean isRegistered(World world) {
+	public synchronized boolean isRegistered(World world) {
 		
 		if(worldlist.containsKey(world) || worldlist.containsValue(world))
 			return true;
@@ -82,7 +82,7 @@ public class WorldManager {
 			return false;
 	}
 	
-	public void broadcast(World world, String msg) {
+	public synchronized void broadcast(World world, String msg) {
 		if(worldlist.containsKey(world)) {
 			
 			for(Player player : world.getPlayers()) {
@@ -94,14 +94,14 @@ public class WorldManager {
 			logger.debug("Tried to broadcast message '" + msg + "' to non registered world - " + world.getName());
 	}
 
-	public void logBlock(Location location) {
+	public synchronized void logBlock(Location location) {
 		if(loggedblocks.containsKey(location.getWorld().getName()) && loggedblocks.get(location.getWorld().getName()).contains(location) == false) {
 			loggedblocks.get(location.getWorld().getName()).add(location);
 			logger.debug("Logged block in world: " + location.getWorld().getName());
 		}
 	}
 
-	public void resetWorld(final World world) {
+	public synchronized void resetWorld(final World world) {
 		
 		logger.debug("Resetting world: " + world.getName());
 		
@@ -171,11 +171,11 @@ public class WorldManager {
 			logger.debug("Tried to reset non registered world!");
 	}
 
-	public void sendPlayerToSpawn(Player player) {
+	public synchronized void sendPlayerToSpawn(Player player) {
 		player.teleport(Bukkit.getWorld(plugin.getConfig().getString("lobbyworld")).getSpawnLocation());
 	}
 
-	public HashMap<String, String> getRegisteredWorldNames() {
+	public synchronized HashMap<String, String> getRegisteredWorldNames() {
 		
 		HashMap<String, String> worlds = new HashMap<String, String>();
 		

@@ -47,12 +47,12 @@ public class StatusManager {
 		logger.debug("Initiated");
 	}
 	
-	public void addWorld(String worldname) {
+	public synchronized void addWorld(String worldname) {
 		worlds.put(worldname, false);
 		tasks.put(worldname, -1); // -1 means no task
 	}
 
-	private boolean setStatus(String worldname, boolean value) {
+	private synchronized boolean setStatus(String worldname, boolean value) {
 		if(worlds.containsKey(worldname)) {
 			worlds.put(worldname, value);
 			return true;
@@ -61,11 +61,11 @@ public class StatusManager {
 			return false;
 	}
 	
-	public boolean getStatus(String worldname) {
+	public synchronized boolean getStatus(String worldname) {
 		return worlds.get(worldname);
 	}
 
-	public void startCountDown(String worldname) {
+	public synchronized void startCountDown(String worldname) {
 		
 		if(worlds.containsKey(worldname) && tasks.get(worldname) == -1) {
 			
@@ -83,7 +83,7 @@ public class StatusManager {
 		}
 	}
 	
-	public void startPlayerCheck(String worldname) {
+	public synchronized void startPlayerCheck(String worldname) {
 		
 		if(worlds.containsKey(worldname) && tasks.get(worldname) == -1) {
 			
@@ -101,7 +101,7 @@ public class StatusManager {
 		}
 	}
 	
-	private void playerCheck(GeneralTaskInfo info) {
+	private synchronized void playerCheck(GeneralTaskInfo info) {
 		
 		String worldname = info.getWorldname();
 		int taskID = info.getTaskID();
@@ -124,7 +124,7 @@ public class StatusManager {
 			plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), ChatColor.LIGHT_PURPLE + plugin.getLanguageManager().getString("waitingForPlayers"));
 	}
 	
-	private void countDown(final CountDown info) {
+	private synchronized void countDown(final CountDown info) {
 		
 		String worldname = info.getWorldname();
 		long timeOfInitiation = info.getStartTime();
@@ -166,7 +166,7 @@ public class StatusManager {
 			plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), (timeToWait - timepassed) + " " + plugin.getLanguageManager().getString("timeleft"));
 	}
 
-	public boolean activate(String worldname) {
+	public synchronized boolean activate(String worldname) {
 		
 		if(worlds.containsKey(worldname)) {
 			setStatus(worldname, true);
@@ -188,7 +188,7 @@ public class StatusManager {
 			return false;
 	}
 
-	private void startArenaCountdown(String worldname) {
+	private synchronized void startArenaCountdown(String worldname) {
 		
 		logger.debug("Starting arena countdown for world: " + worldname);
 		
@@ -208,7 +208,7 @@ public class StatusManager {
 		tasks.put(worldname, info.getTaskID());
 	}
 	
-	private void sendEveryoneToArena(GeneralTaskInfo info) {
+	private synchronized void sendEveryoneToArena(GeneralTaskInfo info) {
 		
 		int taskID = info.getTaskID();
 		
@@ -247,7 +247,7 @@ public class StatusManager {
 		}
 	}
 
-	private void startEndGameCountdown(final String worldname) {
+	private synchronized void startEndGameCountdown(final String worldname) {
 		
 		logger.debug("Starting endgame countdown!");
 		
@@ -264,7 +264,7 @@ public class StatusManager {
 		}, (long) (timeout * 20)));
 	}
 
-	public void reset(String worldname) {
+	public synchronized void reset(String worldname) {
 		
 		logger.debug("Resetting world: " + worldname);
 		

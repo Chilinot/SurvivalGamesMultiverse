@@ -39,7 +39,7 @@ public class LanguageManager {
 		loadLanguage();
 	}
 	
-	private void loadLanguage() {
+	private synchronized void loadLanguage() {
 		
 		FileConfiguration config = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "language.yml"));
 		
@@ -50,7 +50,7 @@ public class LanguageManager {
 		}
 	}
 
-	private void checkDefaults(FileConfiguration config) {
+	private synchronized void checkDefaults(FileConfiguration config) {
 		
 		boolean save = false;
 		
@@ -213,7 +213,7 @@ public class LanguageManager {
 		}
 	}
 	
-	public String getString(String key) {
+	public synchronized String getString(String key) {
 		
 		if(language.containsKey(key)) {
 			return language.get(key);
