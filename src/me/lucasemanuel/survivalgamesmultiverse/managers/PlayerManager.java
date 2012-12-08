@@ -13,7 +13,7 @@
 
 package me.lucasemanuel.survivalgamesmultiverse.managers;
 
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Material;
@@ -30,29 +30,28 @@ public class PlayerManager {
 	private Main plugin;
 	private ConsoleLogger logger;
 	
-	// The second concurrent map in the values is only there to prevent CME's we where getting with the HashSet
-	private ConcurrentHashMap<String, ConcurrentHashMap<Player, Boolean>> playerlists;
+	private ConcurrentHashMap<String, PlayerList> playerlists;
 	
 	public PlayerManager(Main instance) {
 		plugin = instance;
 		logger = new ConsoleLogger(instance, "PlayerManager");
 		
-		playerlists = new ConcurrentHashMap<String, ConcurrentHashMap<Player, Boolean>>();
+		playerlists = new ConcurrentHashMap<String, PlayerList>();
 		
 		logger.debug("Initiated");
 	}
 	
 	public synchronized void addWorld(String worldname) {
 		logger.debug("Adding world - " + worldname);
-		playerlists.put(worldname, new ConcurrentHashMap<Player, Boolean>());
+		playerlists.put(worldname, new PlayerList());
 	}
 
 	public synchronized void addPlayer(String worldname, final Player player) {
 		
 		if(playerlists.containsKey(worldname)) {
-			ConcurrentHashMap<Player, Boolean> playerlist = playerlists.get(worldname);
+			PlayerList playerlist = playerlists.get(worldname);
 			
-			playerlist.put(player, true);
+			playerlist.addPlayer(player);
 			
 			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 				public void run() {
@@ -97,8 +96,8 @@ public class PlayerManager {
 
 	public synchronized boolean isInGame(Player player) {
 		
-		for(ConcurrentHashMap<Player, Boolean> playerlist : playerlists.values()) {
-			if(playerlist.containsKey(player))
+		for(PlayerList playerlist : playerlists.values()) {
+			if(playerlist.containsPlayer(player))
 				return true;
 		}
 		
@@ -109,9 +108,9 @@ public class PlayerManager {
 		
 		if(playerlists.containsKey(worldname)) {
 			
-			ConcurrentHashMap<Player, Boolean> playerlist = playerlists.get(worldname);
+			PlayerList playerlist = playerlists.get(worldname);
 			
-			if(playerlist.remove(player) == false)
+			if(playerlist.removePlayer(player) == false)
 				logger.debug("Tried to remove player from world where he was not listed! Worldname = " + worldname + " - Playername = " + player.getName());
 		}
 		else
@@ -146,7 +145,7 @@ public class PlayerManager {
 	public synchronized int getPlayerAmount(String worldname) {
 		
 		if(playerlists.containsKey(worldname)) {
-			return playerlists.get(worldname).keySet().size();
+			return playerlists.get(worldname).getAmountOfPlayers();
 		}
 		
 		return 0;
@@ -160,11 +159,9 @@ public class PlayerManager {
 		
 		logger.debug("Initated killAndClear on world: " + worldname);
 		
-		Iterator<Player> playerlist = playerlists.get(worldname).keySet().iterator();
-			
-		while(playerlist.hasNext()) {
-			
-			Player player = playerlist.next();
+		Player[] playerlist = playerlists.get(worldname).toArray();
+		
+		for(Player player : playerlist) {
 			
 			if(player != null) {
 				resetPlayer(player);
@@ -179,8 +176,41 @@ public class PlayerManager {
 
 	public synchronized Player[] getPlayerList(String worldname) {
 		if(playerlists.contains(worldname))
-			return (Player[]) playerlists.get(worldname).keySet().toArray();
+			return playerlists.get(worldname).toArray();
 		else
 			return null;
+	}
+}
+
+class PlayerList {
+	
+	private HashSet<Player> players;
+	
+	public PlayerList() {
+		players = new HashSet<Player>();
+	}
+	
+	public synchronized boolean containsPlayer(Player player) {
+		return players.contains(player);
+	}
+
+	public synchronized boolean addPlayer(Player player) {
+		return players.add(player);
+	}
+	
+	public synchronized boolean removePlayer(Player player) {
+		return players.remove(player);
+	}
+	
+	public synchronized int getAmountOfPlayers() {
+		return players.size();
+	}
+	
+	public synchronized void clear() {
+		players.clear();
+	}
+	
+	public synchronized Player[] toArray() {
+		return (Player[]) players.toArray();
 	}
 }
