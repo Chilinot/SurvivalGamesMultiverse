@@ -217,20 +217,18 @@ public class Commands implements CommandExecutor {
 			player.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("sgplayersIncorrect"));
 		
 		if(playerlist != null) {
-			synchronized(playerlist) {
 				
-				if(playerlist.length > 0) {
-					player.sendMessage(ChatColor.LIGHT_PURPLE + " --- " + plugin.getLanguageManager().getString("sgplayersHeading") + " --- ");
-					
-					for(Player tempplayer : playerlist) {
-						player.sendMessage(" - " + ChatColor.GREEN + tempplayer.getName());
-					}
+			if(playerlist.length > 0) {
+				player.sendMessage(ChatColor.LIGHT_PURPLE + " --- " + plugin.getLanguageManager().getString("sgplayersHeading") + " --- ");
+				
+				for(Player tempplayer : playerlist) {
+					player.sendMessage(" - " + ChatColor.GREEN + tempplayer.getName());
 				}
-				else
-					player.sendMessage(ChatColor.LIGHT_PURPLE + plugin.getLanguageManager().getString("sgplayersNoonealive"));
-				
-				return true;
 			}
+			else
+				player.sendMessage(ChatColor.LIGHT_PURPLE + plugin.getLanguageManager().getString("sgplayersNoonealive"));
+			
+			return true;
 		}
 		
 		return false;
