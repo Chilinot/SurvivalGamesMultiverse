@@ -30,6 +30,7 @@ public class PlayerManager {
 	private Main plugin;
 	private ConsoleLogger logger;
 	
+	// The second concurrent map in the values is only there to prevent CME's we where getting with the HashSet
 	private ConcurrentHashMap<String, ConcurrentHashMap<Player, Boolean>> playerlists;
 	
 	public PlayerManager(Main instance) {
