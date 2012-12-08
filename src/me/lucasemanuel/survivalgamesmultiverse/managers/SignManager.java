@@ -17,7 +17,6 @@ package me.lucasemanuel.survivalgamesmultiverse.managers;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -132,14 +131,14 @@ public class SignManager {
 					ChatColor.GRAY  + plugin.getLanguageManager().getString("signs.started") : 
 					ChatColor.GREEN + plugin.getLanguageManager().getString("signs.waiting");
 					
-			Set<Player> playerlist = plugin.getPlayerManager().getPlayerList(worldname);
+			Player[] playerlist = plugin.getPlayerManager().getPlayerList(worldname);
 			
 			synchronized(playerlist) {
 				
 				sign.setLine(0, ChatColor.DARK_GREEN + worldname);
 				sign.setLine(1, status);
 				sign.setLine(2, plugin.getLanguageManager().getString("signs.playersIngame"));
-				sign.setLine(3, "" + ChatColor.WHITE + playerlist.size() + 
+				sign.setLine(3, "" + ChatColor.WHITE + playerlist.length + 
 						"/" + 
 						plugin.getLocationManager().getLocationAmount(worldname));
 				

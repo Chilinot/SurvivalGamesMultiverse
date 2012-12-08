@@ -13,10 +13,7 @@
 
 package me.lucasemanuel.survivalgamesmultiverse.managers;
 
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Material;
@@ -33,36 +30,34 @@ public class PlayerManager {
 	private Main plugin;
 	private ConsoleLogger logger;
 	
-	private ConcurrentHashMap<String, Set<Player>> playerlists;
+	private ConcurrentHashMap<String, ConcurrentHashMap<Player, Boolean>> playerlists;
 	
 	public PlayerManager(Main instance) {
 		plugin = instance;
 		logger = new ConsoleLogger(instance, "PlayerManager");
 		
-		playerlists = new ConcurrentHashMap<String, Set<Player>>();
+		playerlists = new ConcurrentHashMap<String, ConcurrentHashMap<Player, Boolean>>();
 		
 		logger.debug("Initiated");
 	}
 	
 	public synchronized void addWorld(String worldname) {
 		logger.debug("Adding world - " + worldname);
-		playerlists.put(worldname, Collections.synchronizedSet(new HashSet<Player>()));
+		playerlists.put(worldname, new ConcurrentHashMap<Player, Boolean>());
 	}
 
 	public synchronized void addPlayer(String worldname, final Player player) {
 		
 		if(playerlists.containsKey(worldname)) {
-			Set<Player> playerlist = playerlists.get(worldname);
+			ConcurrentHashMap<Player, Boolean> playerlist = playerlists.get(worldname);
 			
-			synchronized(playerlist) {
-				playerlist.add(player);
-			}
+			playerlist.put(player, true);
 			
 			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 				public void run() {
 					resetPlayer(player);
 				}
-			}, 60L);
+			}, 20L);
 			
 			logger.debug("Added - " + player.getName() + " - to world - " + worldname);
 		}
@@ -94,17 +89,16 @@ public class PlayerManager {
 		player.setFoodLevel(20);
 		player.setLevel(0);
 		player.setTotalExperience(0);
+		
 		// Doesn't work without this!
 		player.updateInventory();
 	}
 
 	public synchronized boolean isInGame(Player player) {
 		
-		for(Set<Player> playerlist : playerlists.values()) {
-			synchronized(playerlist) {
-				if(playerlist.contains(player))
-					return true;
-			}
+		for(ConcurrentHashMap<Player, Boolean> playerlist : playerlists.values()) {
+			if(playerlist.containsKey(player))
+				return true;
 		}
 		
 		return false;
@@ -114,12 +108,10 @@ public class PlayerManager {
 		
 		if(playerlists.containsKey(worldname)) {
 			
-			Set<Player> playerlist = playerlists.get(worldname);
+			ConcurrentHashMap<Player, Boolean> playerlist = playerlists.get(worldname);
 			
-			synchronized(playerlist) {
-				if(playerlist.remove(player) == false)
-					logger.debug("Tried to remove player from world where he was not listed! Worldname = " + worldname + " - Playername = " + player.getName());
-			}
+			if(playerlist.remove(player) == false)
+				logger.debug("Tried to remove player from world where he was not listed! Worldname = " + worldname + " - Playername = " + player.getName());
 		}
 		else
 			logger.warning("Tried to remove player '" + player.getName() + "' from incorrect world '" + worldname + "'!");
@@ -127,13 +119,10 @@ public class PlayerManager {
 
 	public synchronized boolean isGameOver(World world) {
 		
-		Set<Player> playerlist = playerlists.get(world.getName());
+		Player[] playerlist = getPlayerList(world.getName());
 		
-		synchronized(playerlist) {
-			if(playerlist != null && playerlist.size() <= 1) {
-				return true;
-			}
-			
+		if(playerlist != null && playerlist.length <= 1) {
+			return true;
 		}
 		
 		return false;
@@ -143,12 +132,10 @@ public class PlayerManager {
 		
 		if(isGameOver(world)) {
 			
-			Set<Player> playerlist = playerlists.get(world.getName());
+			Player[] playerlist = getPlayerList(world.getName());
 			
-			synchronized(playerlist) {
-				if(playerlist != null && playerlist.isEmpty() == false) {
-					return (Player) playerlist.toArray()[0];
-				}
+			if(playerlist != null && playerlist.length == 1) {
+				return playerlist[0];
 			}
 		}
 		
@@ -158,53 +145,41 @@ public class PlayerManager {
 	public synchronized int getPlayerAmount(String worldname) {
 		
 		if(playerlists.containsKey(worldname)) {
-			
-			Set<Player> playerlist = playerlists.get(worldname);
-			
-			synchronized(playerlist) {
-				return playerlist.size();
-			}
+			return playerlists.get(worldname).keySet().size();
 		}
 		
 		return 0;
 	}
 
 	private synchronized void clearList(String worldname) {
-
-		Set<Player> playerlist = playerlists.get(worldname);
-		
-		synchronized(playerlist) {
-			playerlist.clear();
-		}
+		playerlists.get(worldname).clear();
 	}
 
 	public synchronized void killAndClear(String worldname) {
 		
 		logger.debug("Initated killAndClear on world: " + worldname);
 		
-		Set<Player> playerlist = playerlists.get(worldname);
-		
-		synchronized(playerlist) {
+		Iterator<Player> playerlist = playerlists.get(worldname).keySet().iterator();
 			
-			Iterator<Player> i = playerlist.iterator();
+		while(playerlist.hasNext()) {
 			
-			while(i.hasNext()) {
-				
-				Player player = i.next();
-				
-				if(player != null) {
-					resetPlayer(player);
-					player.setHealth(0);
-				}
-				else
-					logger.warning("Tried to reset/kill null player!");
+			Player player = playerlist.next();
+			
+			if(player != null) {
+				resetPlayer(player);
+				player.setHealth(0);
 			}
+			else
+				logger.warning("Tried to reset/kill null player!");
 		}
 		
 		clearList(worldname);
 	}
 
-	public synchronized Set<Player> getPlayerList(String worldname) {
-		return playerlists.get(worldname);
+	public synchronized Player[] getPlayerList(String worldname) {
+		if(playerlists.contains(worldname))
+			return (Player[]) playerlists.get(worldname).keySet().toArray();
+		else
+			return null;
 	}
 }

@@ -16,8 +16,6 @@
 package me.lucasemanuel.survivalgamesmultiverse.managers;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -219,26 +217,20 @@ public class StatusManager {
 			
 			plugin.getWorldManager().broadcast(Bukkit.getWorld(info.getWorldname()), ChatColor.LIGHT_PURPLE + plugin.getLanguageManager().getString("sendingEveryoneToArena"));
 			
-			Set<Player> playerlist = plugin.getPlayerManager().getPlayerList(info.getWorldname());
+			Player[] playerlist = plugin.getPlayerManager().getPlayerList(info.getWorldname());
 			
-			synchronized(playerlist) {
-				
-				Iterator<Player> i = playerlist.iterator();
-				
-				while(i.hasNext()) {
-					
-					Player player = i.next();
-					
-					if(player != null) {
-						if(plugin.getLocationManager().tpToArena(player)) {
-							player.sendMessage(ChatColor.GOLD + plugin.getLanguageManager().getString("sentYouToArena"));
-						}
-						else {
-							player.setHealth(0);
-							player.sendMessage(ChatColor.BLUE + plugin.getLanguageManager().getString("killedSendingArena"));
-						}
+			for(Player player : playerlist) {
+				if(player != null) {
+					if(plugin.getLocationManager().tpToArena(player)) {
+						player.sendMessage(ChatColor.GOLD + plugin.getLanguageManager().getString("sentYouToArena"));
+					}
+					else {
+						player.setHealth(0);
+						player.sendMessage(ChatColor.BLUE + plugin.getLanguageManager().getString("killedSendingArena"));
 					}
 				}
+				else
+					plugin.getPlayerManager().removePlayer(info.getWorldname(), player);
 			}
 			
 			tasks.put(info.getWorldname(), -1);

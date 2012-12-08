@@ -13,9 +13,7 @@
 
 package me.lucasemanuel.survivalgamesmultiverse;
 
-import java.util.Iterator;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -203,7 +201,7 @@ public class Commands implements CommandExecutor {
 		
 		Player player = (Player) sender;
 		
-		Set<Player> playerlist = null;
+		Player[] playerlist = null;
 		
 		if(args.length == 1) {
 			
@@ -221,15 +219,10 @@ public class Commands implements CommandExecutor {
 		if(playerlist != null) {
 			synchronized(playerlist) {
 				
-				if(playerlist.size() > 0) {
+				if(playerlist.length > 0) {
 					player.sendMessage(ChatColor.LIGHT_PURPLE + " --- " + plugin.getLanguageManager().getString("sgplayersHeading") + " --- ");
 					
-					Iterator<Player> i = playerlist.iterator();
-					
-					while(i.hasNext()) {
-						
-						Player tempplayer = i.next();
-						
+					for(Player tempplayer : playerlist) {
 						player.sendMessage(" - " + ChatColor.GREEN + tempplayer.getName());
 					}
 				}
