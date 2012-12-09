@@ -14,6 +14,7 @@
 package me.lucasemanuel.survivalgamesmultiverse.managers;
 
 import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Material;
@@ -175,16 +176,23 @@ public class PlayerManager {
 	}
 
 	public synchronized Player[] getPlayerList(String worldname) {
-		if(playerlists.contains(worldname))
+		
+		logger.debug("getPlayerList called for world: " + worldname);
+		
+		if(playerlists.containsKey(worldname)) {
+			logger.debug("Returning player array.");
 			return playerlists.get(worldname).toArray();
-		else
+		}
+		else {
+			logger.debug("Returning null!");
 			return null;
+		}
 	}
 }
 
 class PlayerList {
 	
-	private HashSet<Player> players;
+	private Set<Player> players;
 	
 	public PlayerList() {
 		players = new HashSet<Player>();
@@ -210,7 +218,17 @@ class PlayerList {
 		players.clear();
 	}
 	
+	// It didn't let me use the set.toArray() and parse like (Player[]) set.toArray()
 	public synchronized Player[] toArray() {
-		return (Player[]) players.toArray();
+		
+		Player[] array = new Player[players.size()];
+		
+		int i = 0;
+		for(Player player : players) {
+			array[i] = player;
+			i++;
+		}
+		
+		return array;
 	}
 }

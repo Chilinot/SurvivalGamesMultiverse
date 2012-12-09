@@ -132,19 +132,14 @@ public class SignManager {
 					ChatColor.GREEN + plugin.getLanguageManager().getString("signs.waiting");
 					
 			Player[] playerlist = plugin.getPlayerManager().getPlayerList(worldname);
+				
+			sign.setLine(0, ChatColor.DARK_GREEN + worldname);
+			sign.setLine(1, status);
+			sign.setLine(2, plugin.getLanguageManager().getString("signs.playersIngame"));
+			sign.setLine(3, "" + ChatColor.WHITE + playerlist.length + 
+					"/" + plugin.getLocationManager().getLocationAmount(worldname));
 			
-			synchronized(playerlist) {
-				
-				sign.setLine(0, ChatColor.DARK_GREEN + worldname);
-				sign.setLine(1, status);
-				sign.setLine(2, plugin.getLanguageManager().getString("signs.playersIngame"));
-				sign.setLine(3, "" + ChatColor.WHITE + playerlist.length + 
-						"/" + 
-						plugin.getLocationManager().getLocationAmount(worldname));
-				
-				sign.update();
-				
-			}
+			sign.update();
 		}
 		else
 			logger.warning("Sign is null! Worldname: " + worldname);
