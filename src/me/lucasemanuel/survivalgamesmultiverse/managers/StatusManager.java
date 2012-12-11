@@ -29,43 +29,43 @@ public class StatusManager {
 	private final Main plugin;
 	private ConsoleLogger logger;
 	
-	// Key = worldname, Value = gamestatus / true = started
-	private HashMap<String, Boolean> worlds;
+	// Key = worldname, Value flags :: 0 = waiting, 1 = started, 2 = frozen
+	private HashMap<String, Integer> worlds_status_flags;
 	
 	// Key = Worldname , Value = TaskID || There should only be one task per world
-	private HashMap<String, Integer> tasks;
+	private HashMap<String, Integer> worlds_tasks;
 	
 	public StatusManager(Main instance) {
 		plugin = instance;
 		logger = new ConsoleLogger(instance, "StatusManager");
 		
-		worlds = new HashMap<String, Boolean>();
-		tasks  = new HashMap<String, Integer>();
+		worlds_status_flags = new HashMap<String, Integer>();
+		worlds_tasks  = new HashMap<String, Integer>();
 		
 		logger.debug("Initiated");
 	}
 	
 	public synchronized void addWorld(String worldname) {
-		worlds.put(worldname, false);
-		tasks.put(worldname, -1); // -1 means no task
+		worlds_status_flags.put(worldname, 0);
+		worlds_tasks.put(worldname, -1); // -1 means no task
 	}
 
-	private synchronized boolean setStatus(String worldname, boolean value) {
-		if(worlds.containsKey(worldname)) {
-			worlds.put(worldname, value);
+	private synchronized boolean setStatus(String worldname, int value) {
+		if(worlds_status_flags.containsKey(worldname)) {
+			worlds_status_flags.put(worldname, value);
 			return true;
 		}
 		else
 			return false;
 	}
 	
-	public synchronized boolean getStatus(String worldname) {
-		return worlds.get(worldname);
+	public synchronized int getStatus(String worldname) {
+		return worlds_status_flags.get(worldname);
 	}
 
 	public synchronized void startCountDown(String worldname) {
 		
-		if(worlds.containsKey(worldname) && tasks.get(worldname) == -1) {
+		if(worlds_status_flags.containsKey(worldname) && worlds_tasks.get(worldname) == -1) {
 			
 			final CountDown info = new CountDown(worldname);
 			
@@ -75,7 +75,7 @@ public class StatusManager {
 				}
 			}, 20L, 200L));
 			
-			tasks.put(worldname, info.getTaskID());
+			worlds_tasks.put(worldname, info.getTaskID());
 			
 			logger.debug("Started task for startCountDown in world: " + worldname + " :: taskID - " + info.getTaskID());
 		}
@@ -83,7 +83,7 @@ public class StatusManager {
 	
 	public synchronized void startPlayerCheck(String worldname) {
 		
-		if(worlds.containsKey(worldname) && tasks.get(worldname) == -1) {
+		if(worlds_status_flags.containsKey(worldname) && worlds_tasks.get(worldname) == -1) {
 			
 			final GeneralTaskInfo info = new GeneralTaskInfo(worldname);
 			
@@ -93,7 +93,7 @@ public class StatusManager {
 				}
 			}, 20L, 200L));
 			
-			tasks.put(worldname, info.getTaskID());
+			worlds_tasks.put(worldname, info.getTaskID());
 			
 			logger.debug("Started task for startPlayerCheck in world: " + worldname + " :: taskID - " + info.getTaskID());
 		}
@@ -110,13 +110,13 @@ public class StatusManager {
 		
 		if(playeramount >= 2) {
 			plugin.getServer().getScheduler().cancelTask(taskID);
-			tasks.put(worldname, -1);
+			worlds_tasks.put(worldname, -1);
 			startCountDown(worldname);
 		}
 		else if(playeramount == 0) {
 			logger.debug("Cancelling task: " + taskID);
 			plugin.getServer().getScheduler().cancelTask(taskID);
-			tasks.put(worldname, -1);
+			worlds_tasks.put(worldname, -1);
 		}
 		else
 			plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), ChatColor.LIGHT_PURPLE + plugin.getLanguageManager().getString("waitingForPlayers"));
@@ -146,7 +146,7 @@ public class StatusManager {
 				logger.debug("Starting 1s countdown for world: " + worldname);
 				
 				plugin.getServer().getScheduler().cancelTask(taskID);
-				tasks.put(worldname, -1);
+				worlds_tasks.put(worldname, -1);
 				
 				info.setStarted10();
 				
@@ -156,7 +156,7 @@ public class StatusManager {
 					}
 				}, 20L, 20L));
 				
-				tasks.put(worldname, info.getTaskID());
+				worlds_tasks.put(worldname, info.getTaskID());
 			}
 		}
 		
@@ -166,16 +166,16 @@ public class StatusManager {
 
 	public synchronized boolean activate(String worldname) {
 		
-		if(worlds.containsKey(worldname)) {
-			setStatus(worldname, true);
+		if(worlds_status_flags.containsKey(worldname)) {
+			setStatus(worldname, 1);
 			
 			plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), ChatColor.GOLD + plugin.getLanguageManager().getString("gamestarted"));
 			
 			plugin.getSignManager().updateSigns();
 			
-			if(tasks.get(worldname) != -1) {
-				plugin.getServer().getScheduler().cancelTask(tasks.get(worldname));
-				tasks.put(worldname, -1);
+			if(worlds_tasks.get(worldname) != -1) {
+				plugin.getServer().getScheduler().cancelTask(worlds_tasks.get(worldname));
+				worlds_tasks.put(worldname, -1);
 			}
 			
 			startArenaCountdown(worldname);
@@ -190,9 +190,9 @@ public class StatusManager {
 		
 		logger.debug("Starting arena countdown for world: " + worldname);
 		
-		if(tasks.get(worldname) != -1) {
-			plugin.getServer().getScheduler().cancelTask(tasks.get(worldname));
-			tasks.put(worldname, -1);
+		if(worlds_tasks.get(worldname) != -1) {
+			plugin.getServer().getScheduler().cancelTask(worlds_tasks.get(worldname));
+			worlds_tasks.put(worldname, -1);
 		}
 		
 		final GeneralTaskInfo info = new GeneralTaskInfo(worldname);
@@ -203,7 +203,7 @@ public class StatusManager {
 			}
 		}, (long) (plugin.getConfig().getInt("timeoutTillArenaInSeconds") * 20)));
 		
-		tasks.put(worldname, info.getTaskID());
+		worlds_tasks.put(worldname, info.getTaskID());
 	}
 	
 	private synchronized void sendEveryoneToArena(GeneralTaskInfo info) {
@@ -213,7 +213,7 @@ public class StatusManager {
 		logger.debug("sendEveryoneToArena() called by task: " + taskID);
 		
 		// Is the task that called this method registered?
-		if(tasks.get(info.getWorldname()) == taskID) {
+		if(worlds_tasks.get(info.getWorldname()) == taskID) {
 			
 			plugin.getWorldManager().broadcast(Bukkit.getWorld(info.getWorldname()), ChatColor.LIGHT_PURPLE + plugin.getLanguageManager().getString("sendingEveryoneToArena"));
 			
@@ -233,7 +233,7 @@ public class StatusManager {
 					plugin.getPlayerManager().removePlayer(info.getWorldname(), player);
 			}
 			
-			tasks.put(info.getWorldname(), -1);
+			worlds_tasks.put(info.getWorldname(), -1);
 			
 			startEndGameCountdown(info.getWorldname());
 		}
@@ -249,7 +249,7 @@ public class StatusManager {
 		plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), timeout + " " + plugin.getLanguageManager().getString("secondsTillTheGameEnds"));
 		
 		// Schedule world reset
-		tasks.put(worldname, plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+		worlds_tasks.put(worldname, plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 			public void run() {
 				plugin.resetWorld(Bukkit.getWorld(worldname));
 			}
@@ -260,12 +260,12 @@ public class StatusManager {
 		
 		logger.debug("Resetting world: " + worldname);
 		
-		if(tasks.get(worldname) != -1) {
-			plugin.getServer().getScheduler().cancelTask(tasks.get(worldname));
-			tasks.put(worldname, -1);
+		if(worlds_tasks.get(worldname) != -1) {
+			plugin.getServer().getScheduler().cancelTask(worlds_tasks.get(worldname));
+			worlds_tasks.put(worldname, -1);
 		}
 		
-		setStatus(worldname, false);
+		setStatus(worldname, 0);
 	}
 }
 

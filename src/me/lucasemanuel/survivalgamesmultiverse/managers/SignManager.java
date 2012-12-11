@@ -127,14 +127,19 @@ public class SignManager {
 		
 		if(sign != null) {
 			
-			String status = plugin.getStatusManager().getStatus(worldname) ? 
-					ChatColor.GRAY  + plugin.getLanguageManager().getString("signs.started") : 
-					ChatColor.GREEN + plugin.getLanguageManager().getString("signs.waiting");
+			String output = "";
+			
+			int status = plugin.getStatusManager().getStatus(worldname);
+			switch(status) {
+				case 0: output = ChatColor.GREEN + plugin.getLanguageManager().getString("signs.waiting"); break;
+				case 1: output = ChatColor.DARK_GREEN  + plugin.getLanguageManager().getString("signs.started"); break;
+				case 3: output = ChatColor.RED + plugin.getLanguageManager().getString("signs.frozen"); break;
+			}
 					
 			Player[] playerlist = plugin.getPlayerManager().getPlayerList(worldname);
 				
 			sign.setLine(0, ChatColor.DARK_GREEN + worldname);
-			sign.setLine(1, status);
+			sign.setLine(1, output);
 			sign.setLine(2, plugin.getLanguageManager().getString("signs.playersIngame"));
 			sign.setLine(3, "" + ChatColor.WHITE + playerlist.length + 
 					"/" + plugin.getLocationManager().getLocationAmount(worldname));

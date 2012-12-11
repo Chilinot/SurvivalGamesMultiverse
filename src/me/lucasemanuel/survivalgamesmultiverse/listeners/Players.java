@@ -133,7 +133,7 @@ public class Players implements Listener {
 				String worldname = plugin.getSignManager().getGameworldName(sign);
 				
 				if(worldname != null && plugin.getWorldManager().isGameWorld(Bukkit.getWorld(worldname))) {
-					if(plugin.getStatusManager().getStatus(worldname) == false) {
+					if(plugin.getStatusManager().getStatus(worldname) == 0) {
 						if(plugin.getPlayerManager().isInGame(player) == false) {
 							if(plugin.getLocationManager().tpToStart(player, worldname)) {
 								
@@ -257,7 +257,7 @@ public class Players implements Listener {
 		if(plugin.getWorldManager().isGameWorld(player.getWorld())) {
 			
 			if(plugin.getPlayerManager().isInGame(player)) {
-				if(plugin.getStatusManager().getStatus(player.getWorld().getName()) == false) {
+				if(plugin.getStatusManager().getStatus(player.getWorld().getName()) == 0) {
 					
 					double fromX = event.getFrom().getX();
 					double fromZ = event.getFrom().getZ();
@@ -289,7 +289,7 @@ public class Players implements Listener {
 			
 			if(plugin.getWorldManager().isGameWorld(player.getWorld())
 					&& plugin.getPlayerManager().isInGame(player)
-					&& plugin.getStatusManager().getStatus(player.getWorld().getName()) == false) {
+					&& plugin.getStatusManager().getStatus(player.getWorld().getName()) == 0) {
 				
 				event.setCancelled(true);
 			}

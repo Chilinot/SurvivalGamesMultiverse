@@ -204,6 +204,11 @@ public class LanguageManager {
 			save = true;
 		}
 		
+		if(!config.contains("signs.frozen")) {
+			config.set("signs.frozen", "Frozen");
+			save = true;
+		}
+		
 		if(save) {
 			try {
 	            config.save(this.plugin.getDataFolder() + File.separator + "language.yml");

@@ -147,7 +147,7 @@ public class Main extends JavaPlugin {
 		
 		if(playermanager.isGameOver(world)) {
 			
-			if(statusmanager.getStatus(world.getName())) {
+			if(statusmanager.getStatus(world.getName()) == 1) {
 				
 				// Broadcast a message to all players in that world that the game is over.
 				worldmanager.broadcast(world, languagemanager.getString("gameover"));
