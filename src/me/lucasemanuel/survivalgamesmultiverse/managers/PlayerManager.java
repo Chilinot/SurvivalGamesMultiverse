@@ -85,6 +85,9 @@ public class PlayerManager {
 			
 			if(plugin.getConfig().getBoolean("halloween.enabled"))
 				player.getInventory().setHelmet(new ItemStack(Material.PUMPKIN));
+			
+			// Doesn't work without this!
+			player.updateInventory();
 		}
 		
 		for(PotionEffect potion : player.getActivePotionEffects()) {
@@ -95,9 +98,6 @@ public class PlayerManager {
 		player.setFoodLevel(20);
 		player.setLevel(0);
 		player.setTotalExperience(0);
-		
-		// Doesn't work without this!
-		player.updateInventory();
 	}
 
 	public synchronized boolean isInGame(Player player) {
