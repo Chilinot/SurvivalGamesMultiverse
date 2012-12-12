@@ -79,8 +79,6 @@ public class SignManager {
 				}
 				else
 					logger.warning("Loaded block is null!");
-				
-				
 			}
 		}
 		else {
