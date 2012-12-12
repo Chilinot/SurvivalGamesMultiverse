@@ -153,8 +153,10 @@ public class Players implements Listener {
 						else
 							player.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("alreadyPlaying"));
 					}
-					else
+					else if(plugin.getStatusManager().getStatus(worldname) == 1)
 						player.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("gameHasAlreadyStarted"));
+					else if(plugin.getStatusManager().getStatus(worldname) == 2)
+						player.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("Join_Blocked_Frozen"));
 				}
 				
 				else if(sign.getLine(0).equalsIgnoreCase("[sginfo]") && player.hasPermission("survivalgames.signs.sginfo")) {

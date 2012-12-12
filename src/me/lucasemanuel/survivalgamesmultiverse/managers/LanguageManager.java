@@ -189,6 +189,11 @@ public class LanguageManager {
 			save = true;
 		}
 		
+		if(!config.contains("Join_Blocked_Frozen")) {
+			config.set("Join_Blocked_Frozen", "This world is temporary frozen!");
+			save = true;
+		}
+		
 		if(!config.contains("signs.started")) {
 			config.set("signs.started", "Started");
 			save = true;
