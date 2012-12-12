@@ -173,8 +173,6 @@ public class Players implements Listener {
 		
 		if(plugin.getWorldManager().isGameWorld(event.getRespawnLocation().getWorld())) {
 			
-//			event.setRespawnLocation(Bukkit.getWorld(plugin.getConfig().getString("lobbyworld")).getSpawnLocation());
-			
 			final Location lobby = Bukkit.getWorld(plugin.getConfig().getString("lobbyworld")).getSpawnLocation();
 			
 			this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
