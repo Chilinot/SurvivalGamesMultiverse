@@ -135,7 +135,7 @@ public class StatusManager {
 		
 		int timepassed = (int) ((System.currentTimeMillis() - timeOfInitiation) / 1000);
 		
-		if(timepassed >= (timeToWait - 12)) {
+		if(timepassed >= (timeToWait - 12) || plugin.getPlayerManager().getPlayerAmount(worldname) >= 20) {
 			
 			if(timepassed >= timeToWait && info.getStarted10() == true) {
 				activate(worldname);
