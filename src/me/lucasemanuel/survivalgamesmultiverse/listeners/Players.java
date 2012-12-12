@@ -271,12 +271,12 @@ public class Players implements Listener {
 					}
 				}
 			}
-			else if(!WorldGuardHook.isInRegion(player.getLocation(), plugin.getConfig().getString("spawnProtectionName")) &&
-					!player.hasPermission("survivalgames.ignore.outsideofspawn")) {
-				
-				player.teleport(player.getWorld().getSpawnLocation());
-				player.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("movedOutsideOfSpawn"));
-			}
+//			else if(!WorldGuardHook.isInRegion(player.getLocation(), plugin.getConfig().getString("spawnProtectionName")) &&
+//					!player.hasPermission("survivalgames.ignore.outsideofspawn")) {
+//				
+//				player.teleport(player.getWorld().getSpawnLocation());
+//				player.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("movedOutsideOfSpawn"));
+//			}
 		}
 	}
 	
