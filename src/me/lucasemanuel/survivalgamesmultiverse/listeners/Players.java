@@ -169,10 +169,19 @@ public class Players implements Listener {
 	}
 	
 	@EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled=true)
-	public void onPlayerRespawn(PlayerRespawnEvent event) {
+	public void onPlayerRespawn(final PlayerRespawnEvent event) {
 		
 		if(plugin.getWorldManager().isGameWorld(event.getRespawnLocation().getWorld())) {
-			event.setRespawnLocation(Bukkit.getWorld(plugin.getConfig().getString("lobbyworld")).getSpawnLocation());
+			
+//			event.setRespawnLocation(Bukkit.getWorld(plugin.getConfig().getString("lobbyworld")).getSpawnLocation());
+			
+			final Location lobby = Bukkit.getWorld(plugin.getConfig().getString("lobbyworld")).getSpawnLocation();
+			
+			this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+				public void run() {
+					event.getPlayer().teleport(lobby);
+				}
+			});
 		}
 	}
 	
