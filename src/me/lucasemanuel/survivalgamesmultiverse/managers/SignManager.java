@@ -133,7 +133,7 @@ public class SignManager {
 			switch(status) {
 				case 0: output = ChatColor.GREEN + plugin.getLanguageManager().getString("signs.waiting"); break;
 				case 1: output = ChatColor.DARK_GREEN  + plugin.getLanguageManager().getString("signs.started"); break;
-				case 3: output = ChatColor.RED + plugin.getLanguageManager().getString("signs.frozen"); break;
+				case 2: output = ChatColor.RED + plugin.getLanguageManager().getString("signs.frozen"); break;
 			}
 					
 			Player[] playerlist = plugin.getPlayerManager().getPlayerList(worldname);
