@@ -58,7 +58,7 @@ public class PlayerManager {
 				public void run() {
 					resetPlayer(player);
 				}
-			}, 20L);
+			}, 5L);
 			
 			logger.debug("Added - " + player.getName() + " - to world - " + worldname);
 		}
