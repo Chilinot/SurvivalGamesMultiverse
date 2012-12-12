@@ -22,6 +22,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.potion.PotionEffect;
 
 import me.lucasemanuel.survivalgamesmultiverse.Main;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
@@ -84,6 +85,10 @@ public class PlayerManager {
 			
 			if(plugin.getConfig().getBoolean("halloween.enabled"))
 				player.getInventory().setHelmet(new ItemStack(Material.PUMPKIN));
+		}
+		
+		for(PotionEffect potion : player.getActivePotionEffects()) {
+			player.removePotionEffect(potion.getType());
 		}
 		
 		player.setHealth(20);
