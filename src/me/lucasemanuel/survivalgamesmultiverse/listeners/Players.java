@@ -20,7 +20,6 @@ import me.lucasemanuel.survivalgamesmultiverse.managers.PlayerManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.StatsManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.WorldManager;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
-import me.lucasemanuel.survivalgamesmultiverse.utils.WorldGuardHook;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
