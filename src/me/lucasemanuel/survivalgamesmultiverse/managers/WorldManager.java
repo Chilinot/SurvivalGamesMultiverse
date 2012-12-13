@@ -171,7 +171,7 @@ public class WorldManager {
 			logger.debug("Tried to reset non registered world!");
 	}
 
-	public synchronized void sendPlayerToSpawn(Player player) {
+	public synchronized void sendPlayerToLobby(Player player) {
 		player.teleport(Bukkit.getWorld(plugin.getConfig().getString("lobbyworld")).getSpawnLocation());
 	}
 

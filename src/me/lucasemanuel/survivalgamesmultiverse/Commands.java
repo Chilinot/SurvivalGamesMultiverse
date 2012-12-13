@@ -187,7 +187,7 @@ public class Commands implements CommandExecutor {
 			plugin.getLocationManager().resetLocationStatus(player.getLocation());
 		}
 		
-		plugin.getWorldManager().sendPlayerToSpawn(player);
+		plugin.getWorldManager().sendPlayerToLobby(player);
 		
 		return true;
 	}
