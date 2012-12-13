@@ -50,7 +50,7 @@ public class StatusManager {
 		worlds_tasks.put(worldname, -1); // -1 means no task
 	}
 
-	private synchronized boolean setStatus(String worldname, int value) {
+	private synchronized boolean setStatusFlag(String worldname, int value) {
 		if(worlds_status_flags.containsKey(worldname)) {
 			worlds_status_flags.put(worldname, value);
 			return true;
@@ -167,7 +167,7 @@ public class StatusManager {
 	public synchronized boolean activate(String worldname) {
 		
 		if(worlds_status_flags.containsKey(worldname)) {
-			setStatus(worldname, 1);
+			setStatusFlag(worldname, 1);
 			
 			plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), ChatColor.GOLD + plugin.getLanguageManager().getString("gamestarted"));
 			
@@ -265,7 +265,7 @@ public class StatusManager {
 			worlds_tasks.put(worldname, -1);
 		}
 		
-		setStatus(worldname, 0);
+		setStatusFlag(worldname, 0);
 	}
 }
 
