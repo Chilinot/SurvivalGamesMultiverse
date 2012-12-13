@@ -52,6 +52,10 @@ public class LanguageManager {
 
 	private synchronized void checkDefaults(FileConfiguration config) {
 		
+		/*
+		 * This is completely messy and needs to be redone!
+		 */
+		
 		boolean save = false;
 		
 		if(!config.contains("gameover")) {
