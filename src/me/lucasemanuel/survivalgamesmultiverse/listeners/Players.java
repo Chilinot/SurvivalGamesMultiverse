@@ -129,10 +129,14 @@ public class Players implements Listener {
 				
 				Sign sign = (Sign) block.getState();
 				
+				/* 
+				 *  ---- Join sign
+				 */
+				
 				String worldname = plugin.getSignManager().getGameworldName(sign);
 				
 				if(worldname != null && plugin.getWorldManager().isGameWorld(Bukkit.getWorld(worldname))) {
-					if(plugin.getStatusManager().getStatus(worldname) == 0) {
+					if(plugin.getStatusManager().getStatusFlag(worldname) == 0) {
 						if(plugin.getPlayerManager().isInGame(player) == false) {
 							if(plugin.getLocationManager().tpToStart(player, worldname)) {
 								
@@ -153,16 +157,24 @@ public class Players implements Listener {
 						else
 							player.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("alreadyPlaying"));
 					}
-					else if(plugin.getStatusManager().getStatus(worldname) == 1)
+					else if(plugin.getStatusManager().getStatusFlag(worldname) == 1)
 						player.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("gameHasAlreadyStarted"));
-					else if(plugin.getStatusManager().getStatus(worldname) == 2)
+					else if(plugin.getStatusManager().getStatusFlag(worldname) == 2)
 						player.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("Join_Blocked_Frozen"));
 				}
+				
+				/*
+				 *  ---- Sign Registration
+				 */
 				
 				else if(sign.getLine(0).equalsIgnoreCase("[sginfo]") && player.hasPermission("survivalgames.signs.sginfo")) {
 					plugin.getSignManager().registerSign(sign);
 				}
 			}
+			
+			/*
+			 *  ---- Chest logging
+			 */
 			
 			else if(block.getType().equals(Material.CHEST) && plugin.getWorldManager().isGameWorld(block.getWorld())) {
 				plugin.getChestManager().randomizeChest((Chest)block.getState());
@@ -269,7 +281,7 @@ public class Players implements Listener {
 		if(plugin.getWorldManager().isGameWorld(player.getWorld())) {
 			
 			if(plugin.getPlayerManager().isInGame(player)) {
-				if(plugin.getStatusManager().getStatus(player.getWorld().getName()) == 0) {
+				if(plugin.getStatusManager().getStatusFlag(player.getWorld().getName()) == 0) {
 					
 					double fromX = event.getFrom().getX();
 					double fromZ = event.getFrom().getZ();
@@ -301,7 +313,7 @@ public class Players implements Listener {
 			
 			if(plugin.getWorldManager().isGameWorld(player.getWorld())
 					&& plugin.getPlayerManager().isInGame(player)
-					&& plugin.getStatusManager().getStatus(player.getWorld().getName()) == 0) {
+					&& plugin.getStatusManager().getStatusFlag(player.getWorld().getName()) == 0) {
 				
 				event.setCancelled(true);
 			}

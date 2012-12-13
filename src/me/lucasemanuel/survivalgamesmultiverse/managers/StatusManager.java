@@ -59,7 +59,7 @@ public class StatusManager {
 			return false;
 	}
 	
-	public synchronized int getStatus(String worldname) {
+	public synchronized int getStatusFlag(String worldname) {
 		return worlds_status_flags.get(worldname);
 	}
 

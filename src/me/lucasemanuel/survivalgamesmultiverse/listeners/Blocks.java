@@ -49,7 +49,7 @@ public class Blocks implements Listener {
 		Block block = event.getBlock();
 		
 		if(plugin.getWorldManager().isGameWorld(block.getWorld())) {
-			if(plugin.getStatusManager().getStatus(block.getWorld().getName()) == 1 || event.getPlayer().hasPermission("survivalgames.ignore.blockfilter")) {
+			if(plugin.getStatusManager().getStatusFlag(block.getWorld().getName()) == 1 || event.getPlayer().hasPermission("survivalgames.ignore.blockfilter")) {
 				if(plugin.getWorldManager().isGameWorld(block.getWorld())) {
 					
 					plugin.getWorldManager().logBlock(block.getLocation());
@@ -71,7 +71,7 @@ public class Blocks implements Listener {
 		Block block = event.getBlock();
 		
 		if(plugin.getWorldManager().isGameWorld(block.getWorld())) {
-			if(plugin.getStatusManager().getStatus(block.getWorld().getName()) == 1 || event.getPlayer().hasPermission("survivalgames.ignore.blockfilter")) {
+			if(plugin.getStatusManager().getStatusFlag(block.getWorld().getName()) == 1 || event.getPlayer().hasPermission("survivalgames.ignore.blockfilter")) {
 				if(plugin.getWorldManager().isGameWorld(block.getWorld())) {
 					plugin.getWorldManager().logBlock(block.getLocation());
 				}

@@ -180,7 +180,7 @@ public class Commands implements CommandExecutor {
 		
 		plugin.getSignManager().updateSigns();
 		
-		if(plugin.getStatusManager().getStatus(player.getWorld().getName()) == 1) {
+		if(plugin.getStatusManager().getStatusFlag(player.getWorld().getName()) == 1) {
 			plugin.gameover(player.getWorld());
 		}
 		else {

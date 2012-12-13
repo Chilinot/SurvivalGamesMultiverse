@@ -127,7 +127,7 @@ public class SignManager {
 			
 			String output = "";
 			
-			int status = plugin.getStatusManager().getStatus(worldname);
+			int status = plugin.getStatusManager().getStatusFlag(worldname);
 			switch(status) {
 				case 0: output = ChatColor.GREEN + plugin.getLanguageManager().getString("signs.waiting"); break;
 				case 1: output = ChatColor.DARK_GREEN  + plugin.getLanguageManager().getString("signs.started"); break;
