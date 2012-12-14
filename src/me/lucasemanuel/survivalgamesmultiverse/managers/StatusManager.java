@@ -186,7 +186,7 @@ public class StatusManager {
 			return false;
 	}
 
-	private synchronized void startArenaCountdown(String worldname) {
+	private synchronized void startArenaCountdown(final String worldname) {
 		
 		logger.debug("Starting arena countdown for world: " + worldname);
 		
@@ -199,7 +199,18 @@ public class StatusManager {
 		
 		info.setTaskID(plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 			public void run() {
-				sendEveryoneToArena(info);
+				
+				// Broadcast that players will be transported to the arena in 5 seconds
+				plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), plugin.getLanguageManager().getString("broadcast_before_arena"));
+				
+				// Schedule the teleport with 100 ticks delay
+				info.setTaskID(plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+					public void run() {
+						sendEveryoneToArena(info);
+					}
+				}, 100L));
+				
+				worlds_tasks.put(worldname, info.getTaskID());
 			}
 		}, (long) (plugin.getConfig().getInt("timeoutTillArenaInSeconds") * 20)));
 		

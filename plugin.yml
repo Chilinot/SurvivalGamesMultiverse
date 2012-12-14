@@ -1,7 +1,7 @@
 name: SurvivalGamesMultiverse
 main: me.lucasemanuel.survivalgamesmultiverse.Main
 version: 0.9.5
-depend: [WorldGuard, WorldEdit]
+#depend: [WorldGuard, WorldEdit]
 
 commands:
   sginfo:

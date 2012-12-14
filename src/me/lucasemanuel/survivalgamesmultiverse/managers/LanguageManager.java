@@ -198,6 +198,11 @@ public class LanguageManager {
 			save = true;
 		}
 		
+		if(!config.contains("broadcast_before_arena")) {
+			config.set("broadcast_before_arena", "You are being teleported to the arena in 5 seconds!");
+			save = true;
+		}
+		
 		if(!config.contains("signs.started")) {
 			config.set("signs.started", "Started");
 			save = true;
