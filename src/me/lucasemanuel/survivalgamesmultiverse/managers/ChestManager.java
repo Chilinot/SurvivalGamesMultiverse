@@ -86,6 +86,11 @@ public class ChestManager {
 					
 					ItemStack item = new ItemStack(Material.getMaterial(itemname.toUpperCase()), 1);
 					
+					
+					/*
+					 *  Enchantments -- start
+					 */
+					
 					if(this.enchable.containsKey(itemname)) {
 						
 						String itemtype = this.enchable.get(itemname);
@@ -135,6 +140,11 @@ public class ChestManager {
 							item.addEnchantment(enchantment, level);
 						}
 					}
+					
+					/*
+					 *  Enchantments -- stop
+					 */
+					
 					
 					// Place the item in a random slot of the inventory, get a new slot if the previous one where occupied
 					int place = 0;
