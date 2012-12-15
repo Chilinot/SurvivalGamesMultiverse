@@ -85,6 +85,8 @@ public class WorldManager {
 	public synchronized void broadcast(World world, String msg) {
 		if(worldlist.containsKey(world)) {
 			
+			logger.debug("Broadcasting message to '" + world.getName() + "': " + msg);
+			
 			for(Player player : world.getPlayers()) {
 				player.sendMessage(ChatColor.GREEN + "[SurvivalGames] - " + ChatColor.WHITE + msg);
 			}
