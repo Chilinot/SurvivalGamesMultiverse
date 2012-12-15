@@ -79,6 +79,8 @@ public class ChestManager {
 				
 				for(int i = 0 ; i < items ; i++) {
 					
+					logger.debug(" --------------- ");
+					
 					Enchantment enchantment = null;
 					String itemname = this.itemlist.next();
 					
@@ -147,6 +149,8 @@ public class ChestManager {
 					
 					logger.debug("Setting item to place " + place);
 					inventory.setItem(place, item);
+					
+					logger.debug(" --------------- ");
 				}
 				
 				logger.debug("Updating chest");
