@@ -114,26 +114,26 @@ public class ChestManager {
 								enchantment = null;
 							}
 						}
-					}
-					
-					// If we have an enchantment, enchant the item
-					if(enchantment != null) {
 						
-						// Generate a random level for the enchantment based on the items maxlevel + 1
-						int level = this.generator.nextInt(enchantment.getMaxLevel() + 1 );
+						// If we have an enchantment, enchant the item
+						if(enchantment != null) {
+							
+							// Generate a random level for the enchantment based on the items maxlevel + 1
+							int level = this.generator.nextInt(enchantment.getMaxLevel() + 1 );
+							
+							logger.debug("Random level = " + level);
+							
+							// If the level is above the maxlevel, set it to max level
+							if(level > enchantment.getMaxLevel())
+								level = enchantment.getMaxLevel();
+							// If the level is beneath or equal to zero, set it to level 1
+							else if (level <= 0)
+								level = 1;
+							
+							logger.debug("Level after check = " + level);
 						
-						logger.debug("Random level = " + level);
-						
-						// If the level is above the maxlevel, set it to max level
-						if(level > enchantment.getMaxLevel())
-							level = enchantment.getMaxLevel();
-						// If the level is beneath or equal to zero, set it to level 1
-						else if (level <= 0)
-							level = 1;
-						
-						logger.debug("Level after check = " + level);
-					
-						item.addEnchantment(enchantment, level);
+							item.addEnchantment(enchantment, level);
+						}
 					}
 					
 					// Place the item in a random slot of the inventory, get a new slot if the previous one where occupied
