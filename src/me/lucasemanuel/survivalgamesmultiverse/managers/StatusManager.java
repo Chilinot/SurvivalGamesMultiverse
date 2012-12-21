@@ -15,6 +15,8 @@
 
 package me.lucasemanuel.survivalgamesmultiverse.managers;
 
+import java.util.HashMap;
+
 import me.lucasemanuel.survivalgamesmultiverse.Main;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
 
@@ -23,16 +25,77 @@ public class StatusManager {
 	private Main plugin;
 	private ConsoleLogger logger;
 	
+	private HashMap<String, TaskInfo> worlds_taskinfo;
+	private HashMap<String, Integer>  worlds_status_flags;
+	
 	public StatusManager(Main instance) {
 		plugin = instance;
 		logger = new ConsoleLogger(instance, "StatusManager");
 		
+		worlds_taskinfo     = new HashMap<String, TaskInfo>();
+		worlds_status_flags = new HashMap<String, Integer>();
+		
 		logger.debug("Initiated");
 	}
 	
+	public synchronized void addWorld(String worldname) {
+		worlds_status_flags.put(worldname, 0);
+		worlds_taskinfo.put(worldname, null);
+	}
+	
+	public synchronized void resetWorld(String worldname) {
+		
+		TaskInfo info = worlds_taskinfo.get(worldname);
+		
+		if(info != null && info.getTaskID() != -1) {
+			plugin.getServer().getScheduler().cancelTask(info.getTaskID());
+			worlds_taskinfo.put(worldname, null);
+		}
+		
+		setStatusFlag(info.getWorldname(), 0);
+	}
+	
+	public synchronized int getStatusFlag(String worldname) {
+		if(worlds_status_flags.containsKey(worldname)) {
+			return worlds_status_flags.get(worldname);
+		}
+		
+		return -1;
+	}
+	
+	private synchronized boolean setStatusFlag(String worldname, int flag) {
+		if(worlds_status_flags.containsKey(worldname)) {
+			worlds_status_flags.put(worldname, flag);
+			return true;
+		}
+		
+		return false;
+	}
 }
 	
+class TaskInfo {
 	
+	private final String worldname;
+	
+	private int taskID;
+	
+	public TaskInfo(String worldname) {
+		this.worldname = worldname;
+		this.taskID = -1;
+	}
+	
+	public synchronized String getWorldname() {
+		return this.worldname;
+	}
+	
+	public synchronized int getTaskID() {
+		return this.taskID;
+	}
+	
+	public synchronized void setTaskID(int ID) {
+		this.taskID = ID;
+	}
+}
 	
 	
 	
