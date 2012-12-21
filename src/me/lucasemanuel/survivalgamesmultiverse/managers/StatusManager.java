@@ -38,6 +38,10 @@ public class StatusManager {
 		logger.debug("Initiated");
 	}
 	
+	/*
+	 *  -- Basics
+	 */
+	
 	public synchronized void addWorld(String worldname) {
 		worlds_status_flags.put(worldname, 0);
 		worlds_taskinfo.put(worldname, null);
@@ -70,6 +74,47 @@ public class StatusManager {
 		}
 		
 		return false;
+	}
+	
+	/*
+	 *  -- Schedule startups
+	 */
+	
+	public synchronized void startPlayerCheck(String worldname) {
+		
+	}
+	
+	public synchronized void startFirstCountDown(String worldname) {
+		
+	}
+	
+	private synchronized void startArenaCountdown(final String worldname) {
+		
+	}
+	
+	private synchronized void startEndgameCountdown(final String worldname) {
+		
+	}
+	
+	
+	/*
+	 *  -- Schedules
+	 */
+	
+	private synchronized void playercheck(TaskInfo info) {
+		
+	}
+	
+	private synchronized void firstCountdown(TaskInfo info) {
+		
+	}
+	
+	private synchronized void arenaCountdown(TaskInfo info) {
+		
+	}
+	
+	private synchronized void endgameCountdown(TaskInfo info) {
+		
 	}
 }
 	
