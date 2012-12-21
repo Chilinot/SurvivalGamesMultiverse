@@ -195,7 +195,7 @@ public class StatusManager {
 			worlds_tasks.put(worldname, -1);
 		}
 		
-		final GeneralTaskInfo info = new GeneralTaskInfo(worldname);
+		final CountDown info = new CountDown(worldname);
 		
 		info.setTaskID(plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 			public void run() {
@@ -217,7 +217,7 @@ public class StatusManager {
 		worlds_tasks.put(worldname, info.getTaskID());
 	}
 	
-	private synchronized void sendEveryoneToArena(GeneralTaskInfo info) {
+	private synchronized void sendEveryoneToArena(CountDown info) {
 		
 		int taskID = info.getTaskID();
 		
