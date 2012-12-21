@@ -20,7 +20,15 @@ import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
 
 public class StatusManager {
 	
+	private Main plugin;
+	private ConsoleLogger logger;
 	
+	public StatusManager(Main instance) {
+		plugin = instance;
+		logger = new ConsoleLogger(instance, "StatusManager");
+		
+		logger.debug("Initiated");
+	}
 	
 	
 	
