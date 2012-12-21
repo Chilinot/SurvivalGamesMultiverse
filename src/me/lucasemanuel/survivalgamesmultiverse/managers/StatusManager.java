@@ -30,6 +30,7 @@ public class StatusManager {
 		logger.debug("Initiated");
 	}
 	
+}
 	
 	
 	
@@ -44,8 +45,7 @@ public class StatusManager {
 	
 	
 	
-	
-	
+//public class StatusManager {
 //	
 //	private final Main plugin;
 //	private ConsoleLogger logger;
@@ -364,4 +364,4 @@ public class StatusManager {
 //	public synchronized boolean getStarted10() {
 //		return this.started10;
 //	}
-}
+//}
