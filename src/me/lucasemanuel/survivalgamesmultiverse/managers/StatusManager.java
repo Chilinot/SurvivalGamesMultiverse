@@ -17,6 +17,9 @@ package me.lucasemanuel.survivalgamesmultiverse.managers;
 
 import java.util.HashMap;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+
 import me.lucasemanuel.survivalgamesmultiverse.Main;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
 
@@ -82,6 +85,20 @@ public class StatusManager {
 	
 	public synchronized void startPlayerCheck(String worldname) {
 		
+		if(worlds_taskinfo.get(worldname) == null) {
+			
+			final TaskInfo info = new TaskInfo(worldname);
+			
+			info.setTaskID(plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+				public void run() {
+					playercheck(info);
+				}
+			}, 20L, 200L));
+			
+			worlds_taskinfo.put(worldname, info);
+			
+			logger.debug("Initiated playercheck for " + worldname + " taskID: " + info.getTaskID());
+		}
 	}
 	
 	public synchronized void startFirstCountDown(String worldname) {
@@ -103,6 +120,23 @@ public class StatusManager {
 	
 	private synchronized void playercheck(TaskInfo info) {
 		
+		String worldname = info.getWorldname();
+		int taskID = info.getTaskID();
+		
+		int playeramount = plugin.getPlayerManager().getPlayerAmount(worldname);
+		
+		if(playeramount == 0) {
+			plugin.getServer().getScheduler().cancelTask(taskID);
+			worlds_taskinfo.put(worldname, null);
+		}
+		else if(playeramount >= 2) {
+			plugin.getServer().getScheduler().cancelTask(taskID);
+			worlds_taskinfo.put(worldname, null);
+			startFirstCountDown(worldname);
+		}
+		else {
+			plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), ChatColor.LIGHT_PURPLE + plugin.getLanguageManager().getString("waitingForPlayers"));
+		}
 	}
 	
 	private synchronized void firstCountdown(TaskInfo info) {
@@ -121,12 +155,13 @@ public class StatusManager {
 class TaskInfo {
 	
 	private final String worldname;
-	
-	private int taskID;
+	private       long   time_of_initiation;
+	private       int    taskID;
 	
 	public TaskInfo(String worldname) {
-		this.worldname = worldname;
-		this.taskID = -1;
+		this.worldname          = worldname;
+		this.taskID             = -1;
+		this.time_of_initiation = System.currentTimeMillis();
 	}
 	
 	public synchronized String getWorldname() {
@@ -139,6 +174,14 @@ class TaskInfo {
 	
 	public synchronized void setTaskID(int ID) {
 		this.taskID = ID;
+	}
+	
+	public synchronized long getTimeOfInitiation() {
+		return this.time_of_initiation;
+	}
+	
+	public synchronized void resetTimeOfInitiation() {
+		this.time_of_initiation = System.currentTimeMillis();
 	}
 }
 	
