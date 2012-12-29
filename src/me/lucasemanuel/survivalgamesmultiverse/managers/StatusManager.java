@@ -126,15 +126,18 @@ public class StatusManager {
 		int playeramount = plugin.getPlayerManager().getPlayerAmount(worldname);
 		
 		if(playeramount == 0) {
+			// Since there are no players left in the game, cancel the check.
 			plugin.getServer().getScheduler().cancelTask(taskID);
 			worlds_taskinfo.put(worldname, null);
 		}
 		else if(playeramount >= 2) {
+			// There are now more then two players, lets start the countdown.
 			plugin.getServer().getScheduler().cancelTask(taskID);
 			worlds_taskinfo.put(worldname, null);
 			startFirstCountDown(worldname);
 		}
 		else {
+			// We are still waiting for more players, lets notify the waiting player.
 			plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), ChatColor.LIGHT_PURPLE + plugin.getLanguageManager().getString("waitingForPlayers"));
 		}
 	}
