@@ -79,6 +79,11 @@ public class StatusManager {
 		return false;
 	}
 	
+	private synchronized void cancelTask(TaskInfo info) {
+		plugin.getServer().getScheduler().cancelTask(info.getTaskID());
+		worlds_taskinfo.put(info.getWorldname(), null);
+	}
+	
 	/*
 	 *  -- Schedule startups
 	 */
@@ -121,19 +126,15 @@ public class StatusManager {
 	private synchronized void playercheck(TaskInfo info) {
 		
 		String worldname = info.getWorldname();
-		int taskID = info.getTaskID();
-		
 		int playeramount = plugin.getPlayerManager().getPlayerAmount(worldname);
 		
 		if(playeramount == 0) {
 			// Since there are no players left in the game, cancel the check.
-			plugin.getServer().getScheduler().cancelTask(taskID);
-			worlds_taskinfo.put(worldname, null);
+			cancelTask(info);
 		}
 		else if(playeramount >= 2) {
 			// There are now more then two players, lets start the countdown.
-			plugin.getServer().getScheduler().cancelTask(taskID);
-			worlds_taskinfo.put(worldname, null);
+			cancelTask(info);
 			startFirstCountDown(worldname);
 		}
 		else {
