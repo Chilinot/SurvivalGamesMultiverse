@@ -52,10 +52,12 @@ public class StatusManager {
 	
 	public synchronized void resetWorld(String worldname) {
 		
+		logger.debug("Resetting world " + worldname);
+		
 		TaskInfo info = worlds_taskinfo.get(worldname);
 		
 		if(info != null && info.getTaskID() != -1) {
-			plugin.getServer().getScheduler().cancelTask(info.getTaskID());
+			cancelTask(info);
 			worlds_taskinfo.put(worldname, null);
 		}
 		
@@ -81,7 +83,27 @@ public class StatusManager {
 	
 	private synchronized void cancelTask(TaskInfo info) {
 		plugin.getServer().getScheduler().cancelTask(info.getTaskID());
-		worlds_taskinfo.put(info.getWorldname(), null);
+		info.setTaskID(-1);
+	}
+	
+	public synchronized boolean activate(String worldname) {
+		
+		if(worlds_status_flags.containsKey(worldname)) {
+			setStatusFlag(worldname, 1);
+			
+			plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), ChatColor.GOLD + plugin.getLanguageManager().getString("gamestarted"));
+			
+			plugin.getSignManager().updateSigns();
+			
+			if(worlds_taskinfo.containsKey(worldname) && worlds_taskinfo.get(worldname) != null)
+				cancelTask(worlds_taskinfo.get(worldname));
+			
+			startArenaCountdown(worldname);
+			
+			return true;
+		}
+		else
+			return false;
 	}
 	
 	/*
@@ -90,7 +112,9 @@ public class StatusManager {
 	
 	public synchronized void startPlayerCheck(String worldname) {
 		
-		if(worlds_taskinfo.get(worldname) == null) {
+		// Make sure there aren't any tasks registered for the world and that the world is in waiting status.
+		// This method gets called every time a player joins the match.
+		if(worlds_taskinfo.get(worldname) == null && worlds_status_flags.get(worldname) == 0) {
 			
 			final TaskInfo info = new TaskInfo(worldname);
 			
@@ -100,14 +124,36 @@ public class StatusManager {
 				}
 			}, 20L, 200L));
 			
+			// Register the task for the world so other methods can find it.
 			worlds_taskinfo.put(worldname, info);
 			
 			logger.debug("Initiated playercheck for " + worldname + " taskID: " + info.getTaskID());
 		}
 	}
 	
-	public synchronized void startFirstCountDown(String worldname) {
+	private synchronized void startFirstCountDown(String worldname) {
 		
+		// Just a failsafe to make sure there isn't another countdown called if the game has started.
+		if(worlds_status_flags.get(worldname) == 0) {
+			
+			final TaskInfo info = worlds_taskinfo.get(worldname);
+			
+			// Reset so we get a correct countdown
+			info.resetTimeOfInitiation();
+			
+			// Make sure the pre-existing task is canceled
+			if(info.getTaskID() != -1)
+				cancelTask(info);
+			
+			// Schedule a repeating call to the firstCountdown() method with 1 s delay and 10 s in between.
+			info.setTaskID(plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+				public void run() {
+					firstCountdown(info);
+				}
+			}, 20L, 200L));
+			
+			logger.debug("Initiated firstCountdown for world: " + worldname + " ; TaskID: " + info.getTaskID());
+		}
 	}
 	
 	private synchronized void startArenaCountdown(final String worldname) {
@@ -130,7 +176,7 @@ public class StatusManager {
 		
 		if(playeramount == 0) {
 			// Since there are no players left in the game, cancel the check.
-			cancelTask(info);
+			resetWorld(worldname);
 		}
 		else if(playeramount >= 2) {
 			// There are now more then two players, lets start the countdown.
@@ -143,10 +189,42 @@ public class StatusManager {
 		}
 	}
 	
-	private synchronized void firstCountdown(TaskInfo info) {
+	private synchronized void firstCountdown(final TaskInfo info) {
 		
+		int confTime     = plugin.getConfig().getInt("timeoutTillStart");
+		int timepassed   = (int) ((System.currentTimeMillis() - info.getTimeOfInitiation()) / 1000);
+		
+		String worldname = info.getWorldname();
+		
+		if(timepassed >= (confTime - 12) || plugin.getPlayerManager().getPlayerAmount(worldname) >= 20) {
+			
+			// If enough time has passed and the 10s countdown has been initiated, activate the game.
+			if(timepassed >= confTime && info.getStarted10() == true) {
+				activate(worldname);
+			}
+			
+			else if(info.getStarted10() == false) {
+				
+				logger.debug("Starting 1s countdown for world: " + worldname);
+				
+				// Cancel the task that calls this method so we can initiate a new one with a shorter repeating delay of 1s.
+				cancelTask(info);
+				
+				// Tell the TaskInfo object that we are starting the 10s countdown.
+				info.setStarted10();
+				
+				info.setTaskID(plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+					public void run() {
+						firstCountdown(info);
+					}
+				}, 20L, 20L));
+			}
+		}
+		
+		if((confTime - timepassed) > 0)
+			plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), (confTime - timepassed) + " " + plugin.getLanguageManager().getString("timeleft"));
 	}
-	
+
 	private synchronized void arenaCountdown(TaskInfo info) {
 		
 	}
@@ -158,16 +236,18 @@ public class StatusManager {
 	
 class TaskInfo {
 	
-	private final String worldname;
-	private       long   time_of_initiation;
-	private       int    taskID;
+	private final String  worldname;
+	private       long    time_of_initiation;
+	private       int     taskID;
+	private       boolean s10;
 	
 	public TaskInfo(String worldname) {
 		this.worldname          = worldname;
 		this.taskID             = -1;
+		this.s10                = false;
 		this.time_of_initiation = System.currentTimeMillis();
 	}
-	
+
 	public synchronized String getWorldname() {
 		return this.worldname;
 	}
@@ -186,6 +266,14 @@ class TaskInfo {
 	
 	public synchronized void resetTimeOfInitiation() {
 		this.time_of_initiation = System.currentTimeMillis();
+	}
+	
+	public void setStarted10() {
+		this.s10 = true;
+	}
+
+	public boolean getStarted10() {
+		return this.s10;
 	}
 }
 	
