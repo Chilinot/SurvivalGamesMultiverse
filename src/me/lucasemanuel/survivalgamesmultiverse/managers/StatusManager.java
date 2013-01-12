@@ -31,12 +31,16 @@ public class StatusManager {
 	private HashMap<String, TaskInfo> worlds_taskinfo;
 	private HashMap<String, Integer>  worlds_status_flags;
 	
+	private final int conftime;
+	
 	public StatusManager(Main instance) {
 		plugin = instance;
 		logger = new ConsoleLogger(instance, "StatusManager");
 		
 		worlds_taskinfo     = new HashMap<String, TaskInfo>();
 		worlds_status_flags = new HashMap<String, Integer>();
+		
+		conftime = plugin.getConfig().getInt("timeoutTillStart");
 		
 		logger.debug("Initiated");
 	}
@@ -81,25 +85,23 @@ public class StatusManager {
 		return false;
 	}
 	
+	private synchronized void checkAndKill(String worldname) {
+		if(worlds_taskinfo.containsKey(worldname) && worlds_taskinfo.get(worldname) != null)
+			cancelTask(worlds_taskinfo.get(worldname));
+	}
+	
 	private synchronized void cancelTask(TaskInfo info) {
 		plugin.getServer().getScheduler().cancelTask(info.getTaskID());
 		info.setTaskID(-1);
 	}
 	
 	public synchronized boolean activate(String worldname) {
-		
 		if(worlds_status_flags.containsKey(worldname)) {
 			setStatusFlag(worldname, 1);
-			
 			plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), ChatColor.GOLD + plugin.getLanguageManager().getString("gamestarted"));
-			
 			plugin.getSignManager().updateSigns();
-			
-			if(worlds_taskinfo.containsKey(worldname) && worlds_taskinfo.get(worldname) != null)
-				cancelTask(worlds_taskinfo.get(worldname));
-			
+			checkAndKill(worldname);
 			startArenaCountdown(worldname);
-			
 			return true;
 		}
 		else
@@ -158,9 +160,11 @@ public class StatusManager {
 	
 	private synchronized void startArenaCountdown(final String worldname) {
 		
-	}
-	
-	private synchronized void startEndgameCountdown(final String worldname) {
+		// Make sure any previous task for this world is canceled.
+		checkAndKill(worldname);
+		
+		
+		
 		
 	}
 	
@@ -191,15 +195,13 @@ public class StatusManager {
 	
 	private synchronized void firstCountdown(final TaskInfo info) {
 		
-		int confTime     = plugin.getConfig().getInt("timeoutTillStart");
 		int timepassed   = (int) ((System.currentTimeMillis() - info.getTimeOfInitiation()) / 1000);
-		
 		String worldname = info.getWorldname();
 		
-		if(timepassed >= (confTime - 12) || plugin.getPlayerManager().getPlayerAmount(worldname) >= 20) {
+		if(timepassed >= (conftime - 12) || plugin.getPlayerManager().getPlayerAmount(worldname) >= 20) {
 			
 			// If enough time has passed and the 10s countdown has been initiated, activate the game.
-			if(timepassed >= confTime && info.getStarted10() == true) {
+			if(timepassed >= conftime && info.getStarted10() == true) {
 				activate(worldname);
 			}
 			
@@ -221,16 +223,8 @@ public class StatusManager {
 			}
 		}
 		
-		if((confTime - timepassed) > 0)
-			plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), (confTime - timepassed) + " " + plugin.getLanguageManager().getString("timeleft"));
-	}
-
-	private synchronized void arenaCountdown(TaskInfo info) {
-		
-	}
-	
-	private synchronized void endgameCountdown(TaskInfo info) {
-		
+		if((conftime - timepassed) > 0)
+			plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), (conftime - timepassed) + " " + plugin.getLanguageManager().getString("timeleft"));
 	}
 }
 	
@@ -268,11 +262,11 @@ class TaskInfo {
 		this.time_of_initiation = System.currentTimeMillis();
 	}
 	
-	public void setStarted10() {
+	public synchronized void setStarted10() {
 		this.s10 = true;
 	}
 
-	public boolean getStarted10() {
+	public synchronized boolean getStarted10() {
 		return this.s10;
 	}
 }
