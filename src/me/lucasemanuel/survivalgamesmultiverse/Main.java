@@ -176,7 +176,7 @@ public class Main extends JavaPlugin {
 		worldmanager.resetWorld(world);
 		locationmanager.resetLocationStatuses(world);
 		chestmanager.clearLogs(world.getName());
-		statusmanager.resetWorld(world.getName());
+		statusmanager.reset(world.getName());
 		signmanager.updateSigns();
 	}
 }
