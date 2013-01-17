@@ -52,7 +52,7 @@ public class Blocks implements Listener {
 			if(plugin.getStatusManager().getStatusFlag(block.getWorld().getName()) == 1 || event.getPlayer().hasPermission("survivalgames.ignore.blockfilter")) {
 				if(plugin.getWorldManager().isGameWorld(block.getWorld())) {
 					
-					plugin.getWorldManager().logBlock(block.getLocation());
+					plugin.getWorldManager().logBlock(block.getLocation(), true);
 					
 					if(block.getType().equals(Material.CHEST))
 						plugin.getChestManager().addChestToLog(block.getLocation());
@@ -73,7 +73,7 @@ public class Blocks implements Listener {
 		if(plugin.getWorldManager().isGameWorld(block.getWorld())) {
 			if(plugin.getStatusManager().getStatusFlag(block.getWorld().getName()) == 1 || event.getPlayer().hasPermission("survivalgames.ignore.blockfilter")) {
 				if(plugin.getWorldManager().isGameWorld(block.getWorld())) {
-					plugin.getWorldManager().logBlock(block.getLocation());
+					plugin.getWorldManager().logBlock(block.getLocation(), false);
 				}
 			}
 			else {
@@ -88,7 +88,7 @@ public class Blocks implements Listener {
 		
 		if(plugin.getWorldManager().isGameWorld(event.getLocation().getWorld())) {
 			for(Block block : event.blockList()) {
-				plugin.getWorldManager().logBlock(block.getLocation());
+				plugin.getWorldManager().logBlock(block.getLocation(), false);
 			}
 		}
 	}
@@ -99,7 +99,7 @@ public class Blocks implements Listener {
 		Block block = event.getBlock();
 		
 		if(plugin.getWorldManager().isGameWorld(block.getWorld())) {
-			plugin.getWorldManager().logBlock(block.getLocation());
+			plugin.getWorldManager().logBlock(block.getLocation(), false);
 		}
 	}
 	
@@ -109,7 +109,7 @@ public class Blocks implements Listener {
 		Block block = event.getBlock();
 		
 		if(plugin.getWorldManager().isGameWorld(block.getWorld())) {
-			plugin.getWorldManager().logBlock(block.getLocation());
+			plugin.getWorldManager().logBlock(block.getLocation(), false);
 		}
 	}
 	
@@ -119,7 +119,7 @@ public class Blocks implements Listener {
 		Block block = event.getBlock();
 		
 		if(plugin.getWorldManager().isGameWorld(block.getWorld())) {
-			plugin.getWorldManager().logBlock(block.getLocation());
+			plugin.getWorldManager().logBlock(block.getLocation(), false);
 		}
 	}
 }

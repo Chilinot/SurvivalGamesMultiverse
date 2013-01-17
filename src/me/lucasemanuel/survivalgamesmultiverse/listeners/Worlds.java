@@ -39,7 +39,7 @@ public class Worlds implements Listener {
 	public void onWorldUnload(WorldUnloadEvent event) {
 		logger.debug("World unload event captured!");
 		
-		if(plugin.getWorldManager().isRegistered(event.getWorld())) {
+		if(plugin.getWorldManager().isGameWorld(event.getWorld())) {
 			logger.debug("Blocking unload!");
 			event.setCancelled(true);
 		}

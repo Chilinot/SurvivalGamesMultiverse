@@ -16,8 +16,6 @@
 package me.lucasemanuel.survivalgamesmultiverse.managers;
 
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -39,13 +37,10 @@ public class WorldManager {
 	private Main plugin;
 	private ConsoleLogger logger;
 	
-	// Key = Gameworlds, Value = Templateworld
-	private HashMap<World, World> worldlist;
-	
 	// Key = Worldname, Value = logged blocks for that world
 	// The logged blocks are separated into several HashSet's so the resetWorld() method will have
 	// less locations to loop over per world, and so speed up performance.
-	private HashMap<String, HashSet<Location>> loggedblocks;
+	private HashMap<String, HashMap<String, LoggedBlock>> logged_blocks;
 	
 	// Entities that shouldn't be removed on world reset
 	private final EntityType[] nonremovable = new EntityType[] { 
@@ -57,33 +52,23 @@ public class WorldManager {
 		plugin = instance;
 		logger = new ConsoleLogger(instance, "WorldManager");
 		
-		worldlist    = new HashMap<World, World>();
-		loggedblocks = new HashMap<String, HashSet<Location>>();
+		logged_blocks = new HashMap<String, HashMap<String, LoggedBlock>>();
 	}
 	
-	public synchronized void addWorld(World world, World template) {
-		worldlist.put(world, template);
-		loggedblocks.put(world.getName(), new HashSet<Location>());
+	public synchronized void addWorld(String worldname) {
+		logged_blocks.put(worldname, new HashMap<String, LoggedBlock>());
 	}
 	
 	public synchronized boolean isGameWorld(World world) {
 		
-		if(worldlist.containsKey(world))
-			return true;
-		else
-			return false;
-	}
-	
-	public synchronized boolean isRegistered(World world) {
-		
-		if(worldlist.containsKey(world) || worldlist.containsValue(world))
+		if(logged_blocks.containsKey(world.getName()))
 			return true;
 		else
 			return false;
 	}
 	
 	public synchronized void broadcast(World world, String msg) {
-		if(worldlist.containsKey(world)) {
+		if(isGameWorld(world)) {
 			
 			logger.debug("Broadcasting message to '" + world.getName() + "': " + msg);
 			
@@ -93,54 +78,47 @@ public class WorldManager {
 			
 		}
 		else
-			logger.debug("Tried to broadcast message '" + msg + "' to non registered world - " + world.getName());
+			logger.debug("Tried to broadcast message '" + msg + "' to non game-world - " + world.getName());
 	}
 
-	public synchronized void logBlock(Location location) {
-		if(loggedblocks.containsKey(location.getWorld().getName()) && loggedblocks.get(location.getWorld().getName()).contains(location) == false) {
-			loggedblocks.get(location.getWorld().getName()).add(location);
-			logger.debug("Logged block in world: " + location.getWorld().getName());
+	public synchronized void logBlock(Location location, boolean placed) {
+		
+		String key = new String(location.getBlockX() + " " + location.getBlockY() + " " + location.getBlockZ());
+		
+		if(logged_blocks.containsKey(location.getWorld().getName()) && logged_blocks.get(location.getWorld().getName()).containsKey(key) == false) {
+			
+			Material material = placed ? Material.AIR : location.getBlock().getType();
+			
+			String[] sign_lines = null;
+			
+			if(location.getBlock().getType() == Material.WALL_SIGN || location.getBlock().getType() == Material.SIGN_POST) {
+				sign_lines = ((Sign) location.getBlock().getState()).getLines();
+			}
+			
+			logged_blocks.get(location.getWorld().getName()).put(
+					key, new LoggedBlock(
+							location.getWorld().getName(), 
+							location.getBlockX(), location.getBlockY(), location.getBlockZ(),
+							material, location.getBlock().getData(), 
+							sign_lines)
+			);
+			
+//			logger.debug("Logged block in world: " + location.getWorld().getName());
 		}
+		else
+			logger.debug("Dupe log!");
 	}
 
 	public synchronized void resetWorld(final World world) {
 		
 		logger.debug("Resetting world: " + world.getName());
 		
-		if(worldlist.containsKey(world)) {
+		if(isGameWorld(world)) {
 			
-			World template = worldlist.get(world);
+			HashMap<String, LoggedBlock> blocks_to_reset = logged_blocks.get(world.getName());
 			
-			HashSet<Location> blocksToReset = loggedblocks.get(world.getName());
-			for(Location location : blocksToReset) {
-				
-				int blockX = location.getBlockX();
-				int blockY = location.getBlockY();
-				int blockZ = location.getBlockZ();
-				
-				Block templateblock  = template.getBlockAt(blockX, blockY, blockZ);
-				Block blockToRestore = location.getBlock();
-				
-				blockToRestore.setType(templateblock.getType());
-				blockToRestore.setData(templateblock.getData());
-				
-				if(templateblock.getType() == Material.WALL_SIGN || templateblock.getType() == Material.SIGN_POST) {
-					
-					// Temporary bugfix - hopefully
-					if(blockToRestore.getType() != templateblock.getType()) {
-						logger.warning("blockToRestore and templateblock not a match! Sign!");
-						continue;
-					}
-					
-					Sign templatesign = (Sign) templateblock.getState();
-					Sign restoredsign = (Sign) blockToRestore.getState();
-					
-					for(int i = 0 ; i < 4 ; i++) {
-						restoredsign.setLine(i, templatesign.getLine(i));
-					}
-					
-					restoredsign.update();
-				}
+			for(LoggedBlock block : blocks_to_reset.values()) {
+				block.reset();
 			}
 			
 			// Schedule removal of all world entities to make sure they are all removed
@@ -167,7 +145,7 @@ public class WorldManager {
 			
 			// Reset logs
 			
-			blocksToReset.clear();
+			blocks_to_reset.clear();
 		}
 		else
 			logger.debug("Tried to reset non registered world!");
@@ -177,14 +155,60 @@ public class WorldManager {
 		player.teleport(Bukkit.getWorld(plugin.getConfig().getString("lobbyworld")).getSpawnLocation());
 	}
 
-	public synchronized HashMap<String, String> getRegisteredWorldNames() {
+	public synchronized String[] getRegisteredWorldNames() {
 		
-		HashMap<String, String> worlds = new HashMap<String, String>();
+		String[] worlds = new String[logged_blocks.size()];
 		
-		for(Entry<World, World> entry : worldlist.entrySet()) {
-			worlds.put(entry.getKey().getName(), entry.getValue().getName());
+		int i = 0;
+		for(String string : logged_blocks.keySet()) {
+			worlds[i] = string;
+			i++;
 		}
 		
 		return worlds;
 	}
 }
+
+class LoggedBlock {
+	
+	private final String   WORLDNAME;
+	private final int      X, Y, Z;
+	
+	private final Material MATERIAL;
+	private final byte     DATA;
+	
+	private final String[] SIGN_LINES;
+	
+	public LoggedBlock(String worldname, int x, int y, int z, Material material, byte data, String[] sign_lines) {
+		
+		WORLDNAME = worldname;
+		X = x; Y = y; Z = z;
+		
+		MATERIAL = material;
+		DATA     = data;
+		
+		SIGN_LINES = sign_lines;
+	}
+	
+	public synchronized void reset() {
+		
+		Block block_to_restore = Bukkit.getWorld(WORLDNAME).getBlockAt(X, Y, Z);
+		
+		block_to_restore.setType(MATERIAL);
+		block_to_restore.setData(DATA);
+		
+		if(SIGN_LINES != null && (MATERIAL == Material.SIGN_POST || MATERIAL ==  Material.WALL_SIGN)) {
+			
+			Sign sign = (Sign) block_to_restore.getState();
+			
+			for(int i = 0 ; i < 4 ; i++) {
+				sign.setLine(i, SIGN_LINES[i]);
+			}
+			
+			sign.update();
+		}
+	}
+}
+
+
+

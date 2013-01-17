@@ -13,8 +13,6 @@
 
 package me.lucasemanuel.survivalgamesmultiverse;
 
-import java.util.Map.Entry;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -91,12 +89,9 @@ public class Commands implements CommandExecutor {
 				
 				case "worlds":
 					sender.sendMessage(ChatColor.LIGHT_PURPLE + " -- Registered worlds:");
-					sender.sendMessage(ChatColor.YELLOW + " -- Gamworld -- Templateworld");
 					
-					for(Entry<String, String> entry : this.plugin.getWorldManager().getRegisteredWorldNames().entrySet()) {
-						
-						sender.sendMessage(" - " + ChatColor.GREEN + entry.getKey() + ChatColor.WHITE + " -- " + ChatColor.LIGHT_PURPLE + entry.getValue());
-						
+					for(String string : this.plugin.getWorldManager().getRegisteredWorldNames()) {
+						sender.sendMessage(" - " + ChatColor.YELLOW + string);
 					}
 					
 					return true;

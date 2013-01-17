@@ -89,9 +89,9 @@ public class Main extends JavaPlugin {
 		
 		logger.debug("Finished! Lets load some worlds...");
 		
-		for(String key : getConfig().getConfigurationSection("worldnames").getKeys(false)) {
+		for(String key : getConfig().getStringList("worldnames")) {
 			
-			worldmanager.addWorld(Bukkit.createWorld(new WorldCreator(key)), Bukkit.createWorld(new WorldCreator(getConfig().getString("worldnames." + key))));
+			worldmanager.addWorld(Bukkit.createWorld(new WorldCreator(key)).getName());
 			playermanager.addWorld(key);
 			locationmanager.addWorld(key);
 			statusmanager.addWorld(key);
