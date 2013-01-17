@@ -105,8 +105,6 @@ public class WorldManager {
 			
 //			logger.debug("Logged block in world: " + location.getWorld().getName());
 		}
-		else
-			logger.debug("Dupe log!");
 	}
 
 	public synchronized void resetWorld(final World world) {
@@ -209,6 +207,3 @@ class LoggedBlock {
 		}
 	}
 }
-
-
-
