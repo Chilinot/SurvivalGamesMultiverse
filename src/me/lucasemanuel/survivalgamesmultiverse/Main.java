@@ -91,7 +91,7 @@ public class Main extends JavaPlugin {
 		
 		for(String key : getConfig().getStringList("worldnames")) {
 			
-			worldmanager.addWorld(Bukkit.createWorld(new WorldCreator(key)).getName());
+			worldmanager.addWorld(Bukkit.createWorld(new WorldCreator(key)));
 			playermanager.addWorld(key);
 			locationmanager.addWorld(key);
 			statusmanager.addWorld(key);

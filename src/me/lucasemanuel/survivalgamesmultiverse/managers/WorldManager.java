@@ -37,10 +37,7 @@ public class WorldManager {
 	private Main plugin;
 	private ConsoleLogger logger;
 	
-	// Key = Worldname, Value = logged blocks for that world
-	// The logged blocks are separated into several HashSet's so the resetWorld() method will have
-	// less locations to loop over per world, and so speed up performance.
-	private HashMap<String, HashMap<String, LoggedBlock>> logged_blocks;
+	private HashMap<World, HashMap<String, LoggedBlock>> logged_blocks;
 	
 	// Entities that shouldn't be removed on world reset
 	private final EntityType[] nonremovable = new EntityType[] { 
@@ -52,16 +49,16 @@ public class WorldManager {
 		plugin = instance;
 		logger = new ConsoleLogger(instance, "WorldManager");
 		
-		logged_blocks = new HashMap<String, HashMap<String, LoggedBlock>>();
+		logged_blocks = new HashMap<World, HashMap<String, LoggedBlock>>();
 	}
 	
-	public synchronized void addWorld(String worldname) {
-		logged_blocks.put(worldname, new HashMap<String, LoggedBlock>());
+	public synchronized void addWorld(World world) {
+		logged_blocks.put(world, new HashMap<String, LoggedBlock>());
 	}
 	
 	public synchronized boolean isGameWorld(World world) {
 		
-		if(logged_blocks.containsKey(world.getName()))
+		if(logged_blocks.containsKey(world))
 			return true;
 		else
 			return false;
@@ -85,7 +82,7 @@ public class WorldManager {
 		
 		String key = new String(location.getBlockX() + " " + location.getBlockY() + " " + location.getBlockZ());
 		
-		if(logged_blocks.containsKey(location.getWorld().getName()) && logged_blocks.get(location.getWorld().getName()).containsKey(key) == false) {
+		if(logged_blocks.containsKey(location.getWorld()) && logged_blocks.get(location.getWorld()).containsKey(key) == false) {
 			
 			Material material = placed ? Material.AIR : location.getBlock().getType();
 			
@@ -95,7 +92,7 @@ public class WorldManager {
 				sign_lines = ((Sign) location.getBlock().getState()).getLines();
 			}
 			
-			logged_blocks.get(location.getWorld().getName()).put(
+			logged_blocks.get(location.getWorld()).put(
 					key, new LoggedBlock(
 							location.getWorld().getName(), 
 							location.getBlockX(), location.getBlockY(), location.getBlockZ(),
@@ -113,7 +110,7 @@ public class WorldManager {
 		
 		if(isGameWorld(world)) {
 			
-			HashMap<String, LoggedBlock> blocks_to_reset = logged_blocks.get(world.getName());
+			HashMap<String, LoggedBlock> blocks_to_reset = logged_blocks.get(world);
 			
 			for(LoggedBlock block : blocks_to_reset.values()) {
 				block.reset();
@@ -158,8 +155,8 @@ public class WorldManager {
 		String[] worlds = new String[logged_blocks.size()];
 		
 		int i = 0;
-		for(String string : logged_blocks.keySet()) {
-			worlds[i] = string;
+		for(World world : logged_blocks.keySet()) {
+			worlds[i] = world.getName();
 			i++;
 		}
 		
