@@ -362,10 +362,10 @@ public class ChestManager {
 		
 		if(save) {
 			try {
-	            itemConfig.save(this.plugin.getDataFolder() + File.separator + "itemlist.yml");
-	            // Some sort of bug makes it impossible to use the config.getList(), reloading it after saving seems to fix it.
-	            this.itemConfig = YamlConfiguration.loadConfiguration(new File(this.plugin.getDataFolder(), "itemlist.yml"));
-	        } catch (IOException e) {
+				itemConfig.save(this.plugin.getDataFolder() + File.separator + "itemlist.yml");
+				// Some sort of bug makes it impossible to use the config.getList(), reloading it after saving seems to fix it.
+				this.itemConfig = YamlConfiguration.loadConfiguration(new File(this.plugin.getDataFolder(), "itemlist.yml"));
+			} catch (IOException e) {
 	        	this.logger.severe("Could not save the itemlist!");
 	        }
 		}
