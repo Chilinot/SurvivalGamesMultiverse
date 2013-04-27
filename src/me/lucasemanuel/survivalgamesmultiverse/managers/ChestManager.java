@@ -117,8 +117,6 @@ public class ChestManager {
 							enchantchance = this.itemConfig.getDouble("armors." + itemname + ".enchantmentchance");
 						}
 						
-						logger.debug("Enchantmentchance = " + enchantchance);
-						
 						// Generate a random double and retrieve an enchantment if the generated value is less or equal to the enchantchance
 						if(this.generator.nextDouble() <= enchantchance) {
 							
@@ -350,8 +348,8 @@ public class ChestManager {
 				// Some sort of bug makes it impossible to use the config.getList(), reloading it after saving seems to fix it.
 				this.itemConfig = YamlConfiguration.loadConfiguration(new File(this.plugin.getDataFolder(), "itemlist.yml"));
 			} catch (IOException e) {
-	        	this.logger.severe("Could not save the itemlist!");
-	        }
+				this.logger.severe("Could not save the itemlist!");
+			}
 		}
 	}
 }
