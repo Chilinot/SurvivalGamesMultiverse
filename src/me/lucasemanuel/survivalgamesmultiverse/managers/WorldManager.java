@@ -19,11 +19,13 @@ import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.craftbukkit.v1_5_R2.CraftChunk;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -99,8 +101,6 @@ public class WorldManager {
 							material, location.getBlock().getData(), 
 							sign_lines)
 			);
-			
-//			logger.debug("Logged block in world: " + location.getWorld().getName());
 		}
 	}
 
@@ -115,8 +115,6 @@ public class WorldManager {
 			for(LoggedBlock block : blocks_to_reset.values()) {
 				block.reset();
 			}
-			
-			// Schedule removal of all world entities to make sure they are all removed
 			
 			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 				public void run() {
@@ -162,6 +160,15 @@ public class WorldManager {
 		
 		return worlds;
 	}
+	
+	/*
+	 *  Thanks to desht @ Bukkit forums for this method! :)
+	 */
+	public static boolean setBlockFast(Block b, int typeId, byte data) {
+        Chunk c = b.getChunk();
+        net.minecraft.server.v1_5_R2.Chunk chunk = ((CraftChunk) c).getHandle();
+        return chunk.a(b.getX() & 15, b.getY(), b.getZ() & 15, typeId, data);
+	}
 }
 
 class LoggedBlock {
@@ -169,7 +176,7 @@ class LoggedBlock {
 	private final String   WORLDNAME;
 	private final int      X, Y, Z;
 	
-	private final Material MATERIAL;
+	private final int      MATERIAL;
 	private final byte     DATA;
 	
 	private final String[] SIGN_LINES;
@@ -179,7 +186,7 @@ class LoggedBlock {
 		WORLDNAME = worldname;
 		X = x; Y = y; Z = z;
 		
-		MATERIAL = material;
+		MATERIAL = material.getId();
 		DATA     = data;
 		
 		SIGN_LINES = sign_lines;
@@ -187,12 +194,13 @@ class LoggedBlock {
 	
 	public synchronized void reset() {
 		
+		//TODO Fix re-lighting!
+		
 		Block block_to_restore = Bukkit.getWorld(WORLDNAME).getBlockAt(X, Y, Z);
 		
-		block_to_restore.setType(MATERIAL);
-		block_to_restore.setData(DATA);
+		WorldManager.setBlockFast(block_to_restore, MATERIAL, DATA);
 		
-		if(SIGN_LINES != null && (MATERIAL == Material.SIGN_POST || MATERIAL ==  Material.WALL_SIGN)) {
+		if(SIGN_LINES != null && (MATERIAL == Material.SIGN_POST.getId() || MATERIAL ==  Material.WALL_SIGN.getId())) {
 			
 			Sign sign = (Sign) block_to_restore.getState();
 			
