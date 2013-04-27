@@ -72,7 +72,7 @@ public class Config {
 		}
 		
 		if(!config.contains("timeoutTillArenaInSeconds")) {
-			config.set("timeoutTillArenaInSeconds", 300);
+			config.set("timeoutTillArenaInSeconds", 180);
 			save = true;
 		}
 		
