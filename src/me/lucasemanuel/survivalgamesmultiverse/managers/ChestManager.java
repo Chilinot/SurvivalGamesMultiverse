@@ -137,7 +137,7 @@ public class ChestManager {
 						if(enchantment != null) {
 							
 							// Generate a random level for the enchantment based on the items maxlevel + 1
-							int level = this.generator.nextInt(enchantment.getMaxLevel() + 1 );
+							int level = this.generator.nextInt(enchantment.getMaxLevel()) + 1;
 							
 							// If the level is above the maxlevel, set it to max level
 							if(level > enchantment.getMaxLevel())
