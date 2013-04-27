@@ -86,8 +86,6 @@ public class ChestManager {
 			int spawnchance = itemConfig.getInt("blankChestChance-OneOutOf");
 			
 			if(spawnchance > generator.nextInt(spawnchance + 1)) {
-			
-				logger.debug("Randomizing inventory of a chest!");
 				
 				Inventory inventory = chest.getInventory();
 				inventory.clear();
@@ -95,8 +93,6 @@ public class ChestManager {
 				int items = this.generator.nextInt(itemConfig.getInt("maxAmountOfItems")) + 1;
 				
 				for(int i = 0 ; i < items ; i++) {
-					
-					logger.debug(" --------------- ");
 					
 					Enchantment enchantment = null;
 					String itemname = this.itemlist.next();
@@ -143,16 +139,12 @@ public class ChestManager {
 							// Generate a random level for the enchantment based on the items maxlevel + 1
 							int level = this.generator.nextInt(enchantment.getMaxLevel() + 1 );
 							
-							logger.debug("Random level = " + level);
-							
 							// If the level is above the maxlevel, set it to max level
 							if(level > enchantment.getMaxLevel())
 								level = enchantment.getMaxLevel();
 							// If the level is beneath or equal to zero, set it to level 1
 							else if (level <= 0)
 								level = 1;
-							
-							logger.debug("Level after check = " + level);
 						
 							item.addEnchantment(enchantment, level);
 						}
@@ -174,20 +166,12 @@ public class ChestManager {
 							break;
 					}
 					
-					logger.debug("Setting item to place " + place);
 					inventory.setItem(place, item);
-					
-					logger.debug(" --------------- ");
 				}
 				
-				logger.debug("Updating chest");
 				chest.update();
 			}
-			else {
-				logger.debug("Spawnchance less or equal to random number, skipping randomization...");
-			}
 			
-			logger.debug("Logging chest");
 			this.randomizedchests.add(chest.getLocation());
 		}
 	}
