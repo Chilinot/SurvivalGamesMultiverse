@@ -16,6 +16,7 @@ package me.lucasemanuel.survivalgamesmultiverse.managers;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -52,175 +53,54 @@ public class LanguageManager {
 
 	private synchronized void checkDefaults(FileConfiguration config) {
 		
-		/*
-		 * This is completely messy and needs to be redone!
-		 */
+		@SuppressWarnings("serial")
+		HashMap<String, String> defaults = new HashMap<String, String>() {{
+			put("gameover", "Game over!");
+			put("wonTheGame", "won the game!");
+			put("isOutOfTheGame", "is out of the game!");
+			put("wasKilledBy", "was killed by");
+			put("youJoinedTheGame", "You joined the game!");
+			put("playerJoinedGame", "joined the game!");
+			put("alreadyPlaying", "You are already playing!");
+			put("gameIsFull", "Game is full!");
+			put("blockedMovement", "You are not allowed to move yet!");
+			put("timeleft","seconds left until game starts.");
+			put("gamestarted", "Game started! GO GO GO!");
+			put("waitingForPlayers", "Atleast one more player has to join!");
+			put("blockedCommand", "You are not allowed to use that command ingame!");
+			put("movedOutsideOfSpawn", "You are not allowed to be there!");
+			put("sgplayersHeading", "Alive Players");
+			put("sgleaveNotIngame", "You are not in the game!");
+			put("sendingEveryoneToArena", "The game took to long to finish! Sending everyone to the arena!");
+			put("sentYouToArena", "You where sent to the arena!");
+			put("secondsTillTheGameEnds", "seconds until the game is cancelled!");
+			put("killedSendingArena", "No locations left in the arena! You where killed.");
+			put("forcedPumpkin", "You have to wear that pumpkin!");
+			put("gameHasNotStartedYet", "The game hasn't started yet!");
+			put("gameHasAlreadyStarted", "The game has already started, try another world!");
+			put("sgplayersNoonealive", "No players alive!");
+			put("sgplayersIncorrect", "You need to be in a gameworld, or enter the name of one!");
+			put("Join_Blocked_Frozen", "This world is temporary frozen!");
+			put("broadcast_before_arena", "You are being teleported to the arena in 5 seconds!");
+			
+			put("anticheat.disconnect", "was removed due to disconnect!");
+			put("anticheat.teleported", "was removed due to teleportation!");
+			
+			put("signs.started", "Started");
+			put("signs.waiting", "Waiting");
+			put("signs.playersIngame", "Players Ingame");
+			put("signs.frozen", "Frozen");
+		}};
+		
+		
 		
 		boolean save = false;
 		
-		if(!config.contains("gameover")) {
-			config.set("gameover", "Game over!");
-			save = true;
-		}
-		
-		if(!config.contains("wonTheGame")) {
-			config.set("wonTheGame", "won the game!");
-			save = true;
-		}
-		
-		if(!config.contains("isOutOfTheGame")) {
-			config.set("isOutOfTheGame", "is out of the game!");
-			save = true;
-		}
-		
-		if(!config.contains("wasKilledBy")) {
-			config.set("wasKilledBy", "was killed by");
-			save = true;
-		}
-		
-		if(!config.contains("youJoinedTheGame")) {
-			config.set("youJoinedTheGame", "You joined the game!");
-			save = true;
-		}
-		
-		if(!config.contains("playerJoinedGame")) {
-			config.set("playerJoinedGame", "joined the game!");
-			save = true;
-		}
-		
-		if(!config.contains("alreadyPlaying")) {
-			config.set("alreadyPlaying", "You are already playing!");
-			save = true;
-		}
-		
-		if(!config.contains("anticheatRemoval.disconnect")) {
-			config.set("anticheatRemoval.disconnect", "was removed due to disconnect!");
-			save = true;
-		}
-		
-		if(!config.contains("anticheatRemoval.teleported")) {
-			config.set("anticheatRemoval.teleported", "was removed due to teleportation!");
-			save = true;
-		}
-		
-		if(!config.contains("gameIsFull")) {
-			config.set("gameIsFull", "Game is full!");
-			save = true;
-		}
-		
-		if(!config.contains("blockedMovement")) {
-			config.set("blockedMovement", "You are not allowed to move yet!");
-			save = true;
-		}
-		
-		if(!config.contains("timeleft")) {
-			config.set("timeleft","seconds left until game starts.");
-			save = true;
-		}
-		
-		if(!config.contains("gamestarted")) {
-			config.set("gamestarted", "Game started! GO GO GO!");
-			save = true;
-		}
-		
-		if(!config.contains("waitingForPlayers")) {
-			config.set("waitingForPlayers", "Atleast one more player has to join!");
-			save = true;
-		}
-		
-		if(!config.contains("blockedCommand")) {
-			config.set("blockedCommand", "You are not allowed to use that command ingame!");
-			save = true;
-		}
-		
-		if(!config.contains("movedOutsideOfSpawn")) {
-			config.set("movedOutsideOfSpawn", "You are not allowed to be there!");
-			save = true;
-		}
-		
-		if(!config.contains("sgplayersHeading")) {
-			config.set("sgplayersHeading", "Alive Players");
-			save = true;
-		}
-		
-		if(!config.contains("sgleaveNotIngame")) {
-			config.set("sgleaveNotIngame", "You are not in the game!");
-			save = true;
-		}
-		
-		if(!config.contains("sendingEveryoneToArena")) {
-			config.set("sendingEveryoneToArena", "The game took to long to finish! Sending everyone to the arena!");
-			save = true;
-		}
-		
-		if(!config.contains("sentYouToArena")) {
-			config.set("sentYouToArena", "You where sent to the arena!");
-			save = true;
-		}
-		
-		if(!config.contains("secondsTillTheGameEnds")) {
-			config.set("secondsTillTheGameEnds", "seconds until the game is cancelled!");
-			save = true;
-		}
-		
-		if(!config.contains("killedSendingArena")) {
-			config.set("killedSendingArena", "No locations left in the arena! You where killed.");
-			save = true;
-		}
-		
-		if(!config.contains("forcedPumpkin")) {
-			config.set("forcedPumpkin", "You have to wear that pumpkin!");
-			save = true;
-		}
-		
-		if(!config.contains("gameHasNotStartedYet")) {
-			config.set("gameHasNotStartedYet", "The game hasn't started yet!");
-			save = true;
-		}
-		
-		if(!config.contains("gameHasAlreadyStarted")) {
-			config.set("gameHasAlreadyStarted", "The game has already started, try another world!");
-			save = true;
-		}
-		
-		if(!config.contains("sgplayersNoonealive")) {
-			config.set("sgplayersNoonealive", "No players alive!");
-			save = true;
-		}
-		
-		if(!config.contains("sgplayersIncorrect")) {
-			config.set("sgplayersIncorrect", "You need to be in a gameworld, or enter the name of one!");
-			save = true;
-		}
-		
-		if(!config.contains("Join_Blocked_Frozen")) {
-			config.set("Join_Blocked_Frozen", "This world is temporary frozen!");
-			save = true;
-		}
-		
-		if(!config.contains("broadcast_before_arena")) {
-			config.set("broadcast_before_arena", "You are being teleported to the arena in 5 seconds!");
-			save = true;
-		}
-		
-		if(!config.contains("signs.started")) {
-			config.set("signs.started", "Started");
-			save = true;
-		}
-		
-		if(!config.contains("signs.waiting")) {
-			config.set("signs.waiting", "Waiting");
-			save = true;
-		}
-		
-		if(!config.contains("signs.playersIngame")) {
-			config.set("signs.playersIngame", "Players Ingame");
-			save = true;
-		}
-		
-		if(!config.contains("signs.frozen")) {
-			config.set("signs.frozen", "Frozen");
-			save = true;
+		for(Entry<String, String> entry : defaults.entrySet()) {
+			if(!config.contains(entry.getKey())) {
+				config.set(entry.getKey(), entry.getValue());
+				save = true;
+			}
 		}
 		
 		if(save) {

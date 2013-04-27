@@ -110,7 +110,7 @@ public class Players implements Listener {
 					+ ChatColor.WHITE + " :: " 
 					+ ChatColor.BLUE + player.getName() 
 					+ ChatColor.WHITE + " - " 
-					+ plugin.getLanguageManager().getString("anticheatRemoval.teleported");
+					+ plugin.getLanguageManager().getString("anticheat.teleported");
 			
 			plugin.getWorldManager().broadcast(from.getWorld(), message);
 			
@@ -220,7 +220,7 @@ public class Players implements Listener {
 					+ ChatColor.WHITE + " :: " 
 					+ ChatColor.BLUE + player.getName() 
 					+ ChatColor.WHITE + " - " 
-					+ plugin.getLanguageManager().getString("anticheatRemoval.disconnect");
+					+ plugin.getLanguageManager().getString("anticheat.disconnect");
 			
 			plugin.getPlayerManager().removePlayer(player.getWorld().getName(), player);
 			plugin.getWorldManager().broadcast(player.getWorld(), message);
