@@ -282,45 +282,74 @@ public class Commands implements CommandExecutor {
 		
 		String worldname = location.getWorld().getName();
 		
+		String error = ChatColor.RED + "This world is not registered!";
+		
 		switch(firstarg) {
 			
 			case "set":
 				if(secondarg.equals("main")) {
-					if(plugin.getLocationManager().addLocation("main", location)) player.sendMessage(ChatColor.GREEN + "Adding main location for this world!");
-					else player.sendMessage(ChatColor.RED + "This world is not registered!");
+					
+					if(plugin.getLocationManager().addLocation("main", location)) 
+						player.sendMessage(ChatColor.GREEN + "Adding main location for this world!");
+					else 
+						player.sendMessage(error);
+					
 					return true;
 				}
 				else if(secondarg.equals("arena")) {
-					if(plugin.getLocationManager().addLocation("arena", location)) player.sendMessage(ChatColor.GREEN + "Adding arena location for this world!");
-					else player.sendMessage(ChatColor.RED + "This world is not registered!");
+					
+					if(plugin.getLocationManager().addLocation("arena", location))
+						player.sendMessage(ChatColor.GREEN + "Adding arena location for this world!");
+					else 
+						player.sendMessage(error);
+					
 					return true;
 				}
+				
 				break;
 				
 			case "save":
 				if(secondarg.equals("main")) {
-					if(plugin.getLocationManager().saveLocationList("main", worldname)) player.sendMessage(ChatColor.GREEN + "Saving main locationlist for this world!");
-					else player.sendMessage(ChatColor.RED + "This world is not registered!");
+					
+					if(plugin.getLocationManager().saveLocationList("main", worldname))
+						player.sendMessage(ChatColor.GREEN + "Saving main locationlist for this world!");
+					else 
+						player.sendMessage(error);
+					
 					return true;
 				}
 				else if(secondarg.equals("arena")) {
-					if(plugin.getLocationManager().saveLocationList("arena", worldname)) player.sendMessage(ChatColor.GREEN + "Saving arena locationlist for this world!");
-					else player.sendMessage(ChatColor.RED + "This world is not registered!");
+					
+					if(plugin.getLocationManager().saveLocationList("arena", worldname)) 
+						player.sendMessage(ChatColor.GREEN + "Saving arena locationlist for this world!");
+					else
+						player.sendMessage(error);
+					
 					return true;
 				}
+				
 				break;
 				
 			case "clear":
 				if(secondarg.equals("main")) {
-					if(plugin.getLocationManager().clearLocationList("main", worldname)) player.sendMessage(ChatColor.GREEN + "Clearing main locations for this world! Remember to save!");
-					else player.sendMessage(ChatColor.RED + "This world is not registered!");
+					
+					if(plugin.getLocationManager().clearLocationList("main", worldname)) 
+						player.sendMessage(ChatColor.GREEN + "Clearing main locations for this world! Remember to save!");
+					else 
+						player.sendMessage(error);
+					
 					return true;
 				}
 				else if(secondarg.equals("arena")) {
-					if(plugin.getLocationManager().clearLocationList("arena", worldname)) player.sendMessage(ChatColor.GREEN + "Clearing arena locations for this world! Remember to save!");
-					else player.sendMessage(ChatColor.RED + "This world is not registered!");
+					
+					if(plugin.getLocationManager().clearLocationList("arena", worldname)) 
+						player.sendMessage(ChatColor.GREEN + "Clearing arena locations for this world! Remember to save!");
+					else
+						player.sendMessage(error);
+					
 					return true;
 				}
+				
 				break;
 		}
 		
