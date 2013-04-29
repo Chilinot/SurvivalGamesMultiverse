@@ -64,7 +64,7 @@ public class LanguageManager {
 			put("alreadyPlaying", "You are already playing!");
 			put("gameIsFull", "Game is full!");
 			put("blockedMovement", "You are not allowed to move yet!");
-			put("timeleft","seconds left until game starts.");
+			
 			put("gamestarted", "Game started! GO GO GO!");
 			put("waitingForPlayers", "Atleast one more player has to join!");
 			put("blockedCommand", "You are not allowed to use that command ingame!");
@@ -73,7 +73,7 @@ public class LanguageManager {
 			put("sgleaveNotIngame", "You are not in the game!");
 			put("sendingEveryoneToArena", "The game took to long to finish! Sending everyone to the arena!");
 			put("sentYouToArena", "You where sent to the arena!");
-			put("secondsTillTheGameEnds", "seconds until the game is cancelled!");
+			
 			put("killedSendingArena", "No locations left in the arena! You where killed.");
 			put("forcedPumpkin", "You have to wear that pumpkin!");
 			put("gameHasNotStartedYet", "The game hasn't started yet!");
@@ -81,11 +81,17 @@ public class LanguageManager {
 			put("sgplayersNoonealive", "No players alive!");
 			put("sgplayersIncorrect", "You need to be in a gameworld, or enter the name of one!");
 			put("Join_Blocked_Frozen", "This world is temporary frozen!");
-			put("broadcast_before_arena", "You are being teleported to the arena in 5 seconds!");
 			
+			// Time related
+			put("timeleft","seconds left until game starts.");
+			put("broadcast_before_arena", "You are being teleported to the arena in 5 seconds!");
+			put("secondsTillTheGameEnds", "seconds until the game is cancelled!");
+			
+			// Anticheat
 			put("anticheat.disconnect", "was removed due to disconnect!");
 			put("anticheat.teleported", "was removed due to teleportation!");
 			
+			// Signs
 			put("signs.started", "Started");
 			put("signs.waiting", "Waiting");
 			put("signs.playersIngame", "Players Ingame");
