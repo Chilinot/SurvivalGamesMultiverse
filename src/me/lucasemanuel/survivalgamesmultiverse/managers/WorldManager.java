@@ -194,8 +194,6 @@ class LoggedBlock {
 	
 	public synchronized void reset() {
 		
-		//TODO Fix re-lighting!
-		
 		Block block_to_restore = Bukkit.getWorld(WORLDNAME).getBlockAt(X, Y, Z);
 		
 		WorldManager.setBlockFast(block_to_restore, MATERIAL, DATA);
