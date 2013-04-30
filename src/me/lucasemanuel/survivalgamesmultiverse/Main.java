@@ -96,7 +96,7 @@ public class Main extends JavaPlugin {
 			locationmanager.addWorld(key);
 			statusmanager.addWorld(key);
 			
-			logger.debug("Loading world - " + key + " :: template - " + getConfig().getString("worldnames." + key));
+			logger.debug("Loading world - " + key);
 		}
 		
 		logger.debug("Finished! Schedules sign update...");
