@@ -19,6 +19,7 @@ import java.io.Serializable;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 
 public class SerializedLocation implements Serializable {
 	private static final long serialVersionUID = -9094035533656633605L;
@@ -27,19 +28,46 @@ public class SerializedLocation implements Serializable {
 	private final double X;
 	private final double Y;
 	private final double Z;
-	private final float YAW;
-	private final float PITCH;
+	private final float  YAW;
+	private final float  PITCH;
 	
 	public SerializedLocation(Location location) {
-		this.WORLDNAME = location.getWorld().getName();
-		this.X         = location.getX();
-		this.Y         = location.getY();
-		this.Z         = location.getZ();
-		this.YAW       = location.getYaw();
-		this.PITCH     = location.getPitch();
+		WORLDNAME = location.getWorld().getName();
+		X         = location.getX();
+		Y         = location.getY();
+		Z         = location.getZ();
+		YAW       = location.getYaw();
+		PITCH     = location.getPitch();
 	}
 	
 	public Location deserialize() {
-		return new Location(Bukkit.getWorld(this.WORLDNAME), this.X, this.Y, this.Z, this.YAW, this.PITCH);
+		return new Location(Bukkit.getWorld(WORLDNAME), X, Y, Z, YAW, PITCH);
+	}
+	
+	public String toString() {
+		return WORLDNAME + ";" + X + ";" + Y + ";" + Z + ";" + YAW + ";" + PITCH;
+	}
+	
+	public static Location deserializeString(String serial) {
+		
+		String[] parts = serial.split(";");
+		if(parts.length != 6) return null;
+		
+		double x, y, z; float yaw, pitch;
+		
+		World world = Bukkit.getWorld(parts[0]);
+		
+		try {
+			x     = Double.parseDouble(parts[1]);
+			y     = Double.parseDouble(parts[2]);
+			z     = Double.parseDouble(parts[3]);
+			yaw   = Float.parseFloat(parts[4]);
+			pitch = Float.parseFloat(parts[5]);
+		}
+		catch(NumberFormatException e) {
+			return null;
+		}
+		
+		return new Location(world, x, y, z, yaw, pitch);
 	}
 }
