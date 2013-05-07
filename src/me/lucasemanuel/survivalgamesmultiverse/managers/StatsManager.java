@@ -34,6 +34,14 @@ package me.lucasemanuel.survivalgamesmultiverse.managers;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.HashMap;
+
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
+import org.bukkit.scoreboard.Scoreboard;
 
 import me.lucasemanuel.survivalgamesmultiverse.Main;
 import me.lucasemanuel.survivalgamesmultiverse.threading.ConcurrentConnection;
@@ -42,6 +50,8 @@ import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
 public class StatsManager {
 	
 	private ConsoleLogger logger;
+	
+	private HashMap<String, PlayerScore> playerstats;
 	
 	private final String username;
 	private final String password;
@@ -56,6 +66,8 @@ public class StatsManager {
 		
 		logger = new ConsoleLogger(instance, "StatsManager");
 		logger.debug("Loading settings");
+		
+		playerstats = new HashMap<String, PlayerScore>();
 		
 		username  = instance.getConfig().getString("database.auth.username");
 		password  = instance.getConfig().getString("database.auth.password");
@@ -103,86 +115,109 @@ public class StatsManager {
 		}
 	}
 	
-	public void addWinPoints(final String playername, final int points) {
-		if(insertobject != null) {
+	public void checkScoreboard(String playername) {
+		if(!playerstats.containsKey(playername)) {
+			Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
+			playerstats.put(playername, new PlayerScore(board));
+			Bukkit.getPlayerExact(playername).setScoreboard(board);
+		}
+	}
+	
+	public boolean removeScoreboard(String playername) {
+		Player player = Bukkit.getPlayerExact(playername);
+		
+		if(player != null && playerstats.containsKey(playername)) {
 			
-			Thread thread = new Thread() {
+			player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+			playerstats.remove(playername);
+			
+			return true;
+		}
+		else 
+			return false;
+	}
+	
+	public void addWinPoints(final String playername, final int points) {
+		
+		/* 
+		 *  - Database
+		 */
+		
+		if(insertobject != null) {
+			new Thread() {
 				public void run() {
 					insertobject.update(playername, points, 0, 0);
 				}
-			};
-			
-			thread.start();
+			}.start();
 		}
 	}
 	
 	public void addKillPoints(final String playername, final int points) {
+		
+		checkScoreboard(playername);
+		
+		playerstats.get(playername).addKills(points);
+		
+		
+		/* 
+		 *  - Database
+		 */
+		
 		if(insertobject != null) {
-			
-			Thread thread = new Thread() {
+			new Thread() {
 				public void run() {
 					insertobject.update(playername, 0, points, 0);
 				}
-			};
-			
-			thread.start();
+			}.start();
 		}
 	}
 	
 	public void addDeathPoints(final String playername, final int points) {
+		
+		
+		/* 
+		 *  - Database
+		 */
+		
 		if(insertobject != null) {
-			
-			Thread thread = new Thread() {
+			new Thread() {
 				public void run() {
 					insertobject.update(playername, 0, 0, points);
 				}
-			};
-			
-			thread.start();
+			}.start();
 		}
 	}
 }
 
-class Score {
+class PlayerScore {
 	
-	private int deaths;
-	private int kills;
-	private double kdr;
+	private Scoreboard board;
+	private int        kills;
 	
-	public Score() {
+	public PlayerScore(Scoreboard board) {
+		
+		this.board  = board;
 		this.kills  = 0;
-		this.deaths = 0;
-		this.kdr    = 0.0;
+		
+		Objective o = board.registerNewObjective("stats", "dummy");
+		
+		o.setDisplayName("Stats:");
+		o.setDisplaySlot(DisplaySlot.SIDEBAR);
+		
+		Score s = o.getScore(Bukkit.getOfflinePlayer("Kills:"));
+		s.setScore(kills);
 	}
 	
-	private void calculateKDR() {
-		if(this.deaths > 0) {
-			this.kdr = this.kills / this.deaths;
-		}
-		else {
-			this.kdr = this.kills;
-		}
+	private void updateScoreboard() {
+		
+		Objective o = board.getObjective(DisplaySlot.SIDEBAR);
+		
+		Score s = o.getScore(Bukkit.getOfflinePlayer("Kills:"));
+		s.setScore(kills);
 	}
 	
 	public void addKills(int amount) {
 		this.kills += amount;
-		calculateKDR();
-	}
-	
-	public void addDeaths(int amount) {
-		this.deaths += amount;
-		calculateKDR();
-	}
-	
-	public int getKills() {
-		return this.kills;
-	}
-	
-	public int getDeaths() {
-		return this.deaths;
-	}
-	
-	public double getKDR() {
-		return this.kdr;
+		updateScoreboard();
 	}
 }

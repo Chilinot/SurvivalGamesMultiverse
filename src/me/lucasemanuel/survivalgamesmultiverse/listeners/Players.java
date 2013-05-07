@@ -142,6 +142,8 @@ public class Players implements Listener {
 								
 								plugin.getPlayerManager().addPlayer(worldname, player);
 								
+								plugin.getStatsManager().checkScoreboard(player.getName());
+								
 								player.sendMessage(ChatColor.GOLD + plugin.getLanguageManager().getString("youJoinedTheGame"));
 								plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), ChatColor.LIGHT_PURPLE + player.getName() + ChatColor.WHITE + " " + plugin.getLanguageManager().getString("playerJoinedGame"));
 								
@@ -261,6 +263,8 @@ public class Players implements Listener {
 				
 				// Remove the player and give him one deathpoint
 				playermanager.removePlayer(victim.getWorld().getName(), victim);
+				
+				plugin.getStatsManager().removeScoreboard(victim.getName());
 				
 				if(!victim.hasPermission("survivalgames.ignore.stats")) statsmanager.addDeathPoints(victim.getName(), 1);
 				
