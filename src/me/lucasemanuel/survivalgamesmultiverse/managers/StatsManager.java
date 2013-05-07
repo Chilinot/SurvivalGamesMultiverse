@@ -142,3 +142,47 @@ public class StatsManager {
 		}
 	}
 }
+
+class Score {
+	
+	private int deaths;
+	private int kills;
+	private double kdr;
+	
+	public Score() {
+		this.kills  = 0;
+		this.deaths = 0;
+		this.kdr    = 0.0;
+	}
+	
+	private void calculateKDR() {
+		if(this.deaths > 0) {
+			this.kdr = this.kills / this.deaths;
+		}
+		else {
+			this.kdr = this.kills;
+		}
+	}
+	
+	public void addKills(int amount) {
+		this.kills += amount;
+		calculateKDR();
+	}
+	
+	public void addDeaths(int amount) {
+		this.deaths += amount;
+		calculateKDR();
+	}
+	
+	public int getKills() {
+		return this.kills;
+	}
+	
+	public int getDeaths() {
+		return this.deaths;
+	}
+	
+	public double getKDR() {
+		return this.kdr;
+	}
+}
