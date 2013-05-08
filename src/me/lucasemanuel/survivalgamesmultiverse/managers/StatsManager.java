@@ -31,6 +31,7 @@
 
 package me.lucasemanuel.survivalgamesmultiverse.managers;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
@@ -75,13 +76,17 @@ public class StatsManager {
 		
 		if(instance.getConfig().getBoolean("database.enabled")) {
 			
-			logger.info("Testing connection to database, please wait!");
+			logger.info("Testing connection to MySQL-database, please wait!");
 			
 			insertobject = new ConcurrentConnection(username, password, host, port, database, tablename);
 			
-			if(!insertobject.testConnection()) {
+			try {
+				insertobject.testConnection();
+			}
+			catch(SQLException | ClassNotFoundException e) {
 				insertobject = null;
-				logger.severe("No connection to database! Stats will not be saved!");
+				logger.severe("Could not connect to the MySQL-database! Stats will not be saved.");
+				logger.severe("Error message: " + e.getMessage());
 			}
 		}
 		else {

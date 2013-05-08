@@ -90,21 +90,10 @@ public class ConcurrentConnection {
 		}
 	}
 	
-	public synchronized boolean testConnection() {
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			
-			String url = "jdbc:mysql://" + host + ":" + port + "/" + database;
-			
-			Connection con = DriverManager.getConnection(url, username, password);
-			
-			con.close();
-			
-			return true;
-		}
-		catch(SQLException | ClassNotFoundException e) {
-			System.out.println("SurvivalGamesMultiverse could not connect to the MySQL database! Error message: " + e.getMessage());
-			return false;
-		}
+	public synchronized void testConnection() throws SQLException, ClassNotFoundException {
+		Class.forName("com.mysql.jdbc.Driver");
+		String url = "jdbc:mysql://" + host + ":" + port + "/" + database;
+		Connection con = DriverManager.getConnection(url, username, password);
+		con.close();
 	}
 }
