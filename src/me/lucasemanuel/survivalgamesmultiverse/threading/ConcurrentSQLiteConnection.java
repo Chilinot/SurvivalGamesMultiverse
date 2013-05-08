@@ -35,8 +35,11 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.bukkit.Location;
 
@@ -52,6 +55,63 @@ public class ConcurrentSQLiteConnection {
 	public ConcurrentSQLiteConnection(Main instance) {
 		plugin = instance;
 		getConnection();
+	}
+	
+	public synchronized ArrayList<HashSet<Location>> getStartLocations(String worldname) {
+		try {
+			testConnection();
+			
+			ArrayList<HashSet<Location>> locations = new ArrayList<HashSet<Location>>();
+			
+			Statement stmt_main  = con.createStatement();
+			Statement stmt_arena = con.createStatement();
+			
+			ResultSet rs_main  = stmt_main.executeQuery ("SELECT * FROM startlocations WHERE worldname='" + worldname + "' AND type='main'");
+			ResultSet rs_arena = stmt_arena.executeQuery("SELECT * FROM startlocations WHERE worldname='" + worldname + "' AND type='arena'");
+			
+			HashSet<Location> main  = new HashSet<Location>();
+			HashSet<Location> arena = new HashSet<Location>();
+			
+			while(rs_main.next()) {
+				main.add(SerializedLocation.deserializeString(rs_main.getString("serial_position")));
+			}
+			
+			while(rs_arena.next()) {
+				arena.add(SerializedLocation.deserializeString(rs_arena.getString("serial_position")));
+			}
+			
+			locations.add(main);
+			locations.add(arena);
+			
+			rs_main.close();
+			rs_arena.close();
+			stmt_main.close();
+			stmt_arena.close();
+			
+			return locations;
+		}
+		catch(SQLException e) {
+			System.out.println("Error while retrieving startlocations for world " + worldname + ". Message: " + e.getMessage());
+			return null;
+		}
+	}
+	
+	public synchronized void saveStartLocations(String worldname, String type, Set<Location> locations) {
+		try {
+			testConnection();
+			
+			Statement stmt = con.createStatement();
+			
+			for(Location l : locations) {
+				String serial = new SerializedLocation(l).toString();
+				stmt.execute("INSERT OR REPLACE INTO startlocations VALUES('" + serial + "', '" + worldname + "', '" + type + "')");
+			}
+			
+			stmt.close();
+		}
+		catch(SQLException e) {
+			System.out.println("Error while saving startlocations for world " + worldname + ". Message: " + e.getMessage());
+		}
 	}
 	
 	public synchronized HashMap<Location, String> getSignlocations() {
@@ -157,13 +217,14 @@ public class ConcurrentSQLiteConnection {
 			Statement stmt = con.createStatement();
 			
 			stmt.execute("CREATE TABLE IF NOT EXISTS signlocations (serial_position VARHCAR(250) NOT NULL PRIMARY KEY, worldname VARCHAR(30) NOT NULL)");
-			stmt.execute("CREATE TABLE IF NOT EXISTS spawnlocations(serial_position VARHCAR(250) NOT NULL PRIMARY KEY, worldname VARCHAR(30) NOT NULL)");
+			stmt.execute("CREATE TABLE IF NOT EXISTS startlocations(serial_position VARHCAR(250) NOT NULL PRIMARY KEY, worldname VARCHAR(30) NOT NULL, type VARCHAR(10) NOT NULL)");
 			
 			stmt.close();
 		}
 		catch(ClassNotFoundException | SQLException e) {
 			System.out.println("WARNING! SEVERE ERROR! Could not connect to SQLite-database in plugin-datafolder! This means it cannot load/store important data!");
 			System.out.println("Error message: " + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 

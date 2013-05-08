@@ -31,15 +31,15 @@
 
 package me.lucasemanuel.survivalgamesmultiverse.managers;
 
-import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import me.lucasemanuel.survivalgamesmultiverse.Main;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
-import me.lucasemanuel.survivalgamesmultiverse.utils.SLAPI;
-import me.lucasemanuel.survivalgamesmultiverse.utils.SerializedLocation;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -184,91 +184,50 @@ public class LocationManager {
 		}
 	}
 
-	public synchronized boolean saveLocationList(final String listtype, String worldname) {
+	public synchronized boolean saveLocationList(final String listtype, final String worldname) {
 		
 		if(locations.containsKey(worldname)) {
 			
 			logger.debug("Saving locationtype: " + listtype + " for world: " + worldname);
 			
-			final String path = plugin.getDataFolder().getAbsolutePath() + "/locations/" + worldname;
+			Map<Location, Boolean> tempmap = this.locations.get(worldname).get(listtype);
 			
-			final HashSet<SerializedLocation> tempmap = new HashSet<SerializedLocation>();
-			
-			HashMap<Location, Boolean> locationlist = locations.get(worldname).get(listtype);
-			
-			if(locationlist != null) {
-				for(Location location : locationlist.keySet()) {
-					tempmap.add(new SerializedLocation(location));
-				}
+			if(tempmap != null) {
+				
+				final Set<Location> locations = tempmap.keySet();
+				
+				new Thread() {
+					public void run() {
+						plugin.getSQLiteConnector().saveStartLocations(worldname, listtype, locations);
+					}
+				}.start();
+				
+				return true;
 			}
-			
-			/*
-			 *  This could potentially lead to several threads modifying the same save-file, which isn't a good thing!
-			 *  But hopefully no one will use this command that many times at the same time that the file would be in danger.
-			 */
-			
-			new Thread() {
-				public void run() {
-					
-					String fullpath = path + "/" + listtype + ".dat";
-					
-					File test = new File(path);
-					
-					if(!test.exists()) {
-						test.mkdirs();
-					}
-					
-					try {
-						logger.debug("Saving locationtype: " + listtype + " to: " + fullpath);
-						SLAPI.save(tempmap, fullpath);
-					}
-					catch (Exception e) {
-						logger.severe("Error while saving locationlist! Message: " + e.getMessage());
-					}
-				}
-			}.start();
-			
-			return true;
 		}
 		
 		return false;
 	}
 	
-	@SuppressWarnings("unchecked")
 	private synchronized void loadLocations(String worldname) {
 		
 		logger.debug("Loading locations for world: " + worldname);
 		
-		String path = plugin.getDataFolder().getAbsolutePath() + "/locations/" + worldname;
+		ArrayList<HashSet<Location>> locations = plugin.getSQLiteConnector().getStartLocations(worldname);
 		
-		if(new File(path).exists()) {
+		if(locations != null && locations.get(0).size() > 0) {
 			
-			String mainpath  = path + "/" + "main.dat";
-			String arenapath = path + "/" + "arena.dat";
+			HashSet<Location> main  = locations.get(0);
+			HashSet<Location> arena = locations.get(1);
 			
-			HashSet<SerializedLocation> mainmap  = null;
-			HashSet<SerializedLocation> arenamap = null;
-			
-			try {
-				mainmap  = (HashSet<SerializedLocation>) SLAPI.load(mainpath);
-				arenamap = (HashSet<SerializedLocation>) SLAPI.load(arenapath);
-			}
-			catch (Exception e) {
-				logger.severe("Error while loading saved locations for world: " + worldname);
-				logger.severe("Message: " + e.getMessage());
+			for(Location location : main) {
+				addLocation("main", location);
 			}
 			
-			if(mainmap != null) {
-				for(SerializedLocation serialized : mainmap) {
-					addLocation("main", serialized.deserialize());
-				}
+			for(Location location : arena) {
+				addLocation("arena", location);
 			}
 			
-			if(arenamap != null) {
-				for(SerializedLocation serialized : arenamap) {
-					addLocation("arena", serialized.deserialize());
-				}
-			}
 		}
 		else
 			logger.warning("No saved locations for world: " + worldname);
@@ -290,6 +249,12 @@ public class LocationManager {
 	}
 
 	public synchronized int getLocationAmount(String worldname) {
-		return locations.get(worldname).get("main").size();
+		
+		HashMap<Location, Boolean> main = locations.get(worldname).get("main");
+		
+		if(main == null)
+			return 0;
+		else
+			return main.size();
 	}
 }
