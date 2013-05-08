@@ -41,23 +41,17 @@ import java.util.Map.Entry;
 import org.bukkit.Location;
 
 import me.lucasemanuel.survivalgamesmultiverse.Main;
-import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
 import me.lucasemanuel.survivalgamesmultiverse.utils.SerializedLocation;
 
 public class ConcurrentSQLiteConnection {
 	
-	private ConsoleLogger logger;
 	private Main plugin;
 	
 	private Connection con;
 	
 	public ConcurrentSQLiteConnection(Main instance) {
-		logger = new ConsoleLogger(instance, "SQLiteConnection");
 		plugin = instance;
-		
 		getConnection();
-		
-		logger.debug("Initiated");
 	}
 	
 	public synchronized HashMap<Location, String> getSignlocations() {
@@ -83,7 +77,7 @@ public class ConcurrentSQLiteConnection {
 			return map;
 		}
 		catch (SQLException e) {
-			logger.severe("Error while retrieving saved signlocations! Message: " + e.getMessage());
+			System.out.println("Error while retrieving saved signlocations! Message: " + e.getMessage());
 			return null;
 		}
 	}
@@ -98,7 +92,7 @@ public class ConcurrentSQLiteConnection {
 			stmt = con.createStatement();
 		}
 		catch (SQLException e) {
-			logger.severe("Error while saving signs! Message: " + e.getMessage());
+			System.out.println("Error while saving signs! Message: " + e.getMessage());
 			return;
 		}
 		
@@ -112,7 +106,7 @@ public class ConcurrentSQLiteConnection {
 					stmt.execute("INSERT OR REPLACE INTO signlocations VALUES('" + serial + "', '" + worldname + "')");
 				}
 				catch (SQLException e) {
-					logger.severe("Error while inserting signdata to database! Message: " + e.getMessage());
+					System.out.println("Error while inserting signdata to database! Message: " + e.getMessage());
 					return;
 				}
 			}
@@ -121,7 +115,7 @@ public class ConcurrentSQLiteConnection {
 				stmt.close();
 			}
 			catch (SQLException e) {
-				logger.severe("Could not close statment! Message: " + e.getMessage());
+				System.out.println("Could not close statment! Message: " + e.getMessage());
 			}
 		}
 			
@@ -138,12 +132,10 @@ public class ConcurrentSQLiteConnection {
 			
 			stmt.execute("DELETE FROM signlocations WHERE serial_position='" + serial + "'");
 			
-			logger.debug("Removed sign at position: " + serial);
-			
 			stmt.close();
 		}
 		catch (SQLException e) {
-			logger.severe("Error while removing sign! Message: " + e.getMessage());
+			System.out.println("Error while removing sign! Message: " + e.getMessage());
 		}
 	}
 	
@@ -152,15 +144,13 @@ public class ConcurrentSQLiteConnection {
 			con.getCatalog();
 		}
 		catch(SQLException e) {
-			logger.warning("Connection no longer valid! Trying to re-establish one...");
+			System.out.println("Connection no longer valid! Trying to re-establish one...");
 			getConnection();
 		}
 	}
 	
 	private synchronized void getConnection() {
 		try {
-			logger.debug("Getting connection...");
-			
 			Class.forName("org.sqlite.JDBC");
 			con = DriverManager.getConnection("jdbc:sqlite:" + plugin.getDataFolder() + "/data.db");
 			
@@ -170,12 +160,10 @@ public class ConcurrentSQLiteConnection {
 			stmt.execute("CREATE TABLE IF NOT EXISTS spawnlocations(serial_position VARHCAR(250) NOT NULL PRIMARY KEY, worldname VARCHAR(30) NOT NULL)");
 			
 			stmt.close();
-			
-			logger.debug("Connected!");
 		}
 		catch(ClassNotFoundException | SQLException e) {
-			logger.severe("WARNING! SEVERE ERROR! Could not connect to SQLite-database in plugin-datafolder! This means it cannot load/store important data!");
-			logger.severe("Error message: " + e.getMessage());
+			System.out.println("WARNING! SEVERE ERROR! Could not connect to SQLite-database in plugin-datafolder! This means it cannot load/store important data!");
+			System.out.println("Error message: " + e.getMessage());
 		}
 	}
 
@@ -184,7 +172,7 @@ public class ConcurrentSQLiteConnection {
 			con.close();
 		}
 		catch (SQLException e) {
-			logger.severe("Error while closing connection, data might have been lost! Message: " + e.getMessage());
+			System.out.println("Error while closing connection, data might have been lost! Message: " + e.getMessage());
 		}
 	}
 }
