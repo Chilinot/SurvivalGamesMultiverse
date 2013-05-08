@@ -42,6 +42,7 @@ import me.lucasemanuel.survivalgamesmultiverse.managers.SignManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.StatsManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.StatusManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.WorldManager;
+import me.lucasemanuel.survivalgamesmultiverse.threading.ConcurrentSQLiteConnection;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
 
 import org.bukkit.Bukkit;
@@ -66,6 +67,7 @@ public class Main extends JavaPlugin {
 	private LocationManager locationmanager;
 	private StatusManager   statusmanager;
 	private SignManager     signmanager;
+	private ConcurrentSQLiteConnection sqlite;
 	
 	public void onEnable() {
 		
@@ -84,6 +86,7 @@ public class Main extends JavaPlugin {
 		locationmanager = new LocationManager(this);
 		statusmanager   = new StatusManager(this);
 		signmanager     = new SignManager(this);
+		sqlite          = new ConcurrentSQLiteConnection(this);
 		
 		logger.debug("Finished! Moving on to event listeners...");
 		
@@ -127,6 +130,12 @@ public class Main extends JavaPlugin {
 		logger.debug("Startup sequence finished!");
 	}
 	
+	public void onDisable() {
+		logger.debug("Disabling plugin!");
+		
+		sqlite.closeConnection();
+	}
+	
 	public synchronized PlayerManager getPlayerManager() {
 		return playermanager;
 	}
@@ -157,6 +166,10 @@ public class Main extends JavaPlugin {
 	
 	public synchronized SignManager getSignManager() {
 		return signmanager;
+	}
+	
+	public synchronized ConcurrentSQLiteConnection getSQLiteConnector() {
+		return sqlite;
 	}
 	
 	public synchronized void gameover(World world) {

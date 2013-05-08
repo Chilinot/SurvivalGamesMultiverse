@@ -61,12 +61,12 @@ public class SerializedLocation implements Serializable {
 	}
 	
 	public String toString() {
-		return WORLDNAME + ";" + X + ";" + Y + ";" + Z + ";" + YAW + ";" + PITCH;
+		return WORLDNAME + "&" + X + "&" + Y + "&" + Z + "&" + YAW + "&" + PITCH;
 	}
 	
 	public static Location deserializeString(String serial) {
 		
-		String[] parts = serial.split(";");
+		String[] parts = serial.split("&");
 		if(parts.length != 6) return null;
 		
 		double x, y, z; float yaw, pitch;

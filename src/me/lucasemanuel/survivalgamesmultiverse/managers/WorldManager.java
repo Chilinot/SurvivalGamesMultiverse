@@ -41,7 +41,6 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-import org.bukkit.craftbukkit.v1_5_R2.CraftChunk;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -171,7 +170,7 @@ public class WorldManager {
 	 */
 	public static boolean setBlockFast(Block b, int typeId, byte data) {
 		Chunk c = b.getChunk();
-		net.minecraft.server.v1_5_R2.Chunk chunk = ((CraftChunk) c).getHandle();
+		net.minecraft.server.v1_5_R3.Chunk chunk = ((org.bukkit.craftbukkit.v1_5_R3.CraftChunk) c).getHandle();
 		return chunk.a(b.getX() & 15, b.getY(), b.getZ() & 15, typeId, data);
 	}
 }

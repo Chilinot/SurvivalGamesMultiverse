@@ -189,6 +189,8 @@ public class Commands implements CommandExecutor {
 		
 		plugin.getPlayerManager().removePlayer(player.getWorld().getName(), player);
 		
+		plugin.getStatsManager().removeScoreboard(player.getName());
+		
 		plugin.getSignManager().updateSigns();
 		
 		if(plugin.getStatusManager().getStatusFlag(player.getWorld().getName()) == 1) {

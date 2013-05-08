@@ -36,6 +36,7 @@ import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -44,8 +45,6 @@ import org.bukkit.entity.Player;
 
 import me.lucasemanuel.survivalgamesmultiverse.Main;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
-import me.lucasemanuel.survivalgamesmultiverse.utils.SLAPI;
-import me.lucasemanuel.survivalgamesmultiverse.utils.SerializedLocation;
 
 public class SignManager {
 	
@@ -61,37 +60,27 @@ public class SignManager {
 		logger.debug("Initiated");
 	}
 
-	@SuppressWarnings("unchecked")
 	public synchronized void loadsigns() {
 		
 		logger.debug("Loading signlocations...");
 		
 		this.signs = new HashMap<Sign, String>();
 		
-		HashMap<SerializedLocation, String> tempmap = new HashMap<SerializedLocation, String>();
+		HashMap<Location, String> locations = plugin.getSQLiteConnector().getSignlocations();
 		
-		try {
-			tempmap = (HashMap<SerializedLocation, String>) SLAPI.load(plugin.getDataFolder() + "/" + "signlocations.dat");
-		}
-		catch(Exception e) {
-			logger.severe("Error while loading signlocations! Message: " + e.getMessage());
-		}
-		
-		if(tempmap != null) {
-			logger.debug("Saved amount: " + tempmap.size());
-			
-			Block block = null;
-			
-			for(Entry<SerializedLocation, String> entry : tempmap.entrySet()) {
+		if(locations != null && locations.size() > 0) {
+			for(Entry<Location, String> entry : locations.entrySet()) {
 				
-				block = entry.getKey().deserialize().getBlock();
+				Block block = entry.getKey().getBlock();
 				
 				if(block != null) {
 					if(block.getType().equals(Material.SIGN_POST) || block.getType().equals(Material.WALL_SIGN)) {
 						signs.put((Sign) block.getState(), entry.getValue());
 					}
-					else
+					else {
 						logger.warning("Loaded block not a sign! Material: " + block.getType());
+						plugin.getSQLiteConnector().removeSign(entry.getKey());
+					}
 				}
 				else
 					logger.warning("Loaded block is null!");
@@ -106,27 +95,13 @@ public class SignManager {
 		
 		logger.debug("Saving signlocations...");
 		
-		final HashMap<SerializedLocation, String> tempmap = new HashMap<SerializedLocation, String>();
+		HashMap<Location, String> locations = new HashMap<Location, String>();
 		
 		for(Entry<Sign, String> entry : signs.entrySet()) {
-			tempmap.put(new SerializedLocation(entry.getKey().getLocation()), entry.getValue());
+			locations.put(entry.getKey().getLocation(), entry.getValue());
 		}
 		
-		Thread thread = new Thread() {
-			public void run() {
-				
-				try {
-					SLAPI.save(tempmap, plugin.getDataFolder() + "/" + "signlocations.dat");
-				}
-				catch(Exception e) {
-					logger.severe("Error while saving signlocations! Message: " + e.getMessage());
-				}
-				
-				logger.debug("Finished");
-			}
-		};
-		
-		thread.start();
+		plugin.getSQLiteConnector().saveSignLocations(locations);
 	}
 
 	public synchronized void updateSigns() {
