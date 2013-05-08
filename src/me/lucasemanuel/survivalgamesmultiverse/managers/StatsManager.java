@@ -42,7 +42,7 @@ import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 
 import me.lucasemanuel.survivalgamesmultiverse.Main;
-import me.lucasemanuel.survivalgamesmultiverse.threading.ConcurrentConnection;
+import me.lucasemanuel.survivalgamesmultiverse.threading.ConcurrentMySQLConnection;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
 
 public class StatsManager {
@@ -58,7 +58,7 @@ public class StatsManager {
 	private final String database;
 	private final String tablename;
 	
-	private ConcurrentConnection insertobject = null;
+	private ConcurrentMySQLConnection insertobject = null;
 	
 	public StatsManager(Main instance) {
 		
@@ -78,7 +78,7 @@ public class StatsManager {
 			
 			logger.info("Testing connection to MySQL-database, please wait!");
 			
-			insertobject = new ConcurrentConnection(username, password, host, port, database, tablename);
+			insertobject = new ConcurrentMySQLConnection(username, password, host, port, database, tablename);
 			
 			try {
 				insertobject.testConnection();

@@ -38,7 +38,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class ConcurrentConnection {
+public class ConcurrentMySQLConnection {
 	
 	private final String username;
 	private final String password;
@@ -47,7 +47,7 @@ public class ConcurrentConnection {
 	private final String database;
 	private final String tablename;
 
-	public ConcurrentConnection(String username, String password, String host, int port, String database, String tablename) {
+	public ConcurrentMySQLConnection(String username, String password, String host, int port, String database, String tablename) {
 		
 		this.username   = username;
 		this.password   = password;
