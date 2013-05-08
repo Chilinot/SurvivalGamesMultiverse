@@ -82,11 +82,6 @@ public class Config {
 			save = true;
 		}
 		
-		if(!config.contains("spawnProtectionName")) {
-			config.set("spawnProtectionName", "sgspawn");
-			save = true;
-		}
-		
 		if(!config.contains("timeoutTillArenaInSeconds")) {
 			config.set("timeoutTillArenaInSeconds", 180);
 			save = true;
