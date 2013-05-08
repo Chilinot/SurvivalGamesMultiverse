@@ -89,7 +89,7 @@ public class StatsManager {
 		}
 	}
 	
-	public void checkScoreboard(String playername) {
+	public void checkAndAddScoreboard(String playername) {
 		if(!playerstats.containsKey(playername)) {
 			Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
 			playerstats.put(playername, new PlayerScore(board));
@@ -128,7 +128,7 @@ public class StatsManager {
 	
 	public void addKillPoints(final String playername, final int points) {
 		
-		checkScoreboard(playername);
+		checkAndAddScoreboard(playername);
 		
 		playerstats.get(playername).addKills(points);
 		

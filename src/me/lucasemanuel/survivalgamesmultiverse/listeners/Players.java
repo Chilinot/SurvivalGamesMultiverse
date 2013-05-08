@@ -158,7 +158,7 @@ public class Players implements Listener {
 								
 								plugin.getPlayerManager().addPlayer(worldname, player);
 								
-								plugin.getStatsManager().checkScoreboard(player.getName());
+								plugin.getStatsManager().checkAndAddScoreboard(player.getName());
 								
 								player.sendMessage(ChatColor.GOLD + plugin.getLanguageManager().getString("youJoinedTheGame"));
 								plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), ChatColor.LIGHT_PURPLE + player.getName() + ChatColor.WHITE + " " + plugin.getLanguageManager().getString("playerJoinedGame"));
