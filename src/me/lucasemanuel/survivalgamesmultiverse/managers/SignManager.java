@@ -79,7 +79,14 @@ public class SignManager {
 					}
 					else {
 						logger.warning("Loaded block not a sign! Material: " + block.getType());
-						plugin.getSQLiteConnector().removeSign(entry.getKey());
+						
+						final Location location = entry.getKey();
+						
+						new Thread() {
+							public void run() {
+								plugin.getSQLiteConnector().removeSign(location);
+							}
+						}.start();
 					}
 				}
 				else
@@ -95,13 +102,17 @@ public class SignManager {
 		
 		logger.debug("Saving signlocations...");
 		
-		HashMap<Location, String> locations = new HashMap<Location, String>();
+		final HashMap<Location, String> locations = new HashMap<Location, String>();
 		
 		for(Entry<Sign, String> entry : signs.entrySet()) {
 			locations.put(entry.getKey().getLocation(), entry.getValue());
 		}
 		
-		plugin.getSQLiteConnector().saveSignLocations(locations);
+		new Thread() {
+			public void run() {
+				plugin.getSQLiteConnector().saveSignLocations(locations);
+			}
+		}.start();
 	}
 
 	public synchronized void updateSigns() {
