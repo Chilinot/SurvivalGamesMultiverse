@@ -207,7 +207,7 @@ public class LocationManager {
 			 *  But hopefully no one will use this command that many times at the same time that the file would be in danger.
 			 */
 			
-			Thread thread = new Thread() {
+			new Thread() {
 				public void run() {
 					
 					String fullpath = path + "/" + listtype + ".dat";
@@ -226,9 +226,7 @@ public class LocationManager {
 						logger.severe("Error while saving locationlist! Message: " + e.getMessage());
 					}
 				}
-			};
-			
-			thread.start();
+			}.start();
 			
 			return true;
 		}
