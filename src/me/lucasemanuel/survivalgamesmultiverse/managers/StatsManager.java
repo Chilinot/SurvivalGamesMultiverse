@@ -49,7 +49,7 @@ public class StatsManager {
 	
 	private ConsoleLogger logger;
 	
-	private HashMap<String, PlayerScore> playerstats;
+	private HashMap<String, Score> playerstats;
 	
 	private final String username;
 	private final String password;
@@ -65,7 +65,7 @@ public class StatsManager {
 		logger = new ConsoleLogger(instance, "StatsManager");
 		logger.debug("Loading settings");
 		
-		playerstats = new HashMap<String, PlayerScore>();
+		playerstats = new HashMap<String, Score>();
 		
 		username  = instance.getConfig().getString("database.auth.username");
 		password  = instance.getConfig().getString("database.auth.password");
@@ -98,8 +98,19 @@ public class StatsManager {
 	
 	public void checkAndAddScoreboard(String playername) {
 		if(!playerstats.containsKey(playername)) {
+			
 			Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
-			playerstats.put(playername, new PlayerScore(board));
+			
+			Objective o = board.registerNewObjective("stats", "dummy");
+			
+			o.setDisplayName("Stats:");
+			o.setDisplaySlot(DisplaySlot.SIDEBAR);
+			
+			Score s = o.getScore(Bukkit.getOfflinePlayer("Kills:"));
+			s.setScore(0);
+			
+			playerstats.put(playername, s);
+			
 			Bukkit.getPlayerExact(playername).setScoreboard(board);
 		}
 	}
@@ -137,8 +148,8 @@ public class StatsManager {
 		
 		checkAndAddScoreboard(playername);
 		
-		playerstats.get(playername).addKills(points);
-		
+		Score s = playerstats.get(playername);
+		s.setScore(s.getScore() + points);
 		
 		/* 
 		 *  - Database
@@ -167,38 +178,5 @@ public class StatsManager {
 				}
 			}.start();
 		}
-	}
-}
-
-class PlayerScore {
-	
-	private Scoreboard board;
-	private int        kills;
-	
-	public PlayerScore(Scoreboard board) {
-		
-		this.board  = board;
-		this.kills  = 0;
-		
-		Objective o = board.registerNewObjective("stats", "dummy");
-		
-		o.setDisplayName("Stats:");
-		o.setDisplaySlot(DisplaySlot.SIDEBAR);
-		
-		Score s = o.getScore(Bukkit.getOfflinePlayer("Kills:"));
-		s.setScore(kills);
-	}
-	
-	private void updateScoreboard() {
-		
-		Objective o = board.getObjective(DisplaySlot.SIDEBAR);
-		
-		Score s = o.getScore(Bukkit.getOfflinePlayer("Kills:"));
-		s.setScore(kills);
-	}
-	
-	public void addKills(int amount) {
-		this.kills += amount;
-		updateScoreboard();
 	}
 }
