@@ -82,6 +82,8 @@ public class StatsManager {
 			
 			try {
 				insertobject.testConnection();
+				
+				logger.info("Successfully connected to the MySQL-database.");
 			}
 			catch(SQLException | ClassNotFoundException e) {
 				insertobject = null;
