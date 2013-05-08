@@ -31,9 +31,6 @@
 
 package me.lucasemanuel.survivalgamesmultiverse.managers;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
@@ -80,35 +77,12 @@ public class StatsManager {
 			
 			logger.info("Testing connection to database, please wait!");
 			
-			Connection con = null;
+			insertobject = new ConcurrentConnection(username, password, host, port, database, tablename);
 			
-			try {
-				Class.forName("com.mysql.jdbc.Driver");
-				
-				String url = "jdbc:mysql://" + host + ":" + port + "/" + database;
-				
-				con = DriverManager.getConnection(url, username, password);
-			}
-			catch(SQLException | ClassNotFoundException e) {
-				logger.severe("Error while testing connection! Message: " + e.getMessage());
-			}
-			
-			if(con != null) {
-				
-				logger.debug("Initiated");
-				logger.info("Connected!");
-				
-				insertobject = new ConcurrentConnection(username, password, host, port, database, tablename);
-				
-				try {
-					con.close();
-				}
-				catch (SQLException e) {
-					logger.severe("Error while closing test connection! Message: " + e.getMessage());
-				}
-			}
-			else
+			if(!insertobject.testConnection()) {
+				insertobject = null;
 				logger.severe("No connection to database! Stats will not be saved!");
+			}
 		}
 		else {
 			logger.info("Database logging disabled! No stats will be saved.");
