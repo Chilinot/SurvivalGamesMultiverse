@@ -57,6 +57,44 @@ public class ConcurrentSQLiteConnection {
 		getConnection();
 	}
 	
+	private synchronized void testConnection() {
+		try {
+			con.getCatalog();
+		}
+		catch(SQLException e) {
+			System.out.println("Connection no longer valid! Trying to re-establish one...");
+			getConnection();
+		}
+	}
+	
+	private synchronized void getConnection() {
+		try {
+			Class.forName("org.sqlite.JDBC");
+			con = DriverManager.getConnection("jdbc:sqlite:" + plugin.getDataFolder() + "/data.db");
+			
+			Statement stmt = con.createStatement();
+			
+			stmt.execute("CREATE TABLE IF NOT EXISTS signlocations (serial_position VARHCAR(250) NOT NULL PRIMARY KEY, worldname VARCHAR(30) NOT NULL)");
+			stmt.execute("CREATE TABLE IF NOT EXISTS startlocations(serial_position VARHCAR(250) NOT NULL PRIMARY KEY, worldname VARCHAR(30) NOT NULL, type VARCHAR(10) NOT NULL)");
+			
+			stmt.close();
+		}
+		catch(ClassNotFoundException | SQLException e) {
+			System.out.println("WARNING! SEVERE ERROR! Could not connect to SQLite-database in plugin-datafolder! This means it cannot load/store important data!");
+			System.out.println("Error message: " + e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	public synchronized void closeConnection() {
+		try {
+			con.close();
+		}
+		catch (SQLException e) {
+			System.out.println("Error while closing connection, data might have been lost! Message: " + e.getMessage());
+		}
+	}
+	
 	public synchronized ArrayList<HashSet<Location>> getStartLocations(String worldname) {
 		try {
 			testConnection();
@@ -196,44 +234,6 @@ public class ConcurrentSQLiteConnection {
 		}
 		catch (SQLException e) {
 			System.out.println("Error while removing sign! Message: " + e.getMessage());
-		}
-	}
-	
-	private synchronized void testConnection() {
-		try {
-			con.getCatalog();
-		}
-		catch(SQLException e) {
-			System.out.println("Connection no longer valid! Trying to re-establish one...");
-			getConnection();
-		}
-	}
-	
-	private synchronized void getConnection() {
-		try {
-			Class.forName("org.sqlite.JDBC");
-			con = DriverManager.getConnection("jdbc:sqlite:" + plugin.getDataFolder() + "/data.db");
-			
-			Statement stmt = con.createStatement();
-			
-			stmt.execute("CREATE TABLE IF NOT EXISTS signlocations (serial_position VARHCAR(250) NOT NULL PRIMARY KEY, worldname VARCHAR(30) NOT NULL)");
-			stmt.execute("CREATE TABLE IF NOT EXISTS startlocations(serial_position VARHCAR(250) NOT NULL PRIMARY KEY, worldname VARCHAR(30) NOT NULL, type VARCHAR(10) NOT NULL)");
-			
-			stmt.close();
-		}
-		catch(ClassNotFoundException | SQLException e) {
-			System.out.println("WARNING! SEVERE ERROR! Could not connect to SQLite-database in plugin-datafolder! This means it cannot load/store important data!");
-			System.out.println("Error message: " + e.getMessage());
-			e.printStackTrace();
-		}
-	}
-
-	public synchronized void closeConnection() {
-		try {
-			con.close();
-		}
-		catch (SQLException e) {
-			System.out.println("Error while closing connection, data might have been lost! Message: " + e.getMessage());
 		}
 	}
 }
