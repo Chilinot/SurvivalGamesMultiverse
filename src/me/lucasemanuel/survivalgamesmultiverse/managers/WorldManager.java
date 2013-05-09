@@ -31,7 +31,10 @@
 
 package me.lucasemanuel.survivalgamesmultiverse.managers;
 
+import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -56,7 +59,11 @@ public class WorldManager {
 	private HashMap<World, HashMap<String, LoggedBlock>> logged_blocks;
 
 	// Entities that shouldn't be removed on world reset
-	private final EntityType[] nonremovable = new EntityType[] { EntityType.PLAYER, EntityType.PAINTING };
+	private final EntityType[] nonremovable = new EntityType[] { 
+			EntityType.PLAYER, 
+			EntityType.PAINTING,
+			EntityType.ITEM_FRAME
+	};
 
 	public WorldManager(Main instance) {
 		plugin = instance;
@@ -123,19 +130,16 @@ public class WorldManager {
 
 			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 				public void run() {
+					
+					Set<EntityType> skip = EnumSet.noneOf(EntityType.class);
+					Collections.addAll(skip, nonremovable);
 
 					for (Entity entity : world.getEntities()) {
+						
+						if(skip.contains(entity.getType()))
+							continue;
 
-						boolean remove = true;
-
-						for (EntityType type : nonremovable) {
-							if (entity.getType().equals(type)) {
-								remove = false;
-								break;
-							}
-						}
-
-						if (remove) entity.remove();
+						entity.remove();
 					}
 				}
 			});
