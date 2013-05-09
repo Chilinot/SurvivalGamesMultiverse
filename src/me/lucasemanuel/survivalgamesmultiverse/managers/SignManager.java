@@ -45,6 +45,7 @@ import org.bukkit.entity.Player;
 
 import me.lucasemanuel.survivalgamesmultiverse.Main;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
+import me.lucasemanuel.survivalgamesmultiverse.utils.SerializedLocation;
 
 public class SignManager {
 	
@@ -102,10 +103,10 @@ public class SignManager {
 		
 		logger.debug("Saving signlocations...");
 		
-		final HashMap<Location, String> locations = new HashMap<Location, String>();
+		final HashMap<SerializedLocation, String> locations = new HashMap<SerializedLocation, String>();
 		
 		for(Entry<Sign, String> entry : signs.entrySet()) {
-			locations.put(entry.getKey().getLocation(), entry.getValue());
+			locations.put(new SerializedLocation(entry.getKey().getLocation()), entry.getValue());
 		}
 		
 		new Thread() {

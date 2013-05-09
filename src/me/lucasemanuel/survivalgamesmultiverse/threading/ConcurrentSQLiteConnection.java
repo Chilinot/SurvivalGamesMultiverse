@@ -96,14 +96,14 @@ public class ConcurrentSQLiteConnection {
 		}
 	}
 	
-	public synchronized void saveStartLocations(String worldname, String type, Set<Location> locations) {
+	public synchronized void saveStartLocations(String worldname, String type, Set<SerializedLocation> locations) {
 		try {
 			testConnection();
 			
 			Statement stmt = con.createStatement();
 			
-			for(Location l : locations) {
-				String serial = new SerializedLocation(l).toString();
+			for(SerializedLocation l : locations) {
+				String serial = l.toString();
 				stmt.execute("INSERT OR REPLACE INTO startlocations VALUES('" + serial + "', '" + worldname + "', '" + type + "')");
 			}
 			
@@ -142,7 +142,7 @@ public class ConcurrentSQLiteConnection {
 		}
 	}
 	
-	public synchronized void saveSignLocations(HashMap<Location, String> locations) {
+	public synchronized void saveSignLocations(HashMap<SerializedLocation, String> locations) {
 		
 		testConnection();
 		
@@ -157,9 +157,9 @@ public class ConcurrentSQLiteConnection {
 		}
 		
 		if(stmt != null)  {
-			for(Entry<Location, String> entry : locations.entrySet()) {
+			for(Entry<SerializedLocation, String> entry : locations.entrySet()) {
 				
-				String serial    = new SerializedLocation(entry.getKey()).toString();
+				String serial    = entry.getKey().toString();
 				String worldname = entry.getValue();
 				
 				try {

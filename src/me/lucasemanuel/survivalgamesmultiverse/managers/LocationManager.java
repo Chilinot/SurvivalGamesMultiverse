@@ -36,10 +36,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import me.lucasemanuel.survivalgamesmultiverse.Main;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
+import me.lucasemanuel.survivalgamesmultiverse.utils.SerializedLocation;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -194,7 +194,11 @@ public class LocationManager {
 			
 			if(tempmap != null) {
 				
-				final Set<Location> locations = tempmap.keySet();
+				final HashSet<SerializedLocation> locations = new HashSet<SerializedLocation>();
+				
+				for(Location location : tempmap.keySet()) {
+					locations.add(new SerializedLocation(location));
+				}
 				
 				new Thread() {
 					public void run() {
