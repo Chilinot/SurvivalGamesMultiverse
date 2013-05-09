@@ -152,6 +152,19 @@ public class ConcurrentSQLiteConnection {
 		}
 	}
 	
+	public synchronized void clearStartLocations(String worldname, String type) {
+		try {
+			testConnection();
+			
+			Statement stmt = con.createStatement();
+			stmt.execute("DELETE FROM startlocations WHERE worldname='" + worldname + "' AND type='" + type + "'");
+			stmt.close();
+		}
+		catch (SQLException e) {
+			System.out.println("Error while clearing startlocations! Message: " + e.getMessage());
+		}
+	}
+	
 	public synchronized HashMap<Location, String> getSignlocations() {
 		try {
 			HashMap<Location, String> map = new HashMap<Location, String>();

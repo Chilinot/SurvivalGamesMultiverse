@@ -298,7 +298,7 @@ public class Commands implements CommandExecutor {
 		String firstarg  = args[0].toLowerCase();
 		String secondarg = args[1].toLowerCase();
 		
-		String worldname = location.getWorld().getName();
+		final String worldname = location.getWorld().getName();
 		
 		String error = ChatColor.RED + "This world is not registered!";
 		
@@ -351,8 +351,18 @@ public class Commands implements CommandExecutor {
 			case "clear":
 				if(secondarg.equals("main")) {
 					
-					if(plugin.getLocationManager().clearLocationList("main", worldname)) 
-						player.sendMessage(ChatColor.GREEN + "Clearing main locations for this world! Remember to save!");
+					if(plugin.getLocationManager().clearLocationList("main", worldname)) {
+						player.sendMessage(ChatColor.GREEN + "Clearing main locations for this world!");
+						
+						plugin.getSignManager().updateSigns();
+						
+						new Thread() {
+							public void run() {
+								plugin.getSQLiteConnector().clearStartLocations(worldname, "main");
+							}
+						}.start();
+					}
+						
 					else 
 						player.sendMessage(error);
 					
@@ -360,8 +370,16 @@ public class Commands implements CommandExecutor {
 				}
 				else if(secondarg.equals("arena")) {
 					
-					if(plugin.getLocationManager().clearLocationList("arena", worldname)) 
-						player.sendMessage(ChatColor.GREEN + "Clearing arena locations for this world! Remember to save!");
+					if(plugin.getLocationManager().clearLocationList("arena", worldname)) {
+						player.sendMessage(ChatColor.GREEN + "Clearing arena locations for this world!");
+						
+						new Thread() {
+							public void run() {
+								plugin.getSQLiteConnector().clearStartLocations(worldname, "arena");
+							}
+						}.start();
+					}
+						
 					else
 						player.sendMessage(error);
 					
