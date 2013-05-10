@@ -200,11 +200,11 @@ public class LocationManager {
 					locations.add(new SerializedLocation(location));
 				}
 				
-				new Thread() {
+				plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 					public void run() {
 						plugin.getSQLiteConnector().saveStartLocations(worldname, listtype, locations);
 					}
-				}.start();
+				});
 				
 				return true;
 			}

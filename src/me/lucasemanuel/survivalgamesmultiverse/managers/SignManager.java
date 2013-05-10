@@ -83,11 +83,11 @@ public class SignManager {
 					else {
 						logger.warning("Loaded block not a sign! Material: " + block.getType());
 						
-						new Thread() {
+						plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 							public void run() {
 								plugin.getSQLiteConnector().removeSign(new SerializedLocation(l));
 							}
-						}.start();
+						});
 					}
 				}
 				else
@@ -109,11 +109,11 @@ public class SignManager {
 			locations.put(new SerializedLocation(entry.getKey().getLocation()), entry.getValue());
 		}
 		
-		new Thread() {
+		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 			public void run() {
 				plugin.getSQLiteConnector().saveSignLocations(locations);
 			}
-		}.start();
+		});
 	}
 
 	public synchronized void updateSigns() {

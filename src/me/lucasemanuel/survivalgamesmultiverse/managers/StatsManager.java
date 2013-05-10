@@ -47,6 +47,7 @@ import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
 
 public class StatsManager {
 	
+	private Main plugin;
 	private ConsoleLogger logger;
 	
 	private HashMap<String, Score> playerstats;
@@ -63,6 +64,8 @@ public class StatsManager {
 	public StatsManager(Main instance) {
 		
 		logger = new ConsoleLogger(instance, "StatsManager");
+		plugin = instance;
+		
 		logger.debug("Loading settings");
 		
 		playerstats = new HashMap<String, Score>();
@@ -136,11 +139,11 @@ public class StatsManager {
 		 */
 		
 		if(insertobject != null) {
-			new Thread() {
+			plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 				public void run() {
 					insertobject.update(playername, points, 0, 0);
 				}
-			}.start();
+			});
 		}
 	}
 	
@@ -156,11 +159,11 @@ public class StatsManager {
 		 */
 		
 		if(insertobject != null) {
-			new Thread() {
+			plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 				public void run() {
 					insertobject.update(playername, 0, points, 0);
 				}
-			}.start();
+			});
 		}
 	}
 	
@@ -172,11 +175,11 @@ public class StatsManager {
 		 */
 		
 		if(insertobject != null) {
-			new Thread() {
+			plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 				public void run() {
 					insertobject.update(playername, 0, 0, points);
 				}
-			}.start();
+			});
 		}
 	}
 }

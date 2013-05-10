@@ -356,11 +356,11 @@ public class Commands implements CommandExecutor {
 						
 						plugin.getSignManager().updateSigns();
 						
-						new Thread() {
+						plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 							public void run() {
 								plugin.getSQLiteConnector().clearStartLocations(worldname, "main");
 							}
-						}.start();
+						});
 					}
 						
 					else 
@@ -373,11 +373,11 @@ public class Commands implements CommandExecutor {
 					if(plugin.getLocationManager().clearLocationList("arena", worldname)) {
 						player.sendMessage(ChatColor.GREEN + "Clearing arena locations for this world!");
 						
-						new Thread() {
+						plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 							public void run() {
 								plugin.getSQLiteConnector().clearStartLocations(worldname, "arena");
 							}
-						}.start();
+						});
 					}
 						
 					else
@@ -391,4 +391,8 @@ public class Commands implements CommandExecutor {
 		
 		return false;
 	}
+}
+
+class Thread {
+	
 }
