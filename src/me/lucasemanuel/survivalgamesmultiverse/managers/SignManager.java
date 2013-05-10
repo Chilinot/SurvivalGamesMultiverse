@@ -67,12 +67,14 @@ public class SignManager {
 		
 		this.signs = new HashMap<Sign, String>();
 		
-		HashMap<Location, String> locations = plugin.getSQLiteConnector().getSignlocations();
+		HashMap<String, String> locations = plugin.getSQLiteConnector().getSignlocations();
 		
 		if(locations != null && locations.size() > 0) {
-			for(Entry<Location, String> entry : locations.entrySet()) {
+			for(Entry<String, String> entry : locations.entrySet()) {
 				
-				Block block = entry.getKey().getBlock();
+				final Location l = SerializedLocation.deserializeString(entry.getKey());
+				
+				Block block = l.getBlock();
 				
 				if(block != null) {
 					if(block.getType().equals(Material.SIGN_POST) || block.getType().equals(Material.WALL_SIGN)) {
@@ -81,11 +83,9 @@ public class SignManager {
 					else {
 						logger.warning("Loaded block not a sign! Material: " + block.getType());
 						
-						final Location location = entry.getKey();
-						
 						new Thread() {
 							public void run() {
-								plugin.getSQLiteConnector().removeSign(location);
+								plugin.getSQLiteConnector().removeSign(new SerializedLocation(l));
 							}
 						}.start();
 					}

@@ -217,19 +217,19 @@ public class LocationManager {
 		
 		logger.debug("Loading locations for world: " + worldname);
 		
-		ArrayList<HashSet<Location>> locations = plugin.getSQLiteConnector().getStartLocations(worldname);
+		ArrayList<HashSet<String>> locations = plugin.getSQLiteConnector().getStartLocations(worldname);
 		
 		if(locations != null && locations.get(0).size() > 0) {
 			
-			HashSet<Location> main  = locations.get(0);
-			HashSet<Location> arena = locations.get(1);
+			HashSet<String> main  = locations.get(0);
+			HashSet<String> arena = locations.get(1);
 			
-			for(Location location : main) {
-				addLocation("main", location);
+			for(String serial : main) {
+				addLocation("main", SerializedLocation.deserializeString(serial));
 			}
 			
-			for(Location location : arena) {
-				addLocation("arena", location);
+			for(String serial : arena) {
+				addLocation("arena", SerializedLocation.deserializeString(serial));
 			}
 			
 		}
