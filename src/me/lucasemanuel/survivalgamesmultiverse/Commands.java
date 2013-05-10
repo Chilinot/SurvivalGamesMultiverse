@@ -392,7 +392,3 @@ public class Commands implements CommandExecutor {
 		return false;
 	}
 }
-
-class Thread {
-	
-}
