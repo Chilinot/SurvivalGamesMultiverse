@@ -41,8 +41,6 @@ import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.bukkit.Location;
-
 import me.lucasemanuel.survivalgamesmultiverse.Main;
 import me.lucasemanuel.survivalgamesmultiverse.utils.SerializedLocation;
 
@@ -95,11 +93,11 @@ public class ConcurrentSQLiteConnection {
 		}
 	}
 	
-	public synchronized ArrayList<HashSet<Location>> getStartLocations(String worldname) {
+	public synchronized ArrayList<HashSet<String>> getStartLocations(String worldname) {
 		try {
 			testConnection();
 			
-			ArrayList<HashSet<Location>> locations = new ArrayList<HashSet<Location>>();
+			ArrayList<HashSet<String>> locations = new ArrayList<HashSet<String>>();
 			
 			Statement stmt_main  = con.createStatement();
 			Statement stmt_arena = con.createStatement();
@@ -107,15 +105,15 @@ public class ConcurrentSQLiteConnection {
 			ResultSet rs_main  = stmt_main.executeQuery ("SELECT * FROM startlocations WHERE worldname='" + worldname + "' AND type='main'");
 			ResultSet rs_arena = stmt_arena.executeQuery("SELECT * FROM startlocations WHERE worldname='" + worldname + "' AND type='arena'");
 			
-			HashSet<Location> main  = new HashSet<Location>();
-			HashSet<Location> arena = new HashSet<Location>();
+			HashSet<String> main  = new HashSet<String>();
+			HashSet<String> arena = new HashSet<String>();
 			
 			while(rs_main.next()) {
-				main.add(SerializedLocation.deserializeString(rs_main.getString("serial_position")));
+				main.add(rs_main.getString("serial_position"));
 			}
 			
 			while(rs_arena.next()) {
-				arena.add(SerializedLocation.deserializeString(rs_arena.getString("serial_position")));
+				arena.add(rs_arena.getString("serial_position"));
 			}
 			
 			locations.add(main);
@@ -165,9 +163,9 @@ public class ConcurrentSQLiteConnection {
 		}
 	}
 	
-	public synchronized HashMap<Location, String> getSignlocations() {
+	public synchronized HashMap<String, String> getSignlocations() {
 		try {
-			HashMap<Location, String> map = new HashMap<Location, String>();
+			HashMap<String, String> map = new HashMap<String, String>();
 			
 			testConnection();
 			
@@ -179,7 +177,7 @@ public class ConcurrentSQLiteConnection {
 				String serial    = rs.getString("serial_position");
 				String worldname = rs.getString("worldname");
 				
-				map.put(SerializedLocation.deserializeString(serial), worldname);
+				map.put(serial, worldname);
 			}
 			
 			rs.close();
@@ -232,16 +230,16 @@ public class ConcurrentSQLiteConnection {
 			
 	}
 	
-	public synchronized void removeSign(Location location) {
+	public synchronized void removeSign(SerializedLocation l) {
 		
 		testConnection();
 		
 		try {
 			Statement stmt = con.createStatement();
 			
-			String serial = new SerializedLocation(location).toString();
+			String s = l.toString();
 			
-			stmt.execute("DELETE FROM signlocations WHERE serial_position='" + serial + "'");
+			stmt.execute("DELETE FROM signlocations WHERE serial_position='" + s + "'");
 			
 			stmt.close();
 		}
