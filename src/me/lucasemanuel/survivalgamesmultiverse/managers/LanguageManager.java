@@ -127,8 +127,8 @@ public class LanguageManager {
 		
 		if(save) {
 			try {
-	            config.save(this.plugin.getDataFolder() + File.separator + "language.yml");
-	        } catch (IOException e) {
+				config.save(this.plugin.getDataFolder() + File.separator + "language.yml");
+			} catch (IOException e) {
 	        	this.logger.severe("Could not save language.yml!");
 	        }
 		}
