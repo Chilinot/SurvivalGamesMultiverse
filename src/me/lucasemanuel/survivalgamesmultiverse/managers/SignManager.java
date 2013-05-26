@@ -61,7 +61,7 @@ public class SignManager {
 		logger.debug("Initiated");
 	}
 
-	public synchronized void loadsigns() {
+	public void loadsigns() {
 		
 		logger.debug("Loading signlocations...");
 		
@@ -99,7 +99,7 @@ public class SignManager {
 		}
 	}
 	
-	private synchronized void saveSigns() {
+	private void saveSigns() {
 		
 		logger.debug("Saving signlocations...");
 		
@@ -116,13 +116,13 @@ public class SignManager {
 		});
 	}
 
-	public synchronized void updateSigns() {
+	public void updateSigns() {
 		for(String worldname : signs.values()) {
 			updateInfoSign(worldname);
 		}
 	}
 
-	private synchronized void updateInfoSign(String worldname) {
+	private void updateInfoSign(String worldname) {
 		
 		Sign sign = getSign(worldname);
 		
@@ -152,7 +152,7 @@ public class SignManager {
 			logger.warning("Sign is null! Worldname: " + worldname);
 	}
 
-	private synchronized Sign getSign(String worldname) {
+	private Sign getSign(String worldname) {
 		
 		for(Entry<Sign, String> entry : signs.entrySet()) {
 			if(entry.getValue().equals(worldname))
@@ -162,7 +162,7 @@ public class SignManager {
 		return null;
 	}
 
-	public synchronized String getGameworldName(Sign sign) {
+	public String getGameworldName(Sign sign) {
 		
 		for(Entry<Sign, String> entry : signs.entrySet()) {
 			if(entry.getKey().equals(sign))
@@ -172,7 +172,7 @@ public class SignManager {
 		return null;
 	}
 
-	public synchronized void registerSign(Sign sign) {
+	public void registerSign(Sign sign) {
 		
 		if(sign != null) {
 			

@@ -72,11 +72,11 @@ public class WorldManager {
 		logged_blocks = new HashMap<World, HashMap<String, LoggedBlock>>();
 	}
 
-	public synchronized void addWorld(World world) {
+	public void addWorld(World world) {
 		logged_blocks.put(world, new HashMap<String, LoggedBlock>());
 	}
 
-	public synchronized boolean isGameWorld(World world) {
+	public boolean isGameWorld(World world) {
 
 		if (logged_blocks.containsKey(world))
 			return true;
@@ -84,7 +84,7 @@ public class WorldManager {
 			return false;
 	}
 
-	public synchronized void broadcast(World world, String msg) {
+	public void broadcast(World world, String msg) {
 		if (isGameWorld(world)) {
 
 			logger.debug("Broadcasting message to '" + world.getName() + "': " + msg);
@@ -98,7 +98,7 @@ public class WorldManager {
 			logger.debug("Tried to broadcast message '" + msg + "' to non game-world - " + world.getName());
 	}
 
-	public synchronized void logBlock(Location location, boolean placed) {
+	public void logBlock(Location location, boolean placed) {
 
 		String key = new String(location.getBlockX() + " " + location.getBlockY() + " " + location.getBlockZ());
 
@@ -116,7 +116,7 @@ public class WorldManager {
 		}
 	}
 
-	public synchronized void resetWorld(final World world) {
+	public void resetWorld(final World world) {
 
 		logger.debug("Resetting world: " + world.getName());
 
@@ -152,11 +152,11 @@ public class WorldManager {
 			logger.debug("Tried to reset non registered world!");
 	}
 
-	public synchronized void sendPlayerToLobby(Player player) {
+	public void sendPlayerToLobby(Player player) {
 		player.teleport(Bukkit.getWorld(plugin.getConfig().getString("lobbyworld")).getSpawnLocation());
 	}
 
-	public synchronized String[] getRegisteredWorldNames() {
+	public String[] getRegisteredWorldNames() {
 
 		String[] worlds = new String[logged_blocks.size()];
 
@@ -202,7 +202,7 @@ class LoggedBlock {
 		SIGN_LINES = sign_lines;
 	}
 
-	public synchronized void reset() {
+	public void reset() {
 
 		Block block_to_restore = Bukkit.getWorld(WORLDNAME).getBlockAt(X, Y, Z);
 

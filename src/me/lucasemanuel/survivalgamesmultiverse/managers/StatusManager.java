@@ -61,12 +61,12 @@ public class StatusManager {
 		logger.debug("Initiated");
 	}
 	
-	public synchronized void addWorld(String worldname) {
+	public void addWorld(String worldname) {
 		worlds_status_flags.put(worldname, 0);
 		worlds_tasks.put(worldname, -1); // -1 means no task
 	}
 
-	private synchronized boolean setStatusFlag(String worldname, int value) {
+	private boolean setStatusFlag(String worldname, int value) {
 		if(worlds_status_flags.containsKey(worldname)) {
 			worlds_status_flags.put(worldname, value);
 			return true;
@@ -75,11 +75,11 @@ public class StatusManager {
 			return false;
 	}
 	
-	public synchronized int getStatusFlag(String worldname) {
+	public int getStatusFlag(String worldname) {
 		return worlds_status_flags.get(worldname);
 	}
 
-	public synchronized void startCountDown(String worldname) {
+	public void startCountDown(String worldname) {
 		
 		if(worlds_status_flags.containsKey(worldname) && worlds_tasks.get(worldname) == -1) {
 			
@@ -97,7 +97,7 @@ public class StatusManager {
 		}
 	}
 	
-	public synchronized void startPlayerCheck(String worldname) {
+	public void startPlayerCheck(String worldname) {
 		
 		if(worlds_status_flags.containsKey(worldname) && worlds_tasks.get(worldname) == -1) {
 			
@@ -115,7 +115,7 @@ public class StatusManager {
 		}
 	}
 	
-	private synchronized void playerCheck(GeneralTaskInfo info) {
+	private void playerCheck(GeneralTaskInfo info) {
 		
 		String worldname = info.getWorldname();
 		int taskID = info.getTaskID();
@@ -138,7 +138,7 @@ public class StatusManager {
 			plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), ChatColor.LIGHT_PURPLE + plugin.getLanguageManager().getString("waitingForPlayers"));
 	}
 	
-	private synchronized void countDown(final CountDown info) {
+	private void countDown(final CountDown info) {
 		
 		String worldname = info.getWorldname();
 		long timeOfInitiation = info.getStartTime();
@@ -180,7 +180,7 @@ public class StatusManager {
 			plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), (timeToWait - timepassed) + " " + plugin.getLanguageManager().getString("timeleft"));
 	}
 
-	public synchronized boolean activate(String worldname) {
+	public boolean activate(String worldname) {
 		
 		if(worlds_status_flags.containsKey(worldname)) {
 			setStatusFlag(worldname, 1);
@@ -202,7 +202,7 @@ public class StatusManager {
 			return false;
 	}
 
-	private synchronized void startArenaCountdown(final String worldname) {
+	private void startArenaCountdown(final String worldname) {
 		
 		logger.debug("Starting arena countdown for world: " + worldname);
 		
@@ -233,7 +233,7 @@ public class StatusManager {
 		worlds_tasks.put(worldname, info.getTaskID());
 	}
 	
-	private synchronized void sendEveryoneToArena(CountDown info) {
+	private void sendEveryoneToArena(CountDown info) {
 		
 		int taskID = info.getTaskID();
 		
@@ -266,7 +266,7 @@ public class StatusManager {
 		}
 	}
 
-	private synchronized void startEndGameCountdown(final String worldname) {
+	private void startEndGameCountdown(final String worldname) {
 		
 		logger.debug("Starting endgame countdown!");
 		
@@ -283,7 +283,7 @@ public class StatusManager {
 		}, (long) (timeout * 20)));
 	}
 
-	public synchronized void reset(String worldname) {
+	public void reset(String worldname) {
 		
 		logger.debug("Resetting world: " + worldname);
 		
@@ -307,15 +307,15 @@ class GeneralTaskInfo {
 		this.worldname = worldname;
 	}
 	
-	public synchronized String getWorldname() {
+	public String getWorldname() {
 		return this.worldname;
 	}
 	
-	public synchronized void setTaskID(int newID) {
+	public void setTaskID(int newID) {
 		this.taskID = newID;
 	}
 	
-	public synchronized int getTaskID() {
+	public int getTaskID() {
 		return this.taskID;
 	}
 }
@@ -336,27 +336,27 @@ class CountDown {
 		started10 = false;
 	}
 	
-	public synchronized String getWorldname() {
+	public String getWorldname() {
 		return this.worldname;
 	}
 	
-	public synchronized long getStartTime() {
+	public long getStartTime() {
 		return this.timeOfInitiation;
 	}
 	
-	public synchronized void setTaskID(int newID) {
+	public void setTaskID(int newID) {
 		this.taskID = newID;
 	}
 	
-	public synchronized int getTaskID() {
+	public int getTaskID() {
 		return this.taskID;
 	}
 	
-	public synchronized void setStarted10() {
+	public void setStarted10() {
 		this.started10 = true;
 	}
 	
-	public synchronized boolean getStarted10() {
+	public boolean getStarted10() {
 		return this.started10;
 	}
 }

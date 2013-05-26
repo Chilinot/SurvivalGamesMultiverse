@@ -136,43 +136,43 @@ public class Main extends JavaPlugin {
 		sqlite.closeConnection();
 	}
 	
-	public synchronized PlayerManager getPlayerManager() {
+	public PlayerManager getPlayerManager() {
 		return playermanager;
 	}
 	
-	public synchronized WorldManager getWorldManager() {
+	public WorldManager getWorldManager() {
 		return worldmanager;
 	}
 	
-	public synchronized ChestManager getChestManager() {
+	public ChestManager getChestManager() {
 		return chestmanager;
 	}
 	
-	public synchronized StatsManager getStatsManager() {
+	public StatsManager getStatsManager() {
 		return statsmanager;
 	}
 	
-	public synchronized LanguageManager getLanguageManager() {
+	public LanguageManager getLanguageManager() {
 		return languagemanager;
 	}
 
-	public synchronized LocationManager getLocationManager() {
+	public LocationManager getLocationManager() {
 		return locationmanager;
 	}
 	
-	public synchronized StatusManager getStatusManager() {
+	public StatusManager getStatusManager() {
 		return statusmanager;
 	}
 	
-	public synchronized SignManager getSignManager() {
+	public SignManager getSignManager() {
 		return signmanager;
 	}
 	
-	public synchronized ConcurrentSQLiteConnection getSQLiteConnector() {
+	public ConcurrentSQLiteConnection getSQLiteConnector() {
 		return sqlite;
 	}
 	
-	public synchronized void gameover(World world) {
+	public void gameover(World world) {
 		
 		if(playermanager.isGameOver(world)) {
 			
@@ -202,7 +202,7 @@ public class Main extends JavaPlugin {
 		}
 	}
 	
-	public synchronized void resetWorld(World world) {
+	public void resetWorld(World world) {
 		playermanager.killAndClear(world.getName());
 		worldmanager.resetWorld(world);
 		locationmanager.resetLocationStatuses(world);

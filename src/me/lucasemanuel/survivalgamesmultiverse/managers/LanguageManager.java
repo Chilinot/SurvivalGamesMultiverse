@@ -56,7 +56,7 @@ public class LanguageManager {
 		loadLanguage();
 	}
 
-	private synchronized void loadLanguage() {
+	private void loadLanguage() {
 
 		FileConfiguration config = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "language.yml"));
 
@@ -67,7 +67,7 @@ public class LanguageManager {
 		}
 	}
 
-	private synchronized void checkDefaults(FileConfiguration config) {
+	private void checkDefaults(FileConfiguration config) {
 
 		@SuppressWarnings("serial")
 		HashMap<String, String> defaults = new HashMap<String, String>() {
@@ -135,7 +135,7 @@ public class LanguageManager {
 		}
 	}
 
-	public synchronized String getString(String key) {
+	public String getString(String key) {
 
 		if (language.containsKey(key)) {
 			return language.get(key);

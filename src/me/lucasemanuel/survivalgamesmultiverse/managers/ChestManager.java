@@ -78,7 +78,7 @@ public class ChestManager {
 		this.logger.debug("Initiated");
 	}
 	
-	public synchronized void randomizeChest(Chest chest) {
+	public void randomizeChest(Chest chest) {
 		
 		if(!this.randomizedchests.contains(chest.getLocation())) {
 			
@@ -173,12 +173,12 @@ public class ChestManager {
 		}
 	}
 	
-	public synchronized void addChestToLog(Location location) {
+	public void addChestToLog(Location location) {
 		if(!this.randomizedchests.contains(location))
 			this.randomizedchests.add(location);
 	}
 	
-	public synchronized void clearLogs(String worldname) {
+	public void clearLogs(String worldname) {
 		logger.debug("Clearing logs for world - " + worldname);
 		
 		Iterator<Location> locations = this.randomizedchests.iterator();
@@ -193,7 +193,7 @@ public class ChestManager {
 		logger.debug("finished...");
 	}
 	
-    private synchronized void loadItemList() {
+    private void loadItemList() {
 		
 		this.itemConfig = YamlConfiguration.loadConfiguration(new File(this.plugin.getDataFolder(), "itemlist.yml"));
 		
@@ -260,7 +260,7 @@ public class ChestManager {
 		logger.debug("Finished loading config");
 	}
 
-	private synchronized void checkDefaults() {
+	private void checkDefaults() {
 		boolean save = false;
 		
 		if(!itemConfig.contains("maxAmountOfItems")) {
