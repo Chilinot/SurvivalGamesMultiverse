@@ -120,7 +120,9 @@ public class Main extends JavaPlugin {
 		
 		logger.debug("Finished! Schedules sign update...");
 		
-		this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+		// Runs a little while after the server is setup to let the signs be registered in time.
+		// Without this delay, the world will say that the signs do not exist. 
+		this.getServer().getScheduler().runTaskLater(this, new Runnable() {
 			public void run() {
 				signmanager.loadsigns();
 				signmanager.updateSigns();
@@ -133,7 +135,14 @@ public class Main extends JavaPlugin {
 	public void onDisable() {
 		logger.debug("Disabling plugin!");
 		
-		sqlite.closeConnection();
+		getServer().getScheduler().cancelTasks(this);
+		
+		if(sqlite != null)
+			sqlite.closeConnection();
+	}
+	
+	public void disable() {
+		this.setEnabled(false);
 	}
 	
 	public PlayerManager getPlayerManager() {

@@ -38,7 +38,6 @@ import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -49,6 +48,8 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 import me.lucasemanuel.survivalgamesmultiverse.Main;
+import me.lucasemanuel.survivalgamesmultiverse.reflection.NMS;
+import me.lucasemanuel.survivalgamesmultiverse.reflection.NMSRetriever;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
 
 public class WorldManager {
@@ -56,6 +57,10 @@ public class WorldManager {
 	private Main plugin;
 	private ConsoleLogger logger;
 
+	// Reflection
+	private static NMS nms;
+	
+	// Logging
 	private HashMap<World, HashMap<String, LoggedBlock>> logged_blocks;
 
 	// Entities that shouldn't be removed on world reset
@@ -70,6 +75,13 @@ public class WorldManager {
 		logger = new ConsoleLogger(instance, "WorldManager");
 
 		logged_blocks = new HashMap<World, HashMap<String, LoggedBlock>>();
+		
+		// Runs directly on next tick to prevent errors that could occur if the plugin is disabled during its setup.
+		plugin.getServer().getScheduler().runTask(plugin, new Runnable() {
+			public void run() {
+				setupNMS();
+			}
+		});
 	}
 
 	public void addWorld(World world) {
@@ -168,14 +180,20 @@ public class WorldManager {
 
 		return worlds;
 	}
-
-	/*
-	 * Thanks to desht @ Bukkit forums for this method! :)
-	 */
+	
+	private void setupNMS() {
+		NMS nms = NMSRetriever.getNMS(plugin);
+		if(nms != null) {
+			WorldManager.nms = nms;
+		}
+		else {
+			logger.severe("Unsupported server version! Disabling plugin!");
+			plugin.disable();
+		}
+	}
+	
 	public static boolean setBlockFast(Block b, int typeId, byte data) {
-		Chunk c = b.getChunk();
-		net.minecraft.server.v1_5_R3.Chunk chunk = ((org.bukkit.craftbukkit.v1_5_R3.CraftChunk) c).getHandle();
-		return chunk.a(b.getX() & 15, b.getY(), b.getZ() & 15, typeId, data);
+		return nms.setBlockFast(b, typeId, data);
 	}
 }
 
