@@ -83,6 +83,17 @@ public class WorldManager {
 			}
 		});
 	}
+	
+	private void setupNMS() {
+		NMS nms = NMSRetriever.getNMS(plugin);
+		if(nms != null) {
+			WorldManager.nms = nms;
+		}
+		else {
+			logger.severe("Unsupported server version! Disabling plugin!");
+			plugin.disable();
+		}
+	}
 
 	public void addWorld(World world) {
 		logged_blocks.put(world, new HashMap<String, LoggedBlock>());
@@ -179,17 +190,6 @@ public class WorldManager {
 		}
 
 		return worlds;
-	}
-	
-	private void setupNMS() {
-		NMS nms = NMSRetriever.getNMS(plugin);
-		if(nms != null) {
-			WorldManager.nms = nms;
-		}
-		else {
-			logger.severe("Unsupported server version! Disabling plugin!");
-			plugin.disable();
-		}
 	}
 	
 	public static boolean setBlockFast(Block b, int typeId, byte data) {
