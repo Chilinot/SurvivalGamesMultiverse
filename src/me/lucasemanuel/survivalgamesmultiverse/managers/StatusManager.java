@@ -186,7 +186,7 @@ public class StatusManager {
 			setStatusFlag(worldname, 1);
 			
 			plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), ChatColor.GOLD + plugin.getLanguageManager().getString("gamestarted"));
-			
+			plugin.getWorldManager().clearEntities(Bukkit.getWorld(worldname));
 			plugin.getSignManager().updateSigns();
 			
 			if(worlds_tasks.get(worldname) != -1) {
