@@ -48,7 +48,6 @@ import org.bukkit.entity.Player;
 
 import me.desht.dhutils.block.CraftMassBlockUpdate;
 import me.desht.dhutils.block.MassBlockUpdate;
-import me.desht.dhutils.nms.api.NMSAbstraction;
 
 import me.lucasemanuel.survivalgamesmultiverse.Main;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
@@ -57,9 +56,6 @@ public class WorldManager {
 
 	private Main plugin;
 	private ConsoleLogger logger;
-
-	// Reflection
-	public static NMSAbstraction nms;
 	
 	// Logging
 	private HashMap<World, HashMap<String, LoggedBlock>> logged_blocks;
@@ -180,10 +176,6 @@ public class WorldManager {
 		}
 
 		return worlds;
-	}
-	
-	public static boolean setBlockFast(World world, int x, int y, int z, int id, byte data) {
-		return nms.setBlockFast(world, x, y, z, id, data);
 	}
 }
 
