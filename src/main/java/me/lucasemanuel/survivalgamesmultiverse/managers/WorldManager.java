@@ -41,15 +41,16 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
+import me.desht.dhutils.block.CraftMassBlockUpdate;
+import me.desht.dhutils.block.MassBlockUpdate;
+import me.desht.dhutils.nms.api.NMSAbstraction;
+
 import me.lucasemanuel.survivalgamesmultiverse.Main;
-import me.lucasemanuel.survivalgamesmultiverse.reflection.NMS;
-import me.lucasemanuel.survivalgamesmultiverse.reflection.NMSRetriever;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
 
 public class WorldManager {
@@ -58,7 +59,7 @@ public class WorldManager {
 	private ConsoleLogger logger;
 
 	// Reflection
-	private static NMS nms;
+	public static NMSAbstraction nms;
 	
 	// Logging
 	private HashMap<World, HashMap<String, LoggedBlock>> logged_blocks;
@@ -70,29 +71,11 @@ public class WorldManager {
 			EntityType.ITEM_FRAME
 	};
 
-	public WorldManager(Main instance) {
+	public WorldManager(final Main instance) {
 		plugin = instance;
 		logger = new ConsoleLogger(instance, "WorldManager");
 
 		logged_blocks = new HashMap<World, HashMap<String, LoggedBlock>>();
-		
-		// Runs directly on next tick to prevent errors that could occur if the plugin is disabled during its setup.
-		plugin.getServer().getScheduler().runTask(plugin, new Runnable() {
-			public void run() {
-				setupNMS();
-			}
-		});
-	}
-	
-	private void setupNMS() {
-		NMS nms = NMSRetriever.getNMS(plugin);
-		if(nms != null) {
-			WorldManager.nms = nms;
-		}
-		else {
-			logger.severe("Unsupported server version! Disabling plugin!");
-			plugin.disable();
-		}
 	}
 
 	public void addWorld(World world) {
@@ -146,10 +129,14 @@ public class WorldManager {
 		if (isGameWorld(world)) {
 
 			HashMap<String, LoggedBlock> blocks_to_reset = logged_blocks.get(world);
+			
+			MassBlockUpdate mbu = CraftMassBlockUpdate.createMassBlockUpdater(plugin, world);
 
 			for (LoggedBlock block : blocks_to_reset.values()) {
-				block.reset();
+				block.reset(mbu);
 			}
+			
+			mbu.notifyClients();
 
 			plugin.getServer().getScheduler().runTask(plugin, new Runnable() {
 				public void run() {
@@ -195,8 +182,8 @@ public class WorldManager {
 		return worlds;
 	}
 	
-	public static boolean setBlockFast(Block b, int typeId, byte data) {
-		return nms.setBlockFast(b, typeId, data);
+	public static boolean setBlockFast(World world, int x, int y, int z, int id, byte data) {
+		return nms.setBlockFast(world, x, y, z, id, data);
 	}
 }
 
@@ -223,15 +210,13 @@ class LoggedBlock {
 		SIGN_LINES = sign_lines;
 	}
 
-	public void reset() {
-
-		Block block_to_restore = Bukkit.getWorld(WORLDNAME).getBlockAt(X, Y, Z);
-
-		WorldManager.setBlockFast(block_to_restore, MATERIAL, DATA);
-
+	public void reset(MassBlockUpdate mbu) {
+		
+		mbu.setBlock(X, Y, Z, MATERIAL, DATA);
+		
 		if (SIGN_LINES != null && (MATERIAL == Material.SIGN_POST.getId() || MATERIAL == Material.WALL_SIGN.getId())) {
 
-			Sign sign = (Sign) block_to_restore.getState();
+			Sign sign = (Sign) Bukkit.getWorld(WORLDNAME).getBlockAt(X, Y, Z).getState();
 
 			for (int i = 0; i < 4; i++) {
 				sign.setLine(i, SIGN_LINES[i]);

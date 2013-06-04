@@ -5,6 +5,7 @@
   <version>0.9.5</version>
   <name>SurvivalGamesMultiverse</name>
   
+  <!-- Repositories -->
   <repositories>
         <repository>
             <id>bukkit-repo</id>
@@ -12,14 +13,24 @@
         </repository>
     </repositories>
     
-    
+  
+  <!-- Dependencies -->
   <dependencies>
-   <dependency>
-	  <groupId>org.bukkit</groupId>
-	  <artifactId>craftbukkit</artifactId>
-	  <version>1.5.2-R0.2-SNAPSHOT</version>
-	  <scope>provided</scope>
-   </dependency>
+  
+	   <!-- Bukkit -->
+	   <dependency>
+		  <groupId>org.bukkit</groupId>
+		  <artifactId>craftbukkit</artifactId>
+		  <version>1.5.2-R0.2-SNAPSHOT</version>
+		  <scope>provided</scope>
+	   </dependency>
+	   
+	   <!-- DHUtils -->
+	   <dependency>
+	        <groupId>me.desht</groupId>
+	        <artifactId>dhutils-lib</artifactId>
+	        <version>2.5.2</version>
+	   </dependency>
   </dependencies>
   
   
@@ -42,6 +53,7 @@
  
         <!-- Plugins -->
         <plugins>
+        
             <!-- Compiler -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -53,7 +65,39 @@
                     <showDeprecation>true</showDeprecation>
                 </configuration>
             </plugin>
+            
+            <!-- Shader -->
+           	<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>1.6</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<minimizeJar>true</minimizeJar>
+							<filters>
+								<filter>
+									<artifact>me.desht:dhutils-lib</artifact>
+									<includes>
+										<include>me/desht/dhutils/nms/**</include>
+										<include>me/desht/dhutils/block/**</include>
+									</includes>
+								</filter>
+							</filters>
+							<relocations>
+								<relocation>
+									<pattern>me.desht.dhutils</pattern>
+									<shadedPattern>me.lucasemanuel.survivalgamesmultiverse.dhutils</shadedPattern>
+								</relocation>
+							</relocations>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
         </plugins>
     </build>
-  
 </project>

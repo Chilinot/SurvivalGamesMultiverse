@@ -31,6 +31,7 @@
 
 package me.lucasemanuel.survivalgamesmultiverse;
 
+import me.desht.dhutils.nms.NMSHelper;
 import me.lucasemanuel.survivalgamesmultiverse.listeners.Blocks;
 import me.lucasemanuel.survivalgamesmultiverse.listeners.Players;
 import me.lucasemanuel.survivalgamesmultiverse.listeners.Worlds;
@@ -73,6 +74,19 @@ public class Main extends JavaPlugin {
 		
 		logger = new ConsoleLogger(this, "Main");
 		logger.debug("Initiating startup sequence...");
+		
+		logger.info("Checking compatability...");
+		
+		try {
+			NMSHelper.init(this);
+		}
+		catch(Exception e) {
+			logger.severe("Unsupported server version! Disabling plugin.");
+			this.setEnabled(false);
+			return;
+		}
+		
+		logger.info("Server is compatible.");
 		
 		Config.load(this);
 		
@@ -139,10 +153,6 @@ public class Main extends JavaPlugin {
 		
 		if(sqlite != null)
 			sqlite.closeConnection();
-	}
-	
-	public void disable() {
-		this.setEnabled(false);
 	}
 	
 	public PlayerManager getPlayerManager() {
