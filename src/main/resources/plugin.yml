@@ -1,6 +1,7 @@
-name: SurvivalGamesMultiverse
-main: me.lucasemanuel.survivalgamesmultiverse.Main
-version: 0.9.5
+name: ${project.name}
+author: LucasEmanuel
+version: ${project.version}
+main: ${project.groupId}.${project.artifactId}.Main
 
 commands:
   sginfo:
