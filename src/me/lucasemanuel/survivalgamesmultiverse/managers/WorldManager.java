@@ -151,19 +151,9 @@ public class WorldManager {
 				block.reset();
 			}
 
-			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+			plugin.getServer().getScheduler().runTask(plugin, new Runnable() {
 				public void run() {
-					
-					Set<EntityType> skip = EnumSet.noneOf(EntityType.class);
-					Collections.addAll(skip, nonremovable);
-
-					for (Entity entity : world.getEntities()) {
-						
-						if(skip.contains(entity.getType()))
-							continue;
-
-						entity.remove();
-					}
+					clearEntities(world);
 				}
 			});
 
@@ -173,6 +163,19 @@ public class WorldManager {
 		}
 		else
 			logger.debug("Tried to reset non registered world!");
+	}
+	
+	public void clearEntities(World world) {
+		Set<EntityType> skip = EnumSet.noneOf(EntityType.class);
+		Collections.addAll(skip, nonremovable);
+
+		for (Entity entity : world.getEntities()) {
+			
+			if(skip.contains(entity.getType()))
+				continue;
+
+			entity.remove();
+		}
 	}
 
 	public void sendPlayerToLobby(Player player) {
