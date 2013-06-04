@@ -99,7 +99,7 @@ public class Blocks implements Listener {
 		}
 	}
 	
-	@EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled=true)
+	@EventHandler(priority=EventPriority.MONITOR, ignoreCancelled=true)
 	public void onEntityExplode(EntityExplodeEvent event) {
 		
 		if(plugin.getWorldManager().isGameWorld(event.getLocation().getWorld())) {
