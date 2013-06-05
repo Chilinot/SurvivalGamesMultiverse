@@ -255,10 +255,6 @@ public class ChestManager {
 		this.enchantmentlists.put("bow",    bows);
 		this.enchantmentlists.put("armors", armors);
 		
-		for(String key : itemConfig.getKeys(true)) {
-			System.out.println(key + ", " + itemConfig.getDouble(key));
-		}
-		
 		
 		logger.debug("Finished loading config");
 	}
