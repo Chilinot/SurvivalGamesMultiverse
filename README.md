@@ -53,7 +53,7 @@ For example, the community im the head developer for is using this plugin in swe
 ##Setup:
 A short video on how to install and use the plugin.
 
-[Youtube](http://www.youtube.com/watch?v=H7H3dIWY_X)
+[Youtube](http://youtu.be/H7H3dIWY_Xw)
 
 ##Signs:
 Players join by rightclicking a sign. These signs can be placed anywhere.
