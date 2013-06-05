@@ -4,19 +4,13 @@ SurvivalGamesMultiverse
 ##Description:
 This plugin allows you to host multiple SurvivalGames in diffrent worlds at the same time.
 
-######Worlds and their templates
-Each world has its main world and a templateworld. When the game is over the mainworld gets reset based on the templateworld.
-The plugin logs all block changes to the mainworld and then resets those blocks based on what it finds in the template world.
-That means that you could do pretty much anything to the mainworld without having to worry if you can reverse the changes, you can always let my plugin reset the changes or just reset it yourself with the templateworld.
+######Worlds
+Each survivalgames-match takes place in its own world. Anything that happens in these worlds are logged and reset after each match.
+This means that you could do pretty much anything to the world and everything will be back to normal when a new round starts.
+This opens up for some interesting gameplay, like allowing all players to be able to craft their own armor or weapons, or build bridges, dig tunnels, create walls to hide behind etc.
 
-Using templateworlds also means that you can edit the templateworld while a game is ongoing in the mainworld. This means that you can just edit the templateworld and the changes will eventually be transmitted to the main world.
-
-Theoretically this will also reduce the amount of RAM necessary to log all changes since the plugin only have to log what location was changed and not save the material, data etc for each block. It will just get that information from the templateworld.
-
-That also enables some more fun gaming rules. For example:
- - Players can break any block.
- - Players can craft items in the world to use as armor or weapons (all drops/items are removed when the world gets reset).
- - etc
+Each match is timed, and after a configurable time all players in the match are teleported to a predefined arena to fight till the end.
+If the players just wont kill each other in the arena the plugin will kill all players left and start a new match if the time runs out.
 
 ######Chests
 All chests in the map gets randomized the first time a player opens them when a new game has started.
@@ -34,6 +28,8 @@ This will prevent server lag/freezes when the plugin needs to store some informa
 ######Stats & MySQL
 When the plugin gets loaded the first time, for example when the server starts. It automatically tries to connect to the database configured in the config.yml file.
 If it cant connect, no stats will be logged. But if a connection is established, it will log whenever a player wins, kills or dies and sends this information to the database.
+
+It is of course possible to disable this check in the config.
 
 The table containing the data has to have the following layout in the following order:
 
@@ -55,10 +51,24 @@ This allows people from all nations to play the game in their native language wi
 For example, the community im the head developer for is using this plugin in swedish. All they had to do was translate the strings in the _language.yml_ file.
 
 ##Signs:
-In progress...
+Players join by rightclicking a sign. These signs can be placed anywhere.
 
-##Dependencies:
-In progress...
+To create "joinsign", write [sginfo] on the first line of the sign, and the name of the gameworld on the second line.
+Then just rightclick the sign to register it and it will update with the correct information.
+
+This is how it's supposed to look before it is rightclicked.
+
+[<img src="https://dl.dropboxusercontent.com/u/51186702/SGMultiverse/Create%20sign.PNG">](Create sign)
+
+**Example:**
+
+Before rightclick:
+
+[<img src="https://dl.dropboxusercontent.com/u/51186702/SGMultiverse/Create%20sign%20-%20Example1.PNG">](Create sign - example1)
+
+After rightclick:
+
+[<img src="https://dl.dropboxusercontent.com/u/51186702/SGMultiverse/Create%20sign%20-%20Example2.PNG">](Create sign - example2)
 
 ##Commands:
 #####/sginfo
@@ -98,4 +108,26 @@ In progress...
  - Permission: survivalgames.commands.sgactivate
 
 ##Permissions:
-In progress...
+#####survivalgames.ignore.commandfilter:
+ - description: Players with this perm will be allowed to use any command while playing SG.
+ - default: op
+
+#####survivalgames.ignore.stats:
+ - description: Players with this perm will not recieve points in SG.
+ - default: false
+
+#####survivalgames.ignore.forcepumpkin:
+ - description: Players with this perm can remove their pumpkin helmet even if forcepumpkin is enabled in the config.
+ - default: op
+
+#####survivalgames.ignore.blockfilter:
+ - description: Allows a player to break/place blocks in a game world that hasnt started.
+ - default: op
+
+#####survivalgames.ignore.clearinv:
+ - description: Allows player to ignore inventory clearing upon joining SurvivalGames
+ - default: op
+
+#####survivalgames.signs.sginfo:
+ - description: Allows a player to register an sginfo sign.
+ - default: op
