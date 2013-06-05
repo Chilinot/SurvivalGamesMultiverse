@@ -55,7 +55,7 @@ A short video on how to install and use the plugin.
 
 [Installing the plugin and basic configuration](http://youtu.be/H7H3dIWY_Xw)
 
-[Configuring the itemlist.yml]
+[Configuring the itemlist.yml](http://www.youtube.com/watch?v=YGoqR3wvaXE)
 
 ##Signs:
 Players join by rightclicking a sign. These signs can be placed anywhere.
