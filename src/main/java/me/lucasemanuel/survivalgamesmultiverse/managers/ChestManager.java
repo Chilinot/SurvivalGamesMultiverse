@@ -255,6 +255,9 @@ public class ChestManager {
 		this.enchantmentlists.put("bow",    bows);
 		this.enchantmentlists.put("armors", armors);
 		
+		for(String key : itemConfig.getKeys(true)) {
+			System.out.println(key + ", " + itemConfig.getDouble(key));
+		}
 		
 		
 		logger.debug("Finished loading config");
@@ -264,80 +267,101 @@ public class ChestManager {
 		boolean save = false;
 		
 		if(!itemConfig.contains("maxAmountOfItems")) {
-			
 			itemConfig.set("maxAmountOfItems", 3);
-			
 			save = true;
 		}
-		
 		if(!itemConfig.contains("blankChestChance-OneOutOf")) {
-			
 			itemConfig.set("blankChestChance-OneOutOf", 5);
-			
 			save = true;
 		}
 		
 		if(!itemConfig.contains("weapons")) {
-			
+			itemConfig.set("weapons.wood_spade.enchantmentchance", 0.0);
+			itemConfig.set("weapons.wood_spade.spawnchance", 0.5);
+			itemConfig.set("weapons.wood_pickaxe.enchantmentchance", 0.0);
+			itemConfig.set("weapons.wood_pickaxe.spawnchance", 0.7);
+			itemConfig.set("weapons.wood_axe.enchantmentchance", 0.0);
+			itemConfig.set("weapons.wood_axe.spawnchance", 0.4);
+			itemConfig.set("weapons.stone_sword.enchantmentchance", 0.1);
+			itemConfig.set("weapons.stone_sword.spawnchance", 0.3);
+			itemConfig.set("weapons.stone_spade.enchantmentchance", 0.0);
+			itemConfig.set("weapons.stone_spade.spawnchance", 0.4);
+			itemConfig.set("weapons.stone_pickaxe.enchantmentchance", 0.0);
+			itemConfig.set("weapons.stone_pickaxe.spawnchance", 0.3);
+			itemConfig.set("weapons.gold_sword.enchantmentchance", 0.4);
+			itemConfig.set("weapons.gold_sword.spawnchance", 0.2);
+			itemConfig.set("weapons.gold_axe.enchantmentchance", 0.0);
+			itemConfig.set("weapons.gold_axe.spawnchance", 0.2);
 			itemConfig.set("weapons.wood_sword.enchantmentchance", 0.3);
 			itemConfig.set("weapons.wood_sword.spawnchance", 0.8);
-			
+			itemConfig.set("weapons.iron_sword.enchantmentchance", 0.1);
+			itemConfig.set("weapons.iron_sword.spawnchance", 0.1);
 			itemConfig.set("weapons.bow.enchantmentchance", 0.1);
 			itemConfig.set("weapons.bow.spawnchance", 0.4);
-			
 			save = true;
 		}
 		
 		if(!itemConfig.contains("armors")) {
-			
+			itemConfig.set("armors.gold_chestplate.enchantmentchance", 0.3);
+			itemConfig.set("armors.gold_chestplate.spawnchance", 0.1);
+			itemConfig.set("armors.gold_leggings.enchantmentchance", 0.3);
+			itemConfig.set("armors.gold_leggings.spawnchance", 0.1);
+			itemConfig.set("armors.iron_chestplate.enchantmentchance", 0.1);
+			itemConfig.set("armors.iron_chestplate.spawnchance", 0.1);
+			itemConfig.set("armors.iron_boots.enchantmentchance", 0.1);
+			itemConfig.set("armors.iron_boots.spawnchance", 0.1);
+			itemConfig.set("armors.leather_leggings.enchantmentchance", 0.2);
+			itemConfig.set("armors.leather_leggings.spawnchance", 0.3);
+			itemConfig.set("armors.leather_boots.enchantmentchance", 0.2);
+			itemConfig.set("armors.leather_boots.spawnchance", 0.3);
+			itemConfig.set("armors.chainmail_chestplate.enchantmentchance", 0.1);
+			itemConfig.set("armors.chainmail_chestplate.spawnchance", 0.2);
+			itemConfig.set("armors.chainmail_leggings.enchantmentchance", 0.1);
+			itemConfig.set("armors.chainmail_leggings.spawnchance", 0.2);
 			itemConfig.set("armors.diamond_helmet.enchantmentchance", 0.01);
 			itemConfig.set("armors.diamond_helmet.spawnchance", 0.1);
-			
 			itemConfig.set("armors.diamond_chestplate.enchantmentchance", 0.01);
 			itemConfig.set("armors.diamond_chestplate.spawnchance", 0.1);
-			
 			itemConfig.set("armors.leather_chestplate.enchantmentchance", 0.3);
 			itemConfig.set("armors.leather_chestplate.spawnchance", 0.3);
-			
 			itemConfig.set("armors.iron_leggings.enchantmentchance", 0.2);
 			itemConfig.set("armors.iron_leggings.spawnchance", 0.2);
-			
 			save = true;
 		}
 		
 		if(!itemConfig.contains("enchantments")) {
-			
 			itemConfig.set("enchantments.swords.fire_aspect", 0.3);
 			itemConfig.set("enchantments.swords.damage_all", 0.3);
 			itemConfig.set("enchantments.swords.knockback", 0.3);
 			itemConfig.set("enchantments.swords.damage_arthropods", 0.3);
 			itemConfig.set("enchantments.swords.damage_undead", 0.3);
-			
 			itemConfig.set("enchantments.bow.arrow_damage", 0.3);
 			itemConfig.set("enchantments.bow.arrow_fire", 0.3);
 			itemConfig.set("enchantments.bow.arrow_infinite", 0.3);
 			itemConfig.set("enchantments.bow.arrow_knockback", 0.3);
-			
 			itemConfig.set("enchantments.armors.protection_fall", 0.2);
 			itemConfig.set("enchantments.armors.protection_projectile", 0.2);
 			itemConfig.set("enchantments.armors.protection_fire", 0.2);
-			
 			save = true;
 		}
 		
 		if(!itemConfig.contains("food")) {
-			
+			itemConfig.set("food.mushroom_soup", 0.2);
+			itemConfig.set("food.bread", 0.4);
+			itemConfig.set("food.grilled_pork", 0.5);
+			itemConfig.set("food.cooked_fish", 0.5);
+			itemConfig.set("food.cookie", 0.4);
+			itemConfig.set("food.cooked_chicken", 0.4);
+			itemConfig.set("food.rotten_flesh", 0.6);
 			itemConfig.set("food.apple", 0.8);
 			itemConfig.set("food.cooked_beef", 0.5);
-			
 			save = true;
 		}
 		
 		if(!itemConfig.contains("items")) {
-			
+			itemConfig.set("items.map", 0.1);
 			itemConfig.set("items.flint_and_steel", 0.2);
 			itemConfig.set("items.arrow", 0.4);
-			
 			save = true;
 		}
 		
