@@ -34,9 +34,6 @@ commands:
     permission: survivalgames.commands.sgleave
     
 permissions:
-  survivalgames.ignore.outsideofspawn:
-    description: Players with this perm will not be teleported back to spawn if they aren't registered.
-    default: op
   survivalgames.ignore.commandfilter:
     description: Players with this perm will be allowed to use any command while playing SG.
     default: op
