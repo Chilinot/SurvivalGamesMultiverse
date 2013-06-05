@@ -50,25 +50,16 @@ This allows people from all nations to play the game in their native language wi
 
 For example, the community im the head developer for is using this plugin in swedish. All they had to do was translate the strings in the _language.yml_ file.
 
+##Setup:
+A short video on how to install and use the plugin.
+
+
+
 ##Signs:
 Players join by rightclicking a sign. These signs can be placed anywhere.
 
 To create "joinsign", write [sginfo] on the first line of the sign, and the name of the gameworld on the second line.
 Then just rightclick the sign to register it and it will update with the correct information.
-
-This is how it's supposed to look before it is rightclicked.
-
-[<img src="https://dl.dropboxusercontent.com/u/51186702/SGMultiverse/Create%20sign.PNG">](Create sign)
-
-**Example:**
-
-Before rightclick:
-
-[<img src="https://dl.dropboxusercontent.com/u/51186702/SGMultiverse/Create%20sign%20-%20Example1.PNG">](Create sign - example1)
-
-After rightclick:
-
-[<img src="https://dl.dropboxusercontent.com/u/51186702/SGMultiverse/Create%20sign%20-%20Example2.PNG">](Create sign - example2)
 
 ##Commands:
 #####/sginfo
@@ -131,3 +122,8 @@ After rightclick:
 #####survivalgames.signs.sginfo:
  - description: Allows a player to register an sginfo sign.
  - default: op
+ 
+##Sourcecode:
+This plugin is open-source and released under the GNU-GPLv3 license. The code can be found here:
+
+[GitHub/SurvivalGamesMultiverse](https://github.com/Chilinot/SurvivalGamesMultiverse)
