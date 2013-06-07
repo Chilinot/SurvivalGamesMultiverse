@@ -85,6 +85,10 @@ public class WorldManager {
 		else
 			return false;
 	}
+	
+	public void broadcast(String worldname, String msg) {
+		broadcast(Bukkit.getWorld(worldname), msg);
+	}
 
 	public void broadcast(World world, String msg) {
 		if (isGameWorld(world)) {
