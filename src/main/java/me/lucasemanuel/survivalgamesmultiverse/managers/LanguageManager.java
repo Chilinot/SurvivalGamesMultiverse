@@ -70,37 +70,33 @@ public class LanguageManager {
 	private void checkDefaults(FileConfiguration config) {
 
 		@SuppressWarnings("serial")
-		HashMap<String, String> defaults = new HashMap<String, String>() {
-			{
-				put("gameover", "Game over!");
-				put("wonTheGame", "won the game!");
-				put("isOutOfTheGame", "is out of the game!");
-				put("wasKilledBy", "was killed by");
-				put("youJoinedTheGame", "You joined the game!");
-				put("playerJoinedGame", "joined the game!");
-				put("alreadyPlaying", "You are already playing!");
-				put("gameIsFull", "Game is full!");
-				put("blockedMovement", "You are not allowed to move yet!");
-
-				put("gamestarted", "Game started! GO GO GO!");
-				put("waitingForPlayers", "Atleast one more player has to join!");
-				put("blockedCommand", "You are not allowed to use that command ingame!");
-				put("sgplayersHeading", "Alive Players");
-				put("sgleaveNotIngame", "You are not in the game!");
-				put("sendingEveryoneToArena", "The game took to long to finish! Sending everyone to the arena!");
-				put("sentYouToArena", "You where sent to the arena!");
-
-				put("killedSendingArena", "No locations left in the arena! You where killed.");
-				put("forcedPumpkin", "You have to wear that pumpkin!");
-				put("gameHasNotStartedYet", "The game hasn't started yet!");
-				put("gameHasAlreadyStarted", "The game has already started, try another world!");
-				put("sgplayersNoonealive", "No players alive!");
-				put("sgplayersIncorrect", "You need to be in a gameworld, or enter the name of one!");
-				put("Join_Blocked_Frozen", "This world is temporary frozen!");
-
-				// Time related
-				put("timeleft", "seconds left until game starts.");
+		HashMap<String, String> defaults = new HashMap<String, String>() {{
+				put("gameover",               "Game over!");
+				put("wonTheGame",             "won the game!");
+				put("isOutOfTheGame",         "is out of the game!");
+				put("wasKilledBy",            "was killed by");
+				put("youJoinedTheGame",       "You joined the game!");
+				put("playerJoinedGame",       "joined the game!");
+				put("alreadyPlaying",         "You are already playing!");
+				put("gameIsFull",             "Game is full!");
+				put("blockedMovement",        "You are not allowed to move yet!");
+				put("blockedCommand",         "You are not allowed to use that command ingame!");
+				put("sgplayersHeading",       "Alive Players");
+				put("sgleaveNotIngame",       "You are not in the game!");
+				put("forcedPumpkin",          "You have to wear that pumpkin!");
+				put("gameHasNotStartedYet",   "The game hasn't started yet!");
+				put("gameHasAlreadyStarted",  "The game has already started, try another world!");
+				put("sgplayersNoonealive",    "No players alive!");
+				put("sgplayersIncorrect",     "You need to be in a gameworld, or enter the name of one!");
+				
+				// StatusManager
+				put("waitingForPlayers",      "Atleast one more player has to join!");
+				put("timeleft",               "seconds left until game starts.");
+				put("gamestarted",            "Game started! GO GO GO!");
 				put("broadcast_before_arena", "You are being teleported to the arena in 5 seconds!");
+				put("sendingEveryoneToArena", "The game took to long to finish! Sending everyone to the arena!");
+				put("sentYouToArena",         "You where sent to the arena!");
+				put("killedSendingArena",     "No locations left in the arena! You where killed.");
 				put("secondsTillTheGameEnds", "seconds until the game is cancelled!");
 
 				// Anticheat
@@ -108,12 +104,14 @@ public class LanguageManager {
 				put("anticheat.teleported", "was removed due to teleportation!");
 
 				// Signs
-				put("signs.started", "Started");
-				put("signs.waiting", "Waiting");
+				put("signs.started",       "Started");
+				put("signs.waiting",       "Waiting");
 				put("signs.playersIngame", "Players Ingame");
-				put("signs.frozen", "Frozen");
-			}
-		};
+				put("signs.frozen",        "Frozen");
+				
+				// Scrap
+				put("Join_Blocked_Frozen", "This world is temporary frozen!");
+		}};
 
 		boolean save = false;
 
