@@ -67,13 +67,8 @@ public class Config {
 		}
 		
 		if(!config.contains("worldnames")) {
-			
-			ArrayList<String> worlds = new ArrayList<String>() {{ 
-				add("survivalgames1");
-				add("survivalgames2");
-			}};
-			
-			config.set("worldnames", worlds);
+			config.set("worldnames.survivalgames1", 2);
+			config.set("worldnames.survivalgames2", 2);
 			save = true;
 		}
 		
