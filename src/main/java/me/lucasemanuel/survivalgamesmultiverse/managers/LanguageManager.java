@@ -85,7 +85,6 @@ public class LanguageManager {
 				put("gamestarted", "Game started! GO GO GO!");
 				put("waitingForPlayers", "Atleast one more player has to join!");
 				put("blockedCommand", "You are not allowed to use that command ingame!");
-				put("movedOutsideOfSpawn", "You are not allowed to be there!");
 				put("sgplayersHeading", "Alive Players");
 				put("sgleaveNotIngame", "You are not in the game!");
 				put("sendingEveryoneToArena", "The game took to long to finish! Sending everyone to the arena!");
