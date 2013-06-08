@@ -51,6 +51,7 @@ import me.desht.dhutils.block.MassBlockUpdate;
 
 import me.lucasemanuel.survivalgamesmultiverse.Main;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
+import me.lucasemanuel.survivalgamesmultiverse.utils.LoggedBlock;
 
 public class WorldManager {
 
@@ -180,45 +181,5 @@ public class WorldManager {
 		}
 
 		return worlds;
-	}
-}
-
-class LoggedBlock {
-
-	private final String	WORLDNAME;
-	private final int		X, Y, Z;
-
-	private final int		MATERIAL;
-	private final byte		DATA;
-
-	private final String[]	SIGN_LINES;
-
-	public LoggedBlock(String worldname, int x, int y, int z, Material material, byte data, String[] sign_lines) {
-
-		WORLDNAME = worldname;
-		X = x;
-		Y = y;
-		Z = z;
-
-		MATERIAL = material.getId();
-		DATA = data;
-
-		SIGN_LINES = sign_lines;
-	}
-
-	public void reset(MassBlockUpdate mbu) {
-		
-		mbu.setBlock(X, Y, Z, MATERIAL, DATA);
-		
-		if (SIGN_LINES != null && (MATERIAL == Material.SIGN_POST.getId() || MATERIAL == Material.WALL_SIGN.getId())) {
-
-			Sign sign = (Sign) Bukkit.getWorld(WORLDNAME).getBlockAt(X, Y, Z).getState();
-
-			for (int i = 0; i < 4; i++) {
-				sign.setLine(i, SIGN_LINES[i]);
-			}
-
-			sign.update();
-		}
 	}
 }
