@@ -31,6 +31,8 @@
 
 package me.lucasemanuel.survivalgamesmultiverse;
 
+import java.io.IOException;
+
 import me.desht.dhutils.nms.NMSHelper;
 import me.lucasemanuel.survivalgamesmultiverse.listeners.Blocks;
 import me.lucasemanuel.survivalgamesmultiverse.listeners.Players;
@@ -52,6 +54,7 @@ import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.mcstats.Metrics;
 
 public class Main extends JavaPlugin {
 	
@@ -85,6 +88,15 @@ public class Main extends JavaPlugin {
 			this.setEnabled(false);
 			return;
 		}
+		
+		try {
+			Metrics metrics = new Metrics(this);
+			metrics.start();
+		}
+		catch (IOException e) {
+			logger.severe("Failed to submit stats to MCStats.org! Please contact author of this plugin!");
+		}
+		
 		
 		logger.info("Server is compatible.");
 		

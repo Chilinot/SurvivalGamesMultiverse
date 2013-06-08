@@ -7,10 +7,18 @@
   
   <!-- Repositories -->
   <repositories>
+  
+ 		<!-- Bukkit -->
         <repository>
             <id>bukkit-repo</id>
             <url>http://repo.bukkit.org/content/groups/public</url>
         </repository>
+        
+        <!-- Metrics -->
+		<repository>
+			<id>Plugin Metrics</id>
+			<url>http://repo.mcstats.org/content/repositories/public</url>
+		</repository>
     </repositories>
     
   
@@ -31,6 +39,19 @@
 	        <artifactId>dhutils-lib</artifactId>
 	        <version>2.5.2</version>
 	   </dependency>
+	   
+	   <!-- Metrics -->
+		<dependency>
+			<groupId>org.mcstats.bukkit</groupId>
+			<artifactId>metrics</artifactId>
+			<version>R6</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>bukkit</artifactId>
+					<groupId>org.bukkit</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
   </dependencies>
   
   
@@ -46,7 +67,6 @@
                 <filtering>true</filtering>
                 <includes>
                     <include>*.yml</include>
-                    <include>*.dat</include>
                 </includes>
             </resource>
         </resources>
@@ -92,6 +112,10 @@
 								<relocation>
 									<pattern>me.desht.dhutils</pattern>
 									<shadedPattern>me.lucasemanuel.survivalgamesmultiverse.dhutils</shadedPattern>
+								</relocation>
+								<relocation>
+									<pattern>org.mcstats</pattern>
+									<shadedPattern>me.lucasemanuel.survivalgamesmultiverse.mcstats</shadedPattern>
 								</relocation>
 							</relocations>
 						</configuration>
