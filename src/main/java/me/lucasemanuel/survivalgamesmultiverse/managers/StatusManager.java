@@ -165,6 +165,8 @@ class Game {
 		cancelTask();
 		flag = 1;
 		
+		plugin.getSignManager().updateSigns();
+		
 		long delay = countdown_arena * 20; delay = delay <= 100 ? delay : delay-100;
 		
 		task = plugin.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
@@ -202,6 +204,8 @@ class Game {
 				plugin.getPlayerManager().removePlayer(worldname, p);
 		}
 		
+		plugin.getWorldManager().broadcast(worldname, countdown_end + " " + plugin.getLanguageManager().getString("secondsTillTheGameEnds"));
+		
 		task = plugin.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
 			public void run() {
 				endTheGame();
@@ -210,7 +214,7 @@ class Game {
 	}
 	
 	private void endTheGame() {
-		
+		plugin.resetWorld(Bukkit.getWorld(worldname));
 	}
 	
 	public int getFlag() {

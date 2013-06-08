@@ -90,7 +90,7 @@ public class LanguageManager {
 				put("sgplayersIncorrect",     "You need to be in a gameworld, or enter the name of one!");
 				
 				// StatusManager
-				put("waitingForPlayers",      "Atleast one more player has to join!");
+				put("waitingForPlayers",      "Waiting for more players!");
 				put("timeleft",               "seconds left until game starts.");
 				put("gamestarted",            "Game started! GO GO GO!");
 				put("broadcast_before_arena", "You are being teleported to the arena in 5 seconds!");
