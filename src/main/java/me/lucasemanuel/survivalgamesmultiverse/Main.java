@@ -124,12 +124,12 @@ public class Main extends JavaPlugin {
 		
 		for(String key : getConfig().getStringList("worldnames")) {
 			
+			logger.debug("Loading world - " + key);
+			
 			worldmanager.addWorld(Bukkit.createWorld(new WorldCreator(key)));
 			playermanager.addWorld(key);
 			locationmanager.addWorld(key);
 			statusmanager.addWorld(key);
-			
-			logger.debug("Loading world - " + key);
 		}
 		
 		logger.debug("Finished! Schedules sign update...");
