@@ -50,6 +50,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType.SlotType;
@@ -329,6 +331,19 @@ public class Players implements Listener {
 					&& plugin.getPlayerManager().isInGame(player)
 					&& plugin.getStatusManager().getStatusFlag(player.getWorld().getName()) == 0) {
 				
+				event.setCancelled(true);
+			}
+		}
+	}
+	
+	@EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled=true)
+	public void onEntityRegainHealth(EntityRegainHealthEvent event) {
+		if(event.getEntity() instanceof Player) {
+			Player p = (Player) event.getEntity();
+			
+			if(plugin.getWorldManager().isGameWorld(p.getWorld()) 
+					&& event.getRegainReason().equals(RegainReason.SATIATED)
+					&& !plugin.getWorldManager().allowHealthRegen(p.getWorld())) {
 				event.setCancelled(true);
 			}
 		}
