@@ -44,6 +44,21 @@ public class Config {
 		FileConfiguration config = plugin.getConfig();
 		boolean save = false;
 		
+		// Fix old entries
+		if(config.contains("worldnames")) {
+			for(String name : config.getStringList("worldnames")) {
+				config.set("worlds." + name + ".players_to_wait_for", 2);
+				config.set("worlds." + name + ".enable_healthregeneration", true);
+			}
+			
+			// Remove the now obsolete entry
+			config.set("worldnames", null);
+			
+			save = true;
+		}
+		
+		// Default entries
+		
 		// General
 		
 		if(!config.contains("debug")) {
