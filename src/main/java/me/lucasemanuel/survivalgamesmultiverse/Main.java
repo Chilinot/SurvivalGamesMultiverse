@@ -122,7 +122,7 @@ public class Main extends JavaPlugin {
 		
 		logger.debug("Finished! Lets load some worlds...");
 		
-		for(String key : getConfig().getConfigurationSection("worldnames").getKeys(false)) {
+		for(String key : getConfig().getConfigurationSection("worlds").getKeys(false)) {
 			
 			logger.debug("Loading world - " + key);
 			

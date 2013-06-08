@@ -66,11 +66,11 @@ public class Config {
 			save = true;
 		}
 		
-		if(!config.contains("worldnames")) {
-			config.set("worldnames.survivalgames1.players_to_wait_for", 2);
-			config.set("worldnames.survivalgames1.enable_healthregeneration", true);
-			config.set("worldnames.survivalgames2.players_to_wait_for", 2);
-			config.set("worldnames.survivalgames2.enable_healthregeneration", true);
+		if(!config.contains("worlds")) {
+			config.set("worlds.survivalgames1.players_to_wait_for", 2);
+			config.set("worlds.survivalgames1.enable_healthregeneration", true);
+			config.set("worlds.survivalgames2.players_to_wait_for", 2);
+			config.set("worlds.survivalgames2.enable_healthregeneration", true);
 			save = true;
 		}
 		
