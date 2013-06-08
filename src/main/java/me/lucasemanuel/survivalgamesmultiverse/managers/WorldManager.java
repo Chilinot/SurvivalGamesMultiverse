@@ -59,32 +59,21 @@ public class WorldManager {
 	private ConsoleLogger logger;
 	
 	// Logging
-	private HashMap<World, HashMap<String, LoggedBlock>> logged_blocks;
-
-	// Entities that shouldn't be removed on world reset
-	private final EntityType[] nonremovable = new EntityType[] { 
-			EntityType.PLAYER, 
-			EntityType.PAINTING,
-			EntityType.ITEM_FRAME
-	};
+	private HashMap<String, GameWorld> worlds = new HashMap<String, GameWorld>();
 
 	public WorldManager(final Main instance) {
 		plugin = instance;
 		logger = new ConsoleLogger(instance, "WorldManager");
 
-		logged_blocks = new HashMap<World, HashMap<String, LoggedBlock>>();
+		logger.debug("Initiated");
 	}
 
 	public void addWorld(World world) {
-		logged_blocks.put(world, new HashMap<String, LoggedBlock>());
+		worlds.put(world.getName(), new GameWorld(plugin, world));
 	}
 
 	public boolean isGameWorld(World world) {
-
-		if (logged_blocks.containsKey(world))
-			return true;
-		else
-			return false;
+		return worlds.containsKey(world.getName());
 	}
 	
 	public void broadcast(String worldname, String msg) {
@@ -106,10 +95,69 @@ public class WorldManager {
 	}
 
 	public void logBlock(Location location, boolean placed) {
+		worlds.get(location.getWorld().getName()).logBlock(location, placed);
+	}
 
-		String key = new String(location.getBlockX() + " " + location.getBlockY() + " " + location.getBlockZ());
+	public void resetWorld(final World world) {
 
-		if (logged_blocks.containsKey(location.getWorld()) && logged_blocks.get(location.getWorld()).containsKey(key) == false) {
+		logger.debug("Resetting world: " + world.getName());
+
+		if (isGameWorld(world)) {
+			worlds.get(world.getName()).resetWorld();
+		}
+		else
+			logger.debug("Tried to reset non registered world!");
+	}
+	
+	public void clearEntities(World world) {
+		if(isGameWorld(world))
+			worlds.get(world.getName()).clearEntities();
+	}
+
+	public void sendPlayerToLobby(Player player) {
+		player.teleport(Bukkit.getWorld(plugin.getConfig().getString("lobbyworld")).getSpawnLocation());
+	}
+
+	public String[] getRegisteredWorldNames() {
+		return (String[]) worlds.keySet().toArray(new String[worlds.keySet().size()]);
+	}
+	
+
+	public boolean allowHealthRegen(World world) {
+		if(isGameWorld(world))
+			return worlds.get(world.getName()).allowHealthRegen();
+		else
+			return true;
+	}
+}
+
+class GameWorld {
+	
+	private Main plugin;
+	
+	private final World world;
+	private boolean health_regen;
+	
+	private HashMap<String, LoggedBlock> log = new HashMap<String, LoggedBlock>();
+	
+	// Entities that shouldn't be removed on world reset
+	private static final EntityType[] nonremovable = new EntityType[] { 
+			EntityType.PLAYER, 
+			EntityType.PAINTING,
+			EntityType.ITEM_FRAME
+	};
+	
+	public GameWorld(Main plugin, World w) {
+		this.plugin = plugin;
+		this.world = w;
+		
+		health_regen = plugin.getConfig().getBoolean("worlds." + world.getName() + ".enable_healthregeneration");
+	}
+	
+	public void logBlock(Location location, boolean placed) {
+		String key = location.getBlockX() + " " + location.getBlockY() + " " + location.getBlockZ();
+		
+		if (!log.containsKey(key)) {
 
 			Material material = placed ? Material.AIR : location.getBlock().getType();
 
@@ -119,41 +167,30 @@ public class WorldManager {
 				sign_lines = ((Sign) location.getBlock().getState()).getLines();
 			}
 
-			logged_blocks.get(location.getWorld()).put(key, new LoggedBlock(location.getWorld().getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ(), material, location.getBlock().getData(), sign_lines));
+			log.put(key, new LoggedBlock(location.getWorld().getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ(), material, location.getBlock().getData(), sign_lines));
 		}
-	}
-
-	public void resetWorld(final World world) {
-
-		logger.debug("Resetting world: " + world.getName());
-
-		if (isGameWorld(world)) {
-
-			HashMap<String, LoggedBlock> blocks_to_reset = logged_blocks.get(world);
-			
-			MassBlockUpdate mbu = CraftMassBlockUpdate.createMassBlockUpdater(plugin, world);
-
-			for (LoggedBlock block : blocks_to_reset.values()) {
-				block.reset(mbu);
-			}
-			
-			mbu.notifyClients();
-
-			plugin.getServer().getScheduler().runTask(plugin, new Runnable() {
-				public void run() {
-					clearEntities(world);
-				}
-			});
-
-			// Reset logs
-
-			blocks_to_reset.clear();
-		}
-		else
-			logger.debug("Tried to reset non registered world!");
 	}
 	
-	public void clearEntities(World world) {
+	public void resetWorld() {
+		
+		MassBlockUpdate mbu = CraftMassBlockUpdate.createMassBlockUpdater(plugin, world);
+
+		for (LoggedBlock block : log.values()) {
+			block.reset(mbu);
+		}
+		
+		mbu.notifyClients();
+
+		plugin.getServer().getScheduler().runTask(plugin, new Runnable() {
+			public void run() {
+				clearEntities();
+			}
+		});
+
+		log.clear();
+	}
+	
+	public void clearEntities() {
 		Set<EntityType> skip = EnumSet.noneOf(EntityType.class);
 		Collections.addAll(skip, nonremovable);
 
@@ -165,21 +202,20 @@ public class WorldManager {
 			entity.remove();
 		}
 	}
-
-	public void sendPlayerToLobby(Player player) {
-		player.teleport(Bukkit.getWorld(plugin.getConfig().getString("lobbyworld")).getSpawnLocation());
-	}
-
-	public String[] getRegisteredWorldNames() {
-
-		String[] worlds = new String[logged_blocks.size()];
-
-		int i = 0;
-		for (World world : logged_blocks.keySet()) {
-			worlds[i] = world.getName();
-			i++;
-		}
-
-		return worlds;
+	
+	public boolean allowHealthRegen() {
+		return health_regen;
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
