@@ -207,15 +207,3 @@ class GameWorld {
 		return health_regen;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
