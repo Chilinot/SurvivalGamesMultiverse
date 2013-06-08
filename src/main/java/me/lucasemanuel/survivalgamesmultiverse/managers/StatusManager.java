@@ -115,6 +115,7 @@ class Game {
 	private int flag = 0;
 	
 	private long time_of_initiation = 0;
+	private boolean started_10 = false;
 	
 	private int players_to_wait_for;
 	
@@ -139,7 +140,7 @@ class Game {
 				public void run() {
 					startCounter();
 				}
-			}, 20L, 20L);
+			}, 0L, 200L);
 		}
 		else
 			plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), ChatColor.LIGHT_PURPLE + plugin.getLanguageManager().getString("waitingForPlayers"));
@@ -148,14 +149,22 @@ class Game {
 	private void startCounter() {
 		if(time_of_initiation == 0) {
 			time_of_initiation = System.currentTimeMillis();
-			return;
 		}
 			
 		int timepassed = (int) (System.currentTimeMillis() - time_of_initiation) / 1000;
 		
 		if(timepassed >= countdown_first) {
 			activate();
-			plugin.getWorldManager().broadcast(worldname, plugin.getLanguageManager().getString("gamestarted"));
+		}
+		else if(timepassed >= countdown_first - 12 && !started_10) {
+			cancelTask();
+			started_10 = true;
+			
+			task = plugin.getServer().getScheduler().runTaskTimer(plugin, new Runnable() {
+				public void run() {
+					startCounter();
+				}
+			}, 20L, 20L);
 		}
 		else
 			plugin.getWorldManager().broadcast(worldname, (countdown_first - timepassed) + " " + plugin.getLanguageManager().getString("timeleft"));
@@ -164,6 +173,8 @@ class Game {
 	public void activate() {
 		cancelTask();
 		flag = 1;
+		
+		plugin.getWorldManager().broadcast(worldname, plugin.getLanguageManager().getString("gamestarted"));
 		
 		plugin.getSignManager().updateSigns();
 		
@@ -229,12 +240,13 @@ class Game {
 		if(task != null) {
 			task.cancel();
 			task = null;
-			time_of_initiation = 0;
 		}
 	}
 	
 	public void reset() {
 		cancelTask();
 		flag = 0;
+		started_10 = false;
+		time_of_initiation = 0;
 	}
 }
