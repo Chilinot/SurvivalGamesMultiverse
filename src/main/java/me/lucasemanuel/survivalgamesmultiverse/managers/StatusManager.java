@@ -63,7 +63,7 @@ public class StatusManager {
 	
 	public void addWorld(String worldname) {
 		logger.debug("Adding world: " + worldname);
-		int ptwf = plugin.getConfig().getInt("worldnames." + worldname + ".players_to_wait_for");
+		int ptwf = plugin.getConfig().getInt("worlds." + worldname + ".players_to_wait_for");
 		games.put(worldname, new Game(plugin, worldname, ptwf));
 	}
 	
