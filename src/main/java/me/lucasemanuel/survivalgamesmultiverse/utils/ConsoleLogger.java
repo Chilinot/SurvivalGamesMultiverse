@@ -28,7 +28,6 @@
  */
 package me.lucasemanuel.survivalgamesmultiverse.utils;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -50,7 +49,7 @@ public class ConsoleLogger {
 	private final String name;
 	private final String info;
 	
-	private static Set<String> listeners = Collections.synchronizedSet(new HashSet<String>());
+	private static Set<String> listeners = new HashSet<String>();
 
 	/**
 	 * Constructor for the ConsoleLogger.
@@ -74,7 +73,7 @@ public class ConsoleLogger {
 	 * 
 	 * @param msg - Info message
 	 */
-	public synchronized void info(String msg) {
+	public void info(String msg) {
 		this.logger.info(Ansi.ansi().fg(Ansi.Color.GREEN) + this.info + msg + Ansi.ansi().fg(Ansi.Color.WHITE));
 		
 		broadcastToListeners("info", msg);
@@ -85,7 +84,7 @@ public class ConsoleLogger {
 	 * 
 	 * @param msg - Warning message
 	 */
-	public synchronized void warning(String msg) {
+	public void warning(String msg) {
 		this.logger.warning(Ansi.ansi().fg(Ansi.Color.YELLOW) + this.info + msg + Ansi.ansi().fg(Ansi.Color.WHITE));
 		
 		broadcastToListeners("warning", msg);
@@ -96,7 +95,7 @@ public class ConsoleLogger {
 	 * 
 	 * @param msg - Severe message
 	 */
-	public synchronized void severe(String msg) {
+	public void severe(String msg) {
 		this.logger.severe(Ansi.ansi().fg(Ansi.Color.RED) + this.info + msg + Ansi.ansi().fg(Ansi.Color.WHITE));
 		
 		broadcastToListeners("severe", msg);
@@ -108,14 +107,14 @@ public class ConsoleLogger {
 	 * 
 	 * @param msg - Debug message
 	 */
-	public synchronized void debug(String msg) {
+	public void debug(String msg) {
 		if (debug == true)
 			this.logger.info(Ansi.ansi().fg(Ansi.Color.CYAN) + this.info + msg + Ansi.ansi().fg(Ansi.Color.WHITE));
 		
 		broadcastToListeners("debug", msg);
 	}
 	
-	private synchronized void broadcastToListeners(String level, String msg) {
+	private void broadcastToListeners(String level, String msg) {
 		
 		String label = null;
 		
@@ -135,21 +134,18 @@ public class ConsoleLogger {
 			default:
 				label = "Default label";
 		}
+			
+		Iterator<String> i = listeners.iterator();
 		
-		synchronized(listeners) {
+		while(i.hasNext()) {
 			
-			Iterator<String> i = listeners.iterator();
+			Player player = plugin.getServer().getPlayer(i.next());
 			
-			while(i.hasNext()) {
-				
-				Player player = plugin.getServer().getPlayer(i.next());
-				
-				if(player != null) {
-					player.sendMessage(label + " [" + this.name + "] - " + ChatColor.WHITE + msg);
-				}
-				else {
-					i.remove();
-				}
+			if(player != null) {
+				player.sendMessage(label + " [" + this.name + "] - " + ChatColor.WHITE + msg);
+			}
+			else {
+				i.remove();
 			}
 		}
 	}
@@ -164,7 +160,7 @@ public class ConsoleLogger {
 	 * 
 	 * @param newstate - True to output, otherwise false.
 	 */
-	public synchronized static void setDebug(boolean newstate) {
+	public static void setDebug(boolean newstate) {
 		ConsoleLogger.debug = newstate;
 		plugin.getConfig().set("debug", newstate);
 		plugin.saveConfig();
@@ -175,7 +171,7 @@ public class ConsoleLogger {
 	 * 
 	 * @param playername - Name of the player
 	 */
-	public synchronized static void addListener(String playername) {
+	public static void addListener(String playername) {
 		synchronized(listeners) {
 			listeners.add(playername);
 		}
@@ -186,7 +182,7 @@ public class ConsoleLogger {
 	 * 
 	 * @param playername - Name of the player to remove
 	 */
-	public synchronized static void removeListener(String playername) {
+	public static void removeListener(String playername) {
 		synchronized(listeners) {
 			listeners.remove(playername);
 		}
