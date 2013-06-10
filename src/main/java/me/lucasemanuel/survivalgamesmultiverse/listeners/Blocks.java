@@ -40,6 +40,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockFadeEvent;
+import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
@@ -69,7 +70,7 @@ public class Blocks implements Listener {
 			if(plugin.getStatusManager().getStatusFlag(block.getWorld().getName()) == 1 || event.getPlayer().hasPermission("survivalgames.ignore.blockfilter")) {
 				if(plugin.getWorldManager().isGameWorld(block.getWorld())) {
 					
-					plugin.getWorldManager().logBlock(block.getLocation(), true);
+					plugin.getWorldManager().logBlock(block, true);
 					
 					if(block.getType().equals(Material.CHEST))
 						plugin.getChestManager().addChestToLog(block.getLocation());
@@ -90,7 +91,7 @@ public class Blocks implements Listener {
 		if(plugin.getWorldManager().isGameWorld(block.getWorld())) {
 			if(plugin.getStatusManager().getStatusFlag(block.getWorld().getName()) == 1 || event.getPlayer().hasPermission("survivalgames.ignore.blockfilter")) {
 				if(plugin.getWorldManager().isGameWorld(block.getWorld())) {
-					plugin.getWorldManager().logBlock(block.getLocation(), false);
+					plugin.getWorldManager().logBlock(block, false);
 				}
 			}
 			else {
@@ -105,7 +106,7 @@ public class Blocks implements Listener {
 		
 		if(plugin.getWorldManager().isGameWorld(event.getLocation().getWorld())) {
 			for(Block block : event.blockList()) {
-				plugin.getWorldManager().logBlock(block.getLocation(), false);
+				plugin.getWorldManager().logBlock(block, false);
 			}
 		}
 	}
@@ -116,7 +117,7 @@ public class Blocks implements Listener {
 		Block block = event.getBlock();
 		
 		if(plugin.getWorldManager().isGameWorld(block.getWorld())) {
-			plugin.getWorldManager().logBlock(block.getLocation(), false);
+			plugin.getWorldManager().logBlock(block, false);
 		}
 	}
 	
@@ -126,7 +127,7 @@ public class Blocks implements Listener {
 		Block block = event.getBlock();
 		
 		if(plugin.getWorldManager().isGameWorld(block.getWorld())) {
-			plugin.getWorldManager().logBlock(block.getLocation(), false);
+			plugin.getWorldManager().logBlock(block, false);
 		}
 	}
 	
@@ -136,7 +137,7 @@ public class Blocks implements Listener {
 		Block block = event.getBlock();
 		
 		if(plugin.getWorldManager().isGameWorld(block.getWorld())) {
-			plugin.getWorldManager().logBlock(block.getLocation(), false);
+			plugin.getWorldManager().logBlock(block, false);
 		}
 	}
 	
@@ -146,7 +147,17 @@ public class Blocks implements Listener {
 		Block block = event.getBlock();
 		
 		if(plugin.getWorldManager().isGameWorld(block.getWorld())) {
-			plugin.getWorldManager().logBlock(block.getLocation(), false);
+			plugin.getWorldManager().logBlock(block, false);
+		}
+	}
+	
+	@EventHandler(priority=EventPriority.MONITOR, ignoreCancelled=true)
+	public void onBlockPhysics(BlockPhysicsEvent event) {
+		
+		Block b = event.getBlock();
+		
+		if(plugin.getWorldManager().isGameWorld(b.getWorld())) {
+			plugin.getWorldManager().logBlock(b, false);
 		}
 	}
 }

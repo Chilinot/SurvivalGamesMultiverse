@@ -38,9 +38,9 @@ import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -69,7 +69,7 @@ public class WorldManager {
 	}
 
 	public void addWorld(World world) {
-		worlds.put(world.getName(), new GameWorld(plugin, world));
+		worlds.put(world.getName(), new GameWorld(plugin, logger, world));
 	}
 
 	public boolean isGameWorld(World world) {
@@ -94,8 +94,8 @@ public class WorldManager {
 			logger.debug("Tried to broadcast message '" + msg + "' to non game-world - " + world.getName());
 	}
 
-	public void logBlock(Location location, boolean placed) {
-		worlds.get(location.getWorld().getName()).logBlock(location, placed);
+	public void logBlock(Block b, boolean placed) {
+		worlds.get(b.getWorld().getName()).logBlock(b, placed);
 	}
 
 	public void resetWorld(final World world) {
@@ -134,6 +134,7 @@ public class WorldManager {
 class GameWorld {
 	
 	private Main plugin;
+	private ConsoleLogger logger;
 	
 	private final World world;
 	private boolean health_regen;
@@ -147,31 +148,36 @@ class GameWorld {
 			EntityType.ITEM_FRAME
 	};
 	
-	public GameWorld(Main plugin, World w) {
+	public GameWorld(Main plugin, ConsoleLogger logger, World w) {
 		this.plugin = plugin;
-		this.world = w;
+		this.logger = logger;
+		this.world  = w;
 		
 		health_regen = plugin.getConfig().getBoolean("worlds." + world.getName() + ".enable_healthregeneration");
 	}
 	
-	public void logBlock(Location location, boolean placed) {
-		String key = location.getBlockX() + " " + location.getBlockY() + " " + location.getBlockZ();
+	public void logBlock(Block b, boolean placed) {
+		String key = b.getX() + " " + b.getY() + " " + b.getZ();
 		
 		if (!log.containsKey(key)) {
 
-			Material material = placed ? Material.AIR : location.getBlock().getType();
+			Material material = placed ? Material.AIR : b.getType();
 
 			String[] sign_lines = null;
 
-			if (location.getBlock().getType() == Material.WALL_SIGN || location.getBlock().getType() == Material.SIGN_POST) {
-				sign_lines = ((Sign) location.getBlock().getState()).getLines();
+			if (b.getType() == Material.WALL_SIGN || b.getType() == Material.SIGN_POST) {
+				sign_lines = ((Sign) b.getState()).getLines();
 			}
 
-			log.put(key, new LoggedBlock(location.getWorld().getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ(), material, location.getBlock().getData(), sign_lines));
+			log.put(key, new LoggedBlock(b.getWorld().getName(), b.getX(), b.getY(), b.getZ(), material, b.getData(), sign_lines));
 		}
+		else
+			logger.debug("Block already logged at position: " + key);
 	}
 	
 	public void resetWorld() {
+		
+		logger.debug("Resetting world: " + world.getName());
 		
 		MassBlockUpdate mbu = CraftMassBlockUpdate.createMassBlockUpdater(plugin, world);
 
