@@ -78,10 +78,10 @@ public class Main extends JavaPlugin {
 		logger = new ConsoleLogger(this, "Main");
 		logger.debug("Initiating startup sequence...");
 		
-		logger.info("Checking compatability...");
-		
 		try {
+			logger.info("Checking compatability...");
 			NMSHelper.init(this);
+			logger.info("Server is compatible.");
 		}
 		catch(Exception e) {
 			logger.severe("Unsupported server version! Disabling plugin.");
@@ -90,6 +90,7 @@ public class Main extends JavaPlugin {
 		}
 		
 		try {
+			logger.debug("Initiating metrics...");
 			Metrics metrics = new Metrics(this);
 			metrics.start();
 		}
@@ -97,9 +98,7 @@ public class Main extends JavaPlugin {
 			logger.severe("Failed to submit stats to MCStats.org! Please contact author of this plugin!");
 		}
 		
-		
-		logger.info("Server is compatible.");
-		
+		logger.debug("Loading configurationfile...");
 		Config.load(this);
 		
 		logger.debug("Initiating managers...");
