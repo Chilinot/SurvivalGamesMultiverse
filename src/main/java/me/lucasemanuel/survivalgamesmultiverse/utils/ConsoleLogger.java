@@ -1,6 +1,6 @@
 /**
  *  Name: ConsoleLogger.java
- *  Updated: 2012-03-23 - 02:43
+ *  Updated: 2013-06-10 - 14:44
  * 
  *  Author: LucasEmanuel @ bukkit forums
  *  
@@ -40,8 +40,8 @@ import org.fusesource.jansi.Ansi;
 
 public class ConsoleLogger {
 
-	private static JavaPlugin plugin;
-	private Logger logger;
+	private static JavaPlugin plugin = null;
+	private static Logger logger     = null;
 
 	private static String template;
 	private static boolean debug;
@@ -50,6 +50,7 @@ public class ConsoleLogger {
 	private final String info;
 	
 	private static Set<String> listeners = new HashSet<String>();
+	private static Set<ConsoleLogger> loggers = new HashSet<ConsoleLogger>();
 
 	/**
 	 * Constructor for the ConsoleLogger.
@@ -58,14 +59,24 @@ public class ConsoleLogger {
 	 * @param logger_name - Name of the logger.
 	 */
 	public ConsoleLogger(JavaPlugin instance, String logger_name) {
-		plugin = instance;
-		this.logger = instance.getLogger();
-		this.name = logger_name;
-
+		ConsoleLogger.plugin   = instance;
+		ConsoleLogger.logger   = instance.getLogger();
 		ConsoleLogger.debug    = plugin.getConfig().getBoolean("debug");
 		ConsoleLogger.template = "v" + plugin.getDescription().getVersion() + ": ";
 		
+		this.name = logger_name;
 		this.info = ConsoleLogger.template + "[" + logger_name + "] - ";
+		
+		loggers.add(this);
+	}
+	
+	/**
+	 * Returns the name of this object.
+	 * 
+	 * @return name
+	 */
+	public String getName() {
+		return name;
 	}
 
 	/**
@@ -74,7 +85,7 @@ public class ConsoleLogger {
 	 * @param msg - Info message
 	 */
 	public void info(String msg) {
-		this.logger.info(Ansi.ansi().fg(Ansi.Color.GREEN) + this.info + msg + Ansi.ansi().fg(Ansi.Color.WHITE));
+		ConsoleLogger.logger.info(Ansi.ansi().fg(Ansi.Color.GREEN) + this.info + msg + Ansi.ansi().fg(Ansi.Color.WHITE));
 		
 		broadcastToListeners("info", msg);
 	}
@@ -85,7 +96,7 @@ public class ConsoleLogger {
 	 * @param msg - Warning message
 	 */
 	public void warning(String msg) {
-		this.logger.warning(Ansi.ansi().fg(Ansi.Color.YELLOW) + this.info + msg + Ansi.ansi().fg(Ansi.Color.WHITE));
+		ConsoleLogger.logger.warning(Ansi.ansi().fg(Ansi.Color.YELLOW) + this.info + msg + Ansi.ansi().fg(Ansi.Color.WHITE));
 		
 		broadcastToListeners("warning", msg);
 	}
@@ -96,7 +107,7 @@ public class ConsoleLogger {
 	 * @param msg - Severe message
 	 */
 	public void severe(String msg) {
-		this.logger.severe(Ansi.ansi().fg(Ansi.Color.RED) + this.info + msg + Ansi.ansi().fg(Ansi.Color.WHITE));
+		ConsoleLogger.logger.severe(Ansi.ansi().fg(Ansi.Color.RED) + this.info + msg + Ansi.ansi().fg(Ansi.Color.WHITE));
 		
 		broadcastToListeners("severe", msg);
 	}
@@ -109,7 +120,7 @@ public class ConsoleLogger {
 	 */
 	public void debug(String msg) {
 		if (debug == true)
-			this.logger.info(Ansi.ansi().fg(Ansi.Color.CYAN) + this.info + msg + Ansi.ansi().fg(Ansi.Color.WHITE));
+			ConsoleLogger.logger.info(Ansi.ansi().fg(Ansi.Color.CYAN) + this.info + msg + Ansi.ansi().fg(Ansi.Color.WHITE));
 		
 		broadcastToListeners("debug", msg);
 	}
@@ -139,7 +150,7 @@ public class ConsoleLogger {
 		
 		while(i.hasNext()) {
 			
-			Player player = plugin.getServer().getPlayer(i.next());
+			Player player = plugin.getServer().getPlayerExact(i.next());
 			
 			if(player != null) {
 				player.sendMessage(label + " [" + this.name + "] - " + ChatColor.WHITE + msg);
@@ -162,8 +173,8 @@ public class ConsoleLogger {
 	 */
 	public static void setDebug(boolean newstate) {
 		ConsoleLogger.debug = newstate;
-		plugin.getConfig().set("debug", newstate);
-		plugin.saveConfig();
+		ConsoleLogger.plugin.getConfig().set("debug", newstate);
+		ConsoleLogger.plugin.saveConfig();
 	}
 	
 	/**
@@ -172,9 +183,7 @@ public class ConsoleLogger {
 	 * @param playername - Name of the player
 	 */
 	public static void addListener(String playername) {
-		synchronized(listeners) {
-			listeners.add(playername);
-		}
+		ConsoleLogger.listeners.add(playername);
 	}
 	
 	/**
@@ -183,8 +192,20 @@ public class ConsoleLogger {
 	 * @param playername - Name of the player to remove
 	 */
 	public static void removeListener(String playername) {
-		synchronized(listeners) {
-			listeners.remove(playername);
+		ConsoleLogger.listeners.remove(playername);
+	}
+	
+	/**
+	 * Retrieve the logger with the given name.
+	 * 
+	 * @param name - Name of the ConsoleLogger to retrieve.
+	 * @return ConsoleLogger with given name, returns null if none was found.
+	 */
+	public static ConsoleLogger getLogger(String name) {
+		for(ConsoleLogger logger : ConsoleLogger.loggers) {
+			if(logger.getName().equals(name))
+				return logger;
 		}
+		return null;
 	}
 }
