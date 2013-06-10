@@ -274,7 +274,7 @@ public class Players implements Listener {
 				
 				if(killer != null) {
 					worldmanager.broadcast(victim.getWorld(), ChatColor.LIGHT_PURPLE + victim.getName() + ChatColor.RED + " " + plugin.getLanguageManager().getString("wasKilledBy") + " " + ChatColor.BLUE + killer.getName());
-					if(!killer.hasPermission("survivalgames.ignore.stats")) statsmanager.addKillPoints(killer.getName(), 1);
+					if(!killer.hasPermission("survivalgames.ignore.stats")) statsmanager.addKillPoints(killer.getName(), 1, true);
 				}
 				else
 					worldmanager.broadcast(victim.getWorld(), ChatColor.LIGHT_PURPLE + victim.getName() + ChatColor.RED + " " + plugin.getLanguageManager().getString("isOutOfTheGame"));
@@ -282,9 +282,9 @@ public class Players implements Listener {
 				// Remove the player and give him one deathpoint
 				playermanager.removePlayer(victim.getWorld().getName(), victim);
 				
-				plugin.getStatsManager().removeScoreboard(victim.getName());
+				if(!victim.hasPermission("survivalgames.ignore.stats")) statsmanager.addDeathPoints(victim.getName(), 1, true);
 				
-				if(!victim.hasPermission("survivalgames.ignore.stats")) statsmanager.addDeathPoints(victim.getName(), 1);
+				plugin.getStatsManager().removeScoreboard(victim.getName());
 				
 				plugin.getSignManager().updateSigns();
 				

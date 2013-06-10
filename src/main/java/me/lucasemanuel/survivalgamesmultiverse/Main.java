@@ -45,7 +45,7 @@ import me.lucasemanuel.survivalgamesmultiverse.managers.SignManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.StatsManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.StatusManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.WorldManager;
-import me.lucasemanuel.survivalgamesmultiverse.threading.ConcurrentSQLiteConnection;
+import me.lucasemanuel.survivalgamesmultiverse.threading.SQLiteInterface;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
 
 import org.bukkit.Bukkit;
@@ -71,7 +71,7 @@ public class Main extends JavaPlugin {
 	private LocationManager locationmanager;
 	private StatusManager   statusmanager;
 	private SignManager     signmanager;
-	private ConcurrentSQLiteConnection sqlite;
+	private SQLiteInterface sqlite;
 	
 	public void onEnable() {
 		
@@ -111,7 +111,7 @@ public class Main extends JavaPlugin {
 		locationmanager = new LocationManager(this);
 		statusmanager   = new StatusManager(this);
 		signmanager     = new SignManager(this);
-		sqlite          = new ConcurrentSQLiteConnection(this);
+		sqlite          = new SQLiteInterface(this);
 		
 		logger.debug("Finished! Moving on to event listeners...");
 		
@@ -198,7 +198,7 @@ public class Main extends JavaPlugin {
 		return signmanager;
 	}
 	
-	public ConcurrentSQLiteConnection getSQLiteConnector() {
+	public SQLiteInterface getSQLiteConnector() {
 		return sqlite;
 	}
 	
@@ -218,7 +218,7 @@ public class Main extends JavaPlugin {
 					
 					worldmanager.broadcast(world, ChatColor.LIGHT_PURPLE + winner.getName() + ChatColor.WHITE + " " + languagemanager.getString("wonTheGame"));
 					
-					if(!winner.hasPermission("survivalgames.ignore.stats")) statsmanager.addWinPoints(winner.getName(), 1);
+					if(!winner.hasPermission("survivalgames.ignore.stats")) statsmanager.addWinPoints(winner.getName(), 1, true);
 					
 					statsmanager.removeScoreboard(winner.getName());
 					

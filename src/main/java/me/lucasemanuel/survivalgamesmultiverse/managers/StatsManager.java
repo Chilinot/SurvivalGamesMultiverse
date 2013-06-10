@@ -50,7 +50,7 @@ public class StatsManager {
 	private Main plugin;
 	private ConsoleLogger logger;
 	
-	private HashMap<String, Score> playerstats;
+	private HashMap<String, Score[]> playerstats;
 	
 	private final String username;
 	private final String password;
@@ -59,7 +59,7 @@ public class StatsManager {
 	private final String database;
 	private final String tablename;
 	
-	private ConcurrentMySQLConnection insertobject = null;
+	private ConcurrentMySQLConnection mysql = null;
 	
 	public StatsManager(Main instance) {
 		
@@ -68,7 +68,7 @@ public class StatsManager {
 		
 		logger.debug("Loading settings");
 		
-		playerstats = new HashMap<String, Score>();
+		playerstats = new HashMap<String, Score[]>();
 		
 		username  = instance.getConfig().getString("database.auth.username");
 		password  = instance.getConfig().getString("database.auth.password");
@@ -81,25 +81,25 @@ public class StatsManager {
 			
 			logger.info("Testing connection to MySQL-database, please wait!");
 			
-			insertobject = new ConcurrentMySQLConnection(username, password, host, port, database, tablename);
+			mysql = new ConcurrentMySQLConnection(username, password, host, port, database, tablename);
 			
 			try {
-				insertobject.testConnection();
+				mysql.testConnection();
 				
 				logger.info("Successfully connected to the MySQL-database.");
 			}
 			catch(SQLException | ClassNotFoundException e) {
-				insertobject = null;
-				logger.severe("Could not connect to the MySQL-database! Stats will not be saved.");
+				mysql = null;
+				logger.severe("Could not connect to the MySQL-database!");
 				logger.severe("Error message: " + e.getMessage());
 			}
 		}
 		else {
-			logger.info("Database logging disabled! No stats will be saved.");
+			logger.info("External database logging disabled.");
 		}
 	}
 	
-	public void checkAndAddScoreboard(String playername) {
+	public void checkAndAddScoreboard(final String playername) {
 		if(!playerstats.containsKey(playername)) {
 			
 			Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
@@ -109,12 +109,24 @@ public class StatsManager {
 			o.setDisplayName("Stats:");
 			o.setDisplaySlot(DisplaySlot.SIDEBAR);
 			
-			Score s = o.getScore(Bukkit.getOfflinePlayer("Kills:"));
-			s.setScore(0);
+			Score[] s = new Score[3];
+			
+			s[0] = o.getScore(Bukkit.getOfflinePlayer("Wins:"));
+			s[0].setScore(0);
+			s[1] = o.getScore(Bukkit.getOfflinePlayer("Kills:"));
+			s[1].setScore(0);
+			s[2] = o.getScore(Bukkit.getOfflinePlayer("Deaths:"));
+			s[2].setScore(0);
 			
 			playerstats.put(playername, s);
 			
 			Bukkit.getPlayerExact(playername).setScoreboard(board);
+			
+			plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+				public void run() {
+					plugin.getSQLiteConnector().loadPlayerStats(playername);
+				}
+			});
 		}
 	}
 	
@@ -132,54 +144,71 @@ public class StatsManager {
 			return false;
 	}
 	
-	public void addWinPoints(final String playername, final int points) {
-		
-		/* 
-		 *  - Database
-		 */
-		
-		if(insertobject != null) {
-			plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
-				public void run() {
-					insertobject.update(playername, points, 0, 0);
-				}
-			});
-		}
-	}
-	
-	public void addKillPoints(final String playername, final int points) {
+	public void addWinPoints(final String playername, final int points, boolean update_database) {
 		
 		checkAndAddScoreboard(playername);
 		
-		Score s = playerstats.get(playername);
-		s.setScore(s.getScore() + points);
+		Score[] s = playerstats.get(playername);
+		s[0].setScore(s[0].getScore() + points);
 		
 		/* 
 		 *  - Database
 		 */
 		
-		if(insertobject != null) {
+		if(update_database) {
 			plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 				public void run() {
-					insertobject.update(playername, 0, points, 0);
+					if(mysql != null) mysql.update(playername, points, 0, 0);
+					plugin.getSQLiteConnector().addScore(playername, points, 0, 0);
 				}
 			});
 		}
 	}
 	
-	public void addDeathPoints(final String playername, final int points) {
+	public void addKillPoints(final String playername, final int points, boolean update_database) {
+		
+		checkAndAddScoreboard(playername);
+		
+		Score[] s = playerstats.get(playername);
+		s[1].setScore(s[1].getScore() + points);
+		
+		/* 
+		 *  - Database
+		 */
+		
+		if(update_database) {
+			plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+				public void run() {
+					if(mysql != null) mysql.update(playername, 0, points, 0);
+					plugin.getSQLiteConnector().addScore(playername, 0, points, 0);
+				}
+			});
+		}
+	}
+	
+	public void addDeathPoints(final String playername, final int points, boolean update_database) {
+		
+		checkAndAddScoreboard(playername);
+		
+		Score[] s = playerstats.get(playername);
+		s[2].setScore(s[2].getScore() + points);
 		
 		
 		/* 
 		 *  - Database
 		 */
 		
-		if(insertobject != null) {
+		if(update_database) {
 			plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 				public void run() {
-					insertobject.update(playername, 0, 0, points);
+					if(mysql != null) mysql.update(playername, 0, 0, points);
+					plugin.getSQLiteConnector().addScore(playername, 0, 0, points);
 				}
 			});
 		}
 	}
 }
+
+
+
+
