@@ -208,7 +208,3 @@ public class StatsManager {
 		}
 	}
 }
-
-
-
-
