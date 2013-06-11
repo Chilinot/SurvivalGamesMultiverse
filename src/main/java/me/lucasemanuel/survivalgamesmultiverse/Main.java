@@ -216,7 +216,7 @@ public class Main extends JavaPlugin {
 				
 				if(winner != null) {
 					
-					worldmanager.broadcast(world, ChatColor.LIGHT_PURPLE + winner.getName() + ChatColor.WHITE + " " + languagemanager.getString("wonTheGame"));
+					worldmanager.broadcast(world, ChatColor.GOLD + winner.getName() + ChatColor.WHITE + " " + languagemanager.getString("wonTheGame"));
 					
 					if(!winner.hasPermission("survivalgames.ignore.stats")) statsmanager.addWinPoints(winner.getName(), 1, true);
 					

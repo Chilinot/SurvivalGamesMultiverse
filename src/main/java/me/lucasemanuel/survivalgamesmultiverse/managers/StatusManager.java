@@ -143,7 +143,7 @@ class Game {
 			}, 0L, 200L);
 		}
 		else
-			plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), ChatColor.LIGHT_PURPLE + plugin.getLanguageManager().getString("waitingForPlayers"));
+			plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), ChatColor.GRAY + plugin.getLanguageManager().getString("waitingForPlayers"));
 	}
 	
 	private void startCounter() {

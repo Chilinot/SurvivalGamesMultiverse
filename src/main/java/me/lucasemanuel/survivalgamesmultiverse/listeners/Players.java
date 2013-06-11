@@ -124,9 +124,10 @@ public class Players implements Listener {
 			
 			plugin.getPlayerManager().removePlayer(from.getWorld().getName(), player);
 			
-			String message = ChatColor.RED + "[SGAnti-Cheat]"
-					+ ChatColor.WHITE + " :: " 
-					+ ChatColor.BLUE + player.getName() 
+			String message = "[" 
+					+ ChatColor.GOLD + "SGAnti-Cheat"
+					+ ChatColor.WHITE + "] :: " 
+					+ ChatColor.RED + player.getName() 
 					+ ChatColor.WHITE + " - " 
 					+ plugin.getLanguageManager().getString("anticheat.teleported");
 			
@@ -163,7 +164,7 @@ public class Players implements Listener {
 								plugin.getStatsManager().checkAndAddScoreboard(player.getName());
 								
 								player.sendMessage(ChatColor.GOLD + plugin.getLanguageManager().getString("youJoinedTheGame"));
-								plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), ChatColor.LIGHT_PURPLE + player.getName() + ChatColor.WHITE + " " + plugin.getLanguageManager().getString("playerJoinedGame"));
+								plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), ChatColor.GOLD + player.getName() + ChatColor.WHITE + " " + plugin.getLanguageManager().getString("playerJoinedGame"));
 								
 								plugin.getSignManager().updateSigns();
 								
@@ -236,9 +237,10 @@ public class Players implements Listener {
 		
 		if(plugin.getWorldManager().isGameWorld(player.getWorld()) && plugin.getPlayerManager().isInGame(player)) {
 			
-			String message = ChatColor.RED + "[SGAnti-Cheat]" 
-					+ ChatColor.WHITE + " :: " 
-					+ ChatColor.BLUE + player.getName() 
+			String message =  "[" 
+					+ ChatColor.GOLD + "SGAnti-Cheat"
+					+ ChatColor.WHITE + "] :: " 
+					+ ChatColor.RED + player.getName() 
 					+ ChatColor.WHITE + " - " 
 					+ plugin.getLanguageManager().getString("anticheat.disconnect");
 			
@@ -273,11 +275,11 @@ public class Players implements Listener {
 				Player killer = event.getEntity().getKiller();
 				
 				if(killer != null) {
-					worldmanager.broadcast(victim.getWorld(), ChatColor.LIGHT_PURPLE + victim.getName() + ChatColor.RED + " " + plugin.getLanguageManager().getString("wasKilledBy") + " " + ChatColor.BLUE + killer.getName());
+					worldmanager.broadcast(victim.getWorld(), ChatColor.RED + victim.getName() + ChatColor.WHITE + " " + plugin.getLanguageManager().getString("wasKilledBy") + " " + ChatColor.GOLD + killer.getName());
 					if(!killer.hasPermission("survivalgames.ignore.stats")) statsmanager.addKillPoints(killer.getName(), 1, true);
 				}
 				else
-					worldmanager.broadcast(victim.getWorld(), ChatColor.LIGHT_PURPLE + victim.getName() + ChatColor.RED + " " + plugin.getLanguageManager().getString("isOutOfTheGame"));
+					worldmanager.broadcast(victim.getWorld(), ChatColor.RED + victim.getName() + ChatColor.WHITE + " " + plugin.getLanguageManager().getString("isOutOfTheGame"));
 				
 				// Remove the player and give him one deathpoint
 				playermanager.removePlayer(victim.getWorld().getName(), victim);

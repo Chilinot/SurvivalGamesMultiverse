@@ -107,16 +107,16 @@ public class StatsManager {
 			
 			Objective o = board.registerNewObjective("stats", "dummy");
 			
-			o.setDisplayName(ChatColor.DARK_GREEN + "STATS");
+			o.setDisplayName(ChatColor.GOLD + "STATS");
 			o.setDisplaySlot(DisplaySlot.SIDEBAR);
 			
 			Score[] s = new Score[3];
 			
-			s[0] = o.getScore(Bukkit.getOfflinePlayer(ChatColor.GOLD + "Wins:"));
+			s[0] = o.getScore(Bukkit.getOfflinePlayer(ChatColor.DARK_GREEN + "Wins"));
 			s[0].setScore(0);
-			s[1] = o.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Kills:"));
+			s[1] = o.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Kills"));
 			s[1].setScore(0);
-			s[2] = o.getScore(Bukkit.getOfflinePlayer(ChatColor.RED + "Deaths:"));
+			s[2] = o.getScore(Bukkit.getOfflinePlayer(ChatColor.RED + "Deaths"));
 			s[2].setScore(0);
 			
 			playerstats.put(playername, s);
