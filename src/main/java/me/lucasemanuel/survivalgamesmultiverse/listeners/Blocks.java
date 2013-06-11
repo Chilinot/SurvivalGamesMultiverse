@@ -67,14 +67,13 @@ public class Blocks implements Listener {
 		Block block = event.getBlock();
 		
 		if(plugin.getWorldManager().isGameWorld(block.getWorld())) {
-			if(plugin.getStatusManager().getStatusFlag(block.getWorld().getName()) == 1 || event.getPlayer().hasPermission("survivalgames.ignore.blockfilter")) {
-				if(plugin.getWorldManager().isGameWorld(block.getWorld())) {
+			if(plugin.getStatusManager().getStatusFlag(block.getWorld().getName()) == 1 
+					|| event.getPlayer().hasPermission("survivalgames.ignore.blockfilter")) {
 					
-					plugin.getWorldManager().logBlock(block, true);
-					
-					if(block.getType().equals(Material.CHEST))
-						plugin.getChestManager().addChestToLog(block.getLocation());
-				}
+				plugin.getWorldManager().logBlock(block, true);
+				
+				if(block.getType().equals(Material.CHEST))
+					plugin.getChestManager().addChestToLog(block.getLocation());
 			}
 			else {
 				event.getPlayer().sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("gameHasNotStartedYet"));
@@ -89,10 +88,10 @@ public class Blocks implements Listener {
 		Block block = event.getBlock();
 		
 		if(plugin.getWorldManager().isGameWorld(block.getWorld())) {
-			if(plugin.getStatusManager().getStatusFlag(block.getWorld().getName()) == 1 || event.getPlayer().hasPermission("survivalgames.ignore.blockfilter")) {
-				if(plugin.getWorldManager().isGameWorld(block.getWorld())) {
-					plugin.getWorldManager().logBlock(block, false);
-				}
+			if(plugin.getStatusManager().getStatusFlag(block.getWorld().getName()) == 1 
+					|| event.getPlayer().hasPermission("survivalgames.ignore.blockfilter")) {
+				
+				plugin.getWorldManager().logBlock(block, false);
 			}
 			else {
 				event.getPlayer().sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("gameHasNotStartedYet"));
