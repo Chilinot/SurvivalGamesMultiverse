@@ -86,7 +86,7 @@ public class WorldManager {
 			logger.debug("Broadcasting message to '" + world.getName() + "': " + msg);
 
 			for (Player player : world.getPlayers()) {
-				player.sendMessage("[" + ChatColor.GOLD + "SGMultiverse" + ChatColor.WHITE + "] - " + msg);
+				player.sendMessage("[" + ChatColor.GOLD + "SGM" + ChatColor.WHITE + "] - " + msg);
 			}
 
 		}
