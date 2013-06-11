@@ -194,7 +194,6 @@ public class StatsManager {
 		Score[] s = playerstats.get(playername);
 		s[2].setScore(s[2].getScore() + points);
 		
-		
 		/* 
 		 *  - Database
 		 */

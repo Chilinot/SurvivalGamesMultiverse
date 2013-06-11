@@ -275,11 +275,16 @@ public class Players implements Listener {
 				Player killer = event.getEntity().getKiller();
 				
 				if(killer != null) {
-					worldmanager.broadcast(victim.getWorld(), ChatColor.RED + victim.getName() + ChatColor.WHITE + " " + plugin.getLanguageManager().getString("wasKilledBy") + " " + ChatColor.GOLD + killer.getName());
+					worldmanager.broadcast(victim.getWorld(), ChatColor.RED + victim.getName() 
+							+ ChatColor.WHITE + " " 
+							+ plugin.getLanguageManager().getString("wasKilledBy") 
+							+ " " + ChatColor.GOLD + killer.getName());
+					
 					if(!killer.hasPermission("survivalgames.ignore.stats")) statsmanager.addKillPoints(killer.getName(), 1, true);
 				}
 				else
-					worldmanager.broadcast(victim.getWorld(), ChatColor.RED + victim.getName() + ChatColor.WHITE + " " + plugin.getLanguageManager().getString("isOutOfTheGame"));
+					worldmanager.broadcast(victim.getWorld(), ChatColor.RED + victim.getName() 
+							+ ChatColor.WHITE + " " + plugin.getLanguageManager().getString("isOutOfTheGame"));
 				
 				// Remove the player and give him one deathpoint
 				playermanager.removePlayer(victim.getWorld().getName(), victim);
