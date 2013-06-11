@@ -35,6 +35,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -106,16 +107,16 @@ public class StatsManager {
 			
 			Objective o = board.registerNewObjective("stats", "dummy");
 			
-			o.setDisplayName("Stats:");
+			o.setDisplayName(ChatColor.DARK_GREEN + "STATS");
 			o.setDisplaySlot(DisplaySlot.SIDEBAR);
 			
 			Score[] s = new Score[3];
 			
-			s[0] = o.getScore(Bukkit.getOfflinePlayer("Wins:"));
+			s[0] = o.getScore(Bukkit.getOfflinePlayer(ChatColor.GOLD + "Wins:"));
 			s[0].setScore(0);
-			s[1] = o.getScore(Bukkit.getOfflinePlayer("Kills:"));
+			s[1] = o.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Kills:"));
 			s[1].setScore(0);
-			s[2] = o.getScore(Bukkit.getOfflinePlayer("Deaths:"));
+			s[2] = o.getScore(Bukkit.getOfflinePlayer(ChatColor.RED + "Deaths:"));
 			s[2].setScore(0);
 			
 			playerstats.put(playername, s);
