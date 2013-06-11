@@ -93,7 +93,7 @@ public class Commands implements CommandExecutor {
 			sender.sendMessage(ChatColor.GREEN + "SurvivalGamesMultiverse v." + plugin.getDescription().getVersion() + " is up and running!");
 			
 			if(sender instanceof Player) 
-				sender.sendMessage(ChatColor.GREEN + "You are in world: " +((Player) sender).getWorld().getName());
+				sender.sendMessage(ChatColor.GREEN + "You are in world: " + ((Player) sender).getWorld().getName());
 			
 			return true;
 		}
@@ -104,10 +104,10 @@ public class Commands implements CommandExecutor {
 			switch(arg) {
 				
 				case "worlds":
-					sender.sendMessage(ChatColor.LIGHT_PURPLE + " -- Registered worlds:");
+					sender.sendMessage(ChatColor.DARK_GRAY + " -- Registered worlds:");
 					
 					for(String string : this.plugin.getWorldManager().getRegisteredWorldNames()) {
-						sender.sendMessage(" - " + ChatColor.YELLOW + string);
+						sender.sendMessage(" - " + ChatColor.GOLD + string);
 					}
 					
 					return true;
@@ -232,14 +232,14 @@ public class Commands implements CommandExecutor {
 		if(playerlist != null) {
 				
 			if(playerlist.length > 0) {
-				player.sendMessage(ChatColor.LIGHT_PURPLE + " --- " + plugin.getLanguageManager().getString("sgplayersHeading") + " --- ");
+				player.sendMessage(ChatColor.DARK_GRAY + " --- " + plugin.getLanguageManager().getString("sgplayersHeading") + " --- ");
 				
 				for(Player tempplayer : playerlist) {
-					player.sendMessage(" - " + ChatColor.GREEN + tempplayer.getName());
+					player.sendMessage(" - " + ChatColor.GOLD + tempplayer.getName());
 				}
 			}
 			else
-				player.sendMessage(ChatColor.LIGHT_PURPLE + plugin.getLanguageManager().getString("sgplayersNoonealive"));
+				player.sendMessage(ChatColor.DARK_GRAY + plugin.getLanguageManager().getString("sgplayersNoonealive"));
 			
 			return true;
 		}
