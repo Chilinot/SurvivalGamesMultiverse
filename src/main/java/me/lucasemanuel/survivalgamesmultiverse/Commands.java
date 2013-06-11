@@ -104,7 +104,7 @@ public class Commands implements CommandExecutor {
 			switch(arg) {
 				
 				case "worlds":
-					sender.sendMessage(ChatColor.DARK_GRAY + " -- Registered worlds:");
+					sender.sendMessage(" --- "+ ChatColor.GRAY +  "Registered worlds" + ChatColor.WHITE + " --- ");
 					
 					for(String string : this.plugin.getWorldManager().getRegisteredWorldNames()) {
 						sender.sendMessage(" - " + ChatColor.GOLD + string);
@@ -232,7 +232,7 @@ public class Commands implements CommandExecutor {
 		if(playerlist != null) {
 				
 			if(playerlist.length > 0) {
-				player.sendMessage(ChatColor.DARK_GRAY + " --- " + plugin.getLanguageManager().getString("sgplayersHeading") + " --- ");
+				player.sendMessage( " --- " + ChatColor.GRAY + plugin.getLanguageManager().getString("sgplayersHeading") + ChatColor.WHITE + " --- ");
 				
 				for(Player tempplayer : playerlist) {
 					player.sendMessage(" - " + ChatColor.GOLD + tempplayer.getName());
