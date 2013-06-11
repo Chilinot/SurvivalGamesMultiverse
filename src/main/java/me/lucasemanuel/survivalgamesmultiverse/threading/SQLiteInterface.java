@@ -216,17 +216,9 @@ public class SQLiteInterface {
 		synchronized(lock) {
 			testConnection();
 			
-			Statement stmt = null;
-			
 			try {
-				stmt = con.createStatement();
-			}
-			catch (SQLException e) {
-				System.out.println("Error while saving signs! Message: " + e.getMessage());
-				return;
-			}
-			
-			if(stmt != null)  {
+				Statement stmt = con.createStatement();
+				
 				for(Entry<SerializedLocation, String> entry : locations.entrySet()) {
 					
 					String serial    = entry.getKey().toString();
@@ -241,16 +233,14 @@ public class SQLiteInterface {
 					}
 				}
 				
-				try {
-					stmt.close();
-				}
-				catch (SQLException e) {
-					System.out.println("Could not close statment! Message: " + e.getMessage());
-				}
+				stmt.close();
+			}
+			catch (SQLException e) {
+				System.out.println("Error while saving signs! Message: " + e.getMessage());
+				return;
 			}
 		}
 	}
-	
 	
 	public void removeSign(SerializedLocation l) {
 		synchronized(lock) {
