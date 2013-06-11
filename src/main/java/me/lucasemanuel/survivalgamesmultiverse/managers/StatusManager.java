@@ -136,17 +136,29 @@ class Game {
 		if(playeramount >= players_to_wait_for) {
 			cancelTask();
 			
-			task = plugin.getServer().getScheduler().runTaskTimer(plugin, new Runnable() {
+			setTask(plugin.getServer().getScheduler().runTaskTimer(plugin, new Runnable() {
 				public void run() {
 					startCounter();
 				}
-			}, 0L, 200L);
+			}, 0L, 200L));
 		}
+		else if (playeramount == 0) 
+			reset();
 		else
 			plugin.getWorldManager().broadcast(Bukkit.getWorld(worldname), ChatColor.GRAY + plugin.getLanguageManager().getString("waitingForPlayers"));
 	}
 	
 	private void startCounter() {
+		
+		if(plugin.getPlayerManager().getPlayerAmount(worldname) < players_to_wait_for) {
+			setTask(plugin.getServer().getScheduler().runTaskTimer(plugin, new Runnable() {
+				public void run() {
+					checkPlayers();
+				}
+			}, 0L, 200L));
+			return;
+		}
+		
 		if(time_of_initiation == 0) {
 			time_of_initiation = System.currentTimeMillis();
 		}
@@ -160,11 +172,11 @@ class Game {
 			cancelTask();
 			started_10 = true;
 			
-			task = plugin.getServer().getScheduler().runTaskTimer(plugin, new Runnable() {
+			setTask(plugin.getServer().getScheduler().runTaskTimer(plugin, new Runnable() {
 				public void run() {
 					startCounter();
 				}
-			}, 20L, 20L);
+			}, 20L, 20L));
 		}
 		else
 			plugin.getWorldManager().broadcast(worldname, (countdown_first - timepassed) + " " + plugin.getLanguageManager().getString("timeleft"));
@@ -180,24 +192,24 @@ class Game {
 		
 		long delay = countdown_arena * 20; delay = delay <= 100 ? delay : delay-100;
 		
-		task = plugin.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
+		setTask(plugin.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
 			public void run() {
 				
 				plugin.getWorldManager().broadcast(worldname, plugin.getLanguageManager().getString("broadcast_before_arena"));
 				
-				task = plugin.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
+				setTask(plugin.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
 					public void run() {
 						arena();
 					}
-				}, 100L);
+				}, 100L));
 			}
-		}, delay);
+		}, delay));
 	}
 	
 	private void arena() {
 		cancelTask();
 		
-		plugin.getWorldManager().broadcast(worldname, ChatColor.LIGHT_PURPLE + plugin.getLanguageManager().getString("sendingEveryoneToArena"));
+		plugin.getWorldManager().broadcast(worldname, plugin.getLanguageManager().getString("sendingEveryoneToArena"));
 		
 		Player[] playerlist = plugin.getPlayerManager().getPlayerList(worldname);
 		
@@ -217,11 +229,11 @@ class Game {
 		
 		plugin.getWorldManager().broadcast(worldname, countdown_end + " " + plugin.getLanguageManager().getString("secondsTillTheGameEnds"));
 		
-		task = plugin.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
+		setTask(plugin.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
 			public void run() {
 				endTheGame();
 			}
-		}, (long) countdown_end * 20);
+		}, (long) countdown_end * 20));
 	}
 	
 	private void endTheGame() {
@@ -233,6 +245,9 @@ class Game {
 	}
 	
 	public void setTask(BukkitTask task) {
+		if(task != null)
+			cancelTask();
+		
 		this.task = task;
 	}
 	
