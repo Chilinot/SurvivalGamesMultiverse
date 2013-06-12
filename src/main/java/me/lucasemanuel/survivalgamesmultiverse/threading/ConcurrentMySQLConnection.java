@@ -57,28 +57,20 @@ public class ConcurrentMySQLConnection {
 		this.tablename  = tablename;
 	}
 	
-	public synchronized void update(String playername, int wins, int kills, int deaths) {
+	public synchronized void update(String playername, int[] s) {
 		try {
-			
 			Class.forName("com.mysql.jdbc.Driver");
-			
 			String url = "jdbc:mysql://" + host + ":" + port + "/" + database;
-			
 			Connection con = DriverManager.getConnection(url, username, password);
 			Statement stmt = con.createStatement();
 			
 			ResultSet rs = stmt.executeQuery("SELECT * FROM " + tablename + " WHERE playernames='" + playername + "'");
 			
 			if(rs.next() && rs.getString("playernames") != null) {
-				
-				wins   = wins   + rs.getInt("wins");
-				kills  = kills  + rs.getInt("kills");
-				deaths = deaths + rs.getInt("deaths");
-				
-				stmt.executeUpdate("UPDATE " + tablename + " SET wins=" + wins + ", kills=" + kills + ", deaths=" + deaths + " WHERE playernames='" + playername + "'");
+				stmt.executeUpdate("UPDATE " + tablename + " SET wins=" + s[0] + ", kills=" + s[1] + ", deaths=" + s[2] + " WHERE playernames='" + playername + "'");
 			}
 			else {
-				stmt.executeUpdate("INSERT INTO " + tablename + " VALUES('" + playername + "', " + wins + ", " + kills + ", " + deaths + ")");
+				stmt.executeUpdate("INSERT INTO " + tablename + " VALUES('" + playername + "', " + s[0] + ", " + s[1] + ", " + s[2] + ")");
 			}
 			
 			rs.close();
