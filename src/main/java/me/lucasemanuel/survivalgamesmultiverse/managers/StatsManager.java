@@ -159,7 +159,6 @@ public class StatsManager {
 		if(update_database) {
 			plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 				public void run() {
-					if(mysql != null) mysql.update(playername, points, 0, 0);
 					plugin.getSQLiteConnector().addScore(playername, points, 0, 0);
 				}
 			});
@@ -180,7 +179,7 @@ public class StatsManager {
 		if(update_database) {
 			plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 				public void run() {
-					if(mysql != null) mysql.update(playername, 0, points, 0);
+					
 					plugin.getSQLiteConnector().addScore(playername, 0, points, 0);
 				}
 			});
@@ -201,8 +200,25 @@ public class StatsManager {
 		if(update_database) {
 			plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 				public void run() {
-					if(mysql != null) mysql.update(playername, 0, 0, points);
 					plugin.getSQLiteConnector().addScore(playername, 0, 0, points);
+				}
+			});
+		}
+	}
+	
+	public void updateMySQL(final String playername) {
+		if(mysql != null && playerstats.containsKey(playername)) {
+			final int[] scores = new int[3];
+			
+			Score[] s = playerstats.get(playername);
+			
+			scores[0] = s[0].getScore();
+			scores[1] = s[1].getScore();
+			scores[2] = s[2].getScore();
+			
+			plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+				public void run() {
+					mysql.update(playername, scores);
 				}
 			});
 		}
