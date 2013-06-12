@@ -63,6 +63,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class Players implements Listener {
 	
@@ -358,7 +359,14 @@ public class Players implements Listener {
 	}
 	
 	@EventHandler
-	public void onPlayerRemove(PlayerRemoveEvent event) {
-		plugin.getStatsManager().updateMySQL(event.getPlayername());
+	public void onPlayerRemove(final PlayerRemoveEvent event) {
+		logger.debug("PlayerRemoveEvent called.");
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				plugin.getStatsManager().updateMySQL(event.getPlayername());
+			}
+		}.runTaskLater(plugin, 5L); 
+		// Runs after a delay to allow for all stats to be correctly set before being sent to the MySQL-database.
 	}
 }
