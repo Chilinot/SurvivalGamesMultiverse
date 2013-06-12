@@ -63,7 +63,6 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 
 public class Players implements Listener {
 	
@@ -282,19 +281,18 @@ public class Players implements Listener {
 							+ plugin.getLanguageManager().getString("wasKilledBy") 
 							+ " " + ChatColor.GOLD + killer.getName());
 					
-					if(!killer.hasPermission("survivalgames.ignore.stats")) statsmanager.addKillPoints(killer.getName(), 1, true);
+					if(!killer.hasPermission("survivalgames.ignore.stats")) 
+						statsmanager.addKillPoints(killer.getName(), 1, true);
 				}
 				else
 					worldmanager.broadcast(victim.getWorld(), ChatColor.RED + victim.getName() 
 							+ ChatColor.WHITE + " " + plugin.getLanguageManager().getString("isOutOfTheGame"));
 				
-				// Remove the player and give him one deathpoint
+				if(!victim.hasPermission("survivalgames.ignore.stats")) 
+					statsmanager.addDeathPoints(victim.getName(), 1, true);
+				
 				playermanager.removePlayer(victim.getWorld().getName(), victim);
-				
-				if(!victim.hasPermission("survivalgames.ignore.stats")) statsmanager.addDeathPoints(victim.getName(), 1, true);
-				
 				plugin.getStatsManager().removeScoreboard(victim.getName());
-				
 				plugin.getSignManager().updateSigns();
 				
 				// Is the game over?
@@ -359,14 +357,7 @@ public class Players implements Listener {
 	}
 	
 	@EventHandler
-	public void onPlayerRemove(final PlayerRemoveEvent event) {
-		logger.debug("PlayerRemoveEvent called.");
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				plugin.getStatsManager().updateMySQL(event.getPlayername());
-			}
-		}.runTaskLater(plugin, 5L); 
-		// Runs after a delay to allow for all stats to be correctly set before being sent to the MySQL-database.
+	public void onPlayerRemove(PlayerRemoveEvent event) {
+		plugin.getStatsManager().updateMySQL(event.getPlayername());
 	}
 }

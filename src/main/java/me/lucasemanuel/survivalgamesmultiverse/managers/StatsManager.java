@@ -208,9 +208,6 @@ public class StatsManager {
 	
 	public void updateMySQL(final String playername) {
 		if(mysql != null && playerstats.containsKey(playername)) {
-			
-			logger.debug("Updating the MySQL-database.");
-			
 			final int[] scores = new int[3];
 			
 			Score[] s = playerstats.get(playername);
