@@ -1,5 +1,5 @@
 /**
- *  Name:    PlayerExitEvent.java
+ *  Name:    PlayerRemoveEvent.java
  *  Created: 19:22:07 - 12 jun 2013
  * 
  *  Author:  Lucas Arnström - LucasEmanuel @ Bukkit forums
@@ -33,13 +33,13 @@ package me.lucasemanuel.survivalgamesmultiverse.events;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class PlayerExitEvent extends Event {
+public class PlayerRemoveEvent extends Event {
 	
 	private static final HandlerList handlers = new HandlerList();
 	
     private String playername;
  
-    public PlayerExitEvent(String playername) {
+    public PlayerRemoveEvent(String playername) {
     	this.playername = playername;
     }
  
