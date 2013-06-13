@@ -25,7 +25,7 @@ commands:
     usage: /<command> <worldname>
     permission: survivalgames.commands.sgreset
   sgplayers:
-    description: Lists all remaining players for the world the sender is in.
+    description: Lists all remaining players for the world the sender is in. If a worldname is given, it will list all remaining players for that world.
     usage: /<command> [worldname]
     permission: survivalgames.commands.sgplayers
   sgleave:
