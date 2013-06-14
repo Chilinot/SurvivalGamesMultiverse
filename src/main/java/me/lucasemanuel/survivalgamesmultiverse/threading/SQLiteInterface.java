@@ -32,6 +32,7 @@ package me.lucasemanuel.survivalgamesmultiverse.threading;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -101,33 +102,42 @@ public class SQLiteInterface {
 				con.close();
 			}
 			catch (SQLException e) {
-				System.out.println("Error while closing connection, data might have been lost! Message: " + e.getMessage());
+				System.out.println("Error while closing connection, data might have been lost! " +
+						"Message: " + e.getMessage());
 			}
 		}
 	}
 	
 	public ArrayList<HashSet<String>> getStartLocations(String worldname) {
 		synchronized(lock) {
+			
+			String select = "SELECT * " +
+							"FROM startlocations " +
+							"WHERE worldname = ? " +
+							"AND type = ?";
 			try {
 				testConnection();
 				
 				ArrayList<HashSet<String>> locations = new ArrayList<HashSet<String>>();
 				
-				Statement stmt_main  = con.createStatement();
-				Statement stmt_arena = con.createStatement();
+				PreparedStatement stmt_main  = con.prepareStatement(select);
+				PreparedStatement stmt_arena = con.prepareStatement(select);
 				
-				ResultSet rs_main  = stmt_main.executeQuery ("SELECT * FROM startlocations WHERE worldname='" + worldname + "' AND type='main'");
-				ResultSet rs_arena = stmt_arena.executeQuery("SELECT * FROM startlocations WHERE worldname='" + worldname + "' AND type='arena'");
+				stmt_main.setString(1, worldname); stmt_main.setString(2, "main");
+				ResultSet rs_main = stmt_main.executeQuery();
+				
+				stmt_arena.setString(1, worldname); stmt_arena.setString(2, "arena");
+				ResultSet rs_arena = stmt_arena.executeQuery();
 				
 				HashSet<String> main  = new HashSet<String>();
 				HashSet<String> arena = new HashSet<String>();
 				
 				while(rs_main.next()) {
-					main.add(rs_main.getString("serial_position"));
+					main.add(rs_main.getString(1));
 				}
 				
 				while(rs_arena.next()) {
-					arena.add(rs_arena.getString("serial_position"));
+					arena.add(rs_arena.getString(1));
 				}
 				
 				locations.add(main);
@@ -141,7 +151,8 @@ public class SQLiteInterface {
 				return locations;
 			}
 			catch(SQLException e) {
-				System.out.println("Error while retrieving startlocations for world " + worldname + ". Message: " + e.getMessage());
+				System.out.println("Error while retrieving startlocations for world " + worldname + ". " +
+						"Message: " + e.getMessage());
 				return null;
 			}
 		}
@@ -149,35 +160,48 @@ public class SQLiteInterface {
 	
 	public void saveStartLocations(String worldname, String type, Set<SerializedLocation> locations) {
 		synchronized(lock) {
+			testConnection();
+			
+			String insert_s = "INSERT OR REPLACE INTO startlocations " +
+							  "VALUES( ? , ? , ? )";
+			
 			try {
-				testConnection();
-				
-				Statement stmt = con.createStatement();
+				PreparedStatement stmt = con.prepareStatement(insert_s);
 				
 				for(SerializedLocation l : locations) {
-					String serial = l.toString();
-					stmt.execute("INSERT OR REPLACE INTO startlocations VALUES('" + serial + "', '" + worldname + "', '" + type + "')");
+					stmt.setString(1, l.toString());
+					stmt.setString(2, worldname);
+					stmt.setString(3, type);
+					stmt.addBatch();
 				}
 				
+				stmt.executeBatch();
 				stmt.close();
 			}
 			catch(SQLException e) {
-				System.out.println("Error while saving startlocations for world " + worldname + ". Message: " + e.getMessage());
+				System.out.println("Error while saving startlocations for world " + worldname + ". " +
+						"Message: " + e.getMessage());
 			}
 		}
 	}
 	
 	public void clearStartLocations(String worldname, String type) {
 		synchronized(lock) {
+			testConnection();
+			
+			String delete_s = "DELETE FROM startlocations " +
+							  "WHERE worldname = ? " +
+							  "AND type = ?";
 			try {
-				testConnection();
-				
-				Statement stmt = con.createStatement();
-				stmt.execute("DELETE FROM startlocations WHERE worldname='" + worldname + "' AND type='" + type + "'");
+				PreparedStatement stmt = con.prepareStatement(delete_s);
+				stmt.setString(1, worldname);
+				stmt.setString(2, type);
+				stmt.execute();
 				stmt.close();
 			}
 			catch (SQLException e) {
-				System.out.println("Error while clearing startlocations! Message: " + e.getMessage());
+				System.out.println("Error while clearing startlocations! " +
+						"Message: " + e.getMessage());
 			}
 		}
 	}
@@ -216,28 +240,23 @@ public class SQLiteInterface {
 		synchronized(lock) {
 			testConnection();
 			
+			String insert_s = "INSERT OR REPLACE INTO signlocations " +
+							  "VALUES( ? , ? )";
+			
 			try {
-				Statement stmt = con.createStatement();
+				PreparedStatement stmt = con.prepareStatement(insert_s);
 				
 				for(Entry<SerializedLocation, String> entry : locations.entrySet()) {
-					
-					String serial    = entry.getKey().toString();
-					String worldname = entry.getValue();
-					
-					try {
-						stmt.execute("INSERT OR REPLACE INTO signlocations VALUES('" + serial + "', '" + worldname + "')");
-					}
-					catch (SQLException e) {
-						System.out.println("Error while inserting signdata to database! Message: " + e.getMessage());
-						return;
-					}
+					stmt.setString(1, entry.getKey().toString());
+					stmt.setString(2, entry.getValue());
+					stmt.addBatch();
 				}
 				
+				stmt.executeBatch();
 				stmt.close();
 			}
 			catch (SQLException e) {
 				System.out.println("Error while saving signs! Message: " + e.getMessage());
-				return;
 			}
 		}
 	}
@@ -246,13 +265,13 @@ public class SQLiteInterface {
 		synchronized(lock) {
 			testConnection();
 			
+			String delete = "DELETE FROM signlocations " +
+							"WHERE serial_position = ?";
+			
 			try {
-				Statement stmt = con.createStatement();
-				
-				String s = l.toString();
-				
-				stmt.execute("DELETE FROM signlocations WHERE serial_position='" + s + "'");
-				
+				PreparedStatement stmt = con.prepareStatement(delete);
+				stmt.setString(1, l.toString());
+				stmt.execute();
 				stmt.close();
 			}
 			catch (SQLException e) {
@@ -268,10 +287,15 @@ public class SQLiteInterface {
 		synchronized(lock) {
 			testConnection();
 			
+			String select = "SELECT * " +
+							"FROM playerstats " +
+							"WHERE playername = ?";
 			try {
-				Statement stmt = con.createStatement();
+				PreparedStatement stmt = con.prepareStatement(select);
 				
-				ResultSet rs = stmt.executeQuery("SELECT * FROM playerstats WHERE playername='" + playername + "'");
+				stmt.setString(1, playername);
+				
+				ResultSet rs = stmt.executeQuery();
 				
 				if(rs.next()) {
 					stats[0] = rs.getInt("wins");
@@ -283,7 +307,8 @@ public class SQLiteInterface {
 				stmt.close();
 			}
 			catch (SQLException e) {
-				System.out.println("Error while loading stats for player= " + playername + "! Message: " + e.getMessage());
+				System.out.println("Error while loading stats for player= " + playername + "! " +
+						"Message: " + e.getMessage());
 			}
 		}
 		
@@ -300,26 +325,50 @@ public class SQLiteInterface {
 		synchronized(lock) {
 			testConnection();
 			
+			String select_s = "SELECT * FROM playerstats WHERE playername = ?";
+			
+			String update_s = "UPDATE playerstats " +
+							  "SET wins = wins + ? , kills = kills + ? , deaths = deaths + ? " +
+							  "WHERE playername = ?";
+			
+			String insert_s = "INSERT INTO playerstats " +
+							  "VALUES( ? , ? , ? , ? )";
+			
+			PreparedStatement select = null;
+			PreparedStatement update = null;
+			PreparedStatement insert = null;
+			
 			try {
-				Statement stmt = con.createStatement();
+				select = con.prepareStatement(select_s);
+				select.setString(1, playername);
 				
-				ResultSet rs = stmt.executeQuery("SELECT * FROM playerstats WHERE playername='" + playername + "'");
+				ResultSet rs = select.executeQuery();
 				
 				if(rs.next()) {
-					wins   += rs.getInt("wins");
-					kills  += rs.getInt("kills");
-					deaths += rs.getInt("deaths");
-					
-					stmt.execute("UPDATE playerstats SET wins=" + wins + ", kills=" + kills + ", deaths=" + deaths + " WHERE playername='" + playername + "'");
+					update = con.prepareStatement(update_s);
+					update.setInt(1, wins);
+					update.setInt(2, kills);
+					update.setInt(3, deaths);
+					update.setString(4, playername);
+					update.execute();
+					update.close();
 				}
-				else
-					stmt.execute("INSERT INTO playerstats VALUES('" + playername + "', " + wins + ", " + kills + ", " + deaths + ")");
+				else {
+					insert = con.prepareStatement(insert_s);
+					insert.setString(1, playername);
+					insert.setInt(2, wins);
+					insert.setInt(3, kills);
+					insert.setInt(4, deaths);
+					insert.execute();
+					insert.close();
+				}
 				
 				rs.close();
-				stmt.close();
+				select.close();
 			}
 			catch (SQLException e) {
-				System.out.println("Error while saving stats for player= " + playername + "! Message: " + e.getMessage());
+				System.out.println("Error while saving stats for player= " + playername + "! " +
+						"Message: " + e.getMessage());
 			}
 		}
 	}
