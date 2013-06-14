@@ -85,7 +85,7 @@ public class PlayerManager {
 	}
 
 	@SuppressWarnings("deprecation")
-	private void resetPlayer(Player player) {
+	public void resetPlayer(Player player) {
 		
 		logger.debug("Resetting player: " + player.getName());
 		
