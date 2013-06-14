@@ -30,6 +30,7 @@
 
 package me.lucasemanuel.survivalgamesmultiverse.events;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
@@ -37,14 +38,14 @@ public class PlayerRemoveEvent extends Event {
 	
 	private static final HandlerList handlers = new HandlerList();
 	
-    private String playername;
+    private Player player;
  
-    public PlayerRemoveEvent(String playername) {
-    	this.playername = playername;
+    public PlayerRemoveEvent(Player player) {
+    	this.player = player;
     }
  
-    public String getPlayername() {
-        return playername;
+    public Player getplayer() {
+        return player;
     }
  
     public HandlerList getHandlers() {
