@@ -358,6 +358,7 @@ public class Players implements Listener {
 	
 	@EventHandler
 	public void onPlayerRemove(PlayerRemoveEvent event) {
-		plugin.getStatsManager().updateMySQL(event.getPlayername());
+		plugin.getStatsManager().updateMySQL(event.getPlayer().getName());
+		plugin.getPlayerManager().resetPlayer(event.getPlayer());
 	}
 }
