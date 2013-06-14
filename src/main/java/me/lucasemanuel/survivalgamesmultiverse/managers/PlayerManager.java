@@ -136,7 +136,7 @@ public class PlayerManager {
 			if(playerlist.removePlayer(player) == false)
 				logger.debug("Tried to remove player from world where he was not listed! Worldname = " + worldname + " - Playername = " + player.getName());
 			else
-				plugin.getServer().getPluginManager().callEvent(new PlayerRemoveEvent(player.getName()));
+				plugin.getServer().getPluginManager().callEvent(new PlayerRemoveEvent(player));
 		}
 		else
 			logger.warning("Tried to remove player '" + player.getName() + "' from incorrect world '" + worldname + "'!");
