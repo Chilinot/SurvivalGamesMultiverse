@@ -34,57 +34,87 @@ package me.lucasemanuel.survivalgamesmultiverse.threading;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class ConcurrentMySQLConnection {
 	
+	private final String url;
 	private final String username;
 	private final String password;
-	private final String host;
-	private final int    port;
-	private final String database;
-	private final String tablename;
+	
+	private final String select_s;
+	private final String update_s;
+	private final String insert_s;
 
 	public ConcurrentMySQLConnection(String username, String password, String host, int port, String database, String tablename) {
 		
-		this.username   = username;
-		this.password   = password;
-		this.host       = host;
-		this.port       = port;
-		this.database   = database;
-		this.tablename  = tablename;
+		// Load the driver
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		}
+		catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		this.url      = "jdbc:mysql://" + host + ":" + port + "/" + database;
+		this.username = username;
+		this.password = password;
+		
+		this.select_s = "SELECT * " +
+						"FROM " + tablename + " " +
+						"WHERE playernames = ?";
+		
+		this.update_s = "UPDATE " + tablename + " " +
+						"SET wins = ? , kills = ? , deaths = ? " +
+						"WHERE playernames = ?";
+		
+		this.insert_s = "INSERT INTO " + tablename + " " +
+						"VALUES( ? , ? , ? , ? )";
 	}
 	
 	public synchronized void update(String playername, int[] s) {
+		PreparedStatement select = null;
+		PreparedStatement update = null;
+		PreparedStatement insert = null;
+		
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			String url = "jdbc:mysql://" + host + ":" + port + "/" + database;
 			Connection con = DriverManager.getConnection(url, username, password);
-			Statement stmt = con.createStatement();
+
+			select = con.prepareStatement(select_s);
+			select.setString(1, playername);
+			ResultSet rs = select.executeQuery();
 			
-			ResultSet rs = stmt.executeQuery("SELECT * FROM " + tablename + " WHERE playernames='" + playername + "'");
-			
-			if(rs.next() && rs.getString("playernames") != null) {
-				stmt.executeUpdate("UPDATE " + tablename + " SET wins=" + s[0] + ", kills=" + s[1] + ", deaths=" + s[2] + " WHERE playernames='" + playername + "'");
+			if(rs.next() && rs.getString(1) != null) {
+				update = con.prepareStatement(update_s);
+				update.setInt(1, s[0]);
+				update.setInt(2, s[1]);
+				update.setInt(3, s[2]);
+				update.setString(4, playername);
+				update.executeUpdate();
+				update.close();
 			}
 			else {
-				stmt.executeUpdate("INSERT INTO " + tablename + " VALUES('" + playername + "', " + s[0] + ", " + s[1] + ", " + s[2] + ")");
+				insert = con.prepareStatement(insert_s);
+				insert.setString(1, playername);
+				insert.setInt(2, s[0]);
+				insert.setInt(3, s[1]);
+				insert.setInt(4, s[2]);
+				insert.executeUpdate();
+				insert.close();
 			}
 			
 			rs.close();
-			stmt.close();
+			select.close();
 			con.close();
 		}
-		catch(SQLException | ClassNotFoundException e) {
+		catch(SQLException e) {
 			System.out.println("Error while inserting killpoint! Message: " + e.getMessage());
 		}
 	}
 	
 	public synchronized void testConnection() throws SQLException, ClassNotFoundException {
-		Class.forName("com.mysql.jdbc.Driver");
-		String url = "jdbc:mysql://" + host + ":" + port + "/" + database;
 		Connection con = DriverManager.getConnection(url, username, password);
 		con.close();
 	}
