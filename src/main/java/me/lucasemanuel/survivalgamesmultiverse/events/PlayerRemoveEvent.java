@@ -44,7 +44,7 @@ public class PlayerRemoveEvent extends Event {
     	this.player = player;
     }
  
-    public Player getplayer() {
+    public Player getPlayer() {
         return player;
     }
  
