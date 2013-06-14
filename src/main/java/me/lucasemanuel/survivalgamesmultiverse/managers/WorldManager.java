@@ -34,6 +34,7 @@ package me.lucasemanuel.survivalgamesmultiverse.managers;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
@@ -59,7 +60,7 @@ public class WorldManager {
 	private ConsoleLogger logger;
 	
 	// Logging
-	private HashMap<String, GameWorld> worlds = new HashMap<String, GameWorld>();
+	private HashSet<GameWorld> worlds = new HashSet<GameWorld>();
 
 	public WorldManager(final Main instance) {
 		plugin = instance;
@@ -69,11 +70,14 @@ public class WorldManager {
 	}
 
 	public void addWorld(World world) {
-		worlds.put(world.getName(), new GameWorld(plugin, logger, world));
+		worlds.add(new GameWorld(plugin, logger, world));
 	}
 
 	public boolean isGameWorld(World world) {
-		return worlds.containsKey(world.getName());
+		if(getGameWorld(world.getName()) != null)
+			return true;
+		else
+			return false;
 	}
 	
 	public void broadcast(String worldname, String msg) {
@@ -81,7 +85,8 @@ public class WorldManager {
 	}
 
 	public void broadcast(World world, String msg) {
-		if (isGameWorld(world)) {
+		GameWorld game = getGameWorld(world.getName());
+		if(game != null) {
 
 			logger.debug("Broadcasting message to '" + world.getName() + "': " + msg);
 
@@ -95,23 +100,25 @@ public class WorldManager {
 	}
 
 	public void logBlock(Block b, boolean placed) {
-		worlds.get(b.getWorld().getName()).logBlock(b, placed);
+		getGameWorld(b.getWorld().getName()).logBlock(b, placed);
 	}
 
 	public void resetWorld(final World world) {
 
 		logger.debug("Resetting world: " + world.getName());
-
-		if (isGameWorld(world)) {
-			worlds.get(world.getName()).resetWorld();
+		
+		GameWorld game = getGameWorld(world.getName());
+		if(game != null) {
+			game.resetWorld();
 		}
 		else
 			logger.debug("Tried to reset non registered world!");
 	}
 	
 	public void clearEntities(World world) {
-		if(isGameWorld(world))
-			worlds.get(world.getName()).clearEntities();
+		GameWorld game = getGameWorld(world.getName());
+		if(game != null)
+			game.clearEntities();
 	}
 
 	public void sendPlayerToLobby(Player player) {
@@ -119,13 +126,29 @@ public class WorldManager {
 	}
 
 	public String[] getRegisteredWorldNames() {
-		return (String[]) worlds.keySet().toArray(new String[worlds.keySet().size()]);
+		String[] names = new String[worlds.size()];
+		
+		int i = 0;
+		for(GameWorld world : worlds) {
+			names[i] = world.getWorldname();
+			i++;
+		}
+		
+		return names;
 	}
 	
+	public GameWorld getGameWorld(String worldname) {
+		for(GameWorld world : worlds) {
+			if(world.getWorldname().equals(worldname))
+				return world;
+		}
+		return null;
+	}
 
 	public boolean allowHealthRegen(World world) {
-		if(isGameWorld(world))
-			return worlds.get(world.getName()).allowHealthRegen();
+		GameWorld game = getGameWorld(world.getName());
+		if(game != null)
+			return game.allowHealthRegen();
 		else
 			return true;
 	}
@@ -211,5 +234,9 @@ class GameWorld {
 	
 	public boolean allowHealthRegen() {
 		return health_regen;
+	}
+	
+	public String getWorldname() {
+		return world.getName();
 	}
 }
