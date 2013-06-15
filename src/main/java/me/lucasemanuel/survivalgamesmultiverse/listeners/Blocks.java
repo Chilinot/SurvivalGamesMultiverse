@@ -31,6 +31,9 @@
 
 package me.lucasemanuel.survivalgamesmultiverse.listeners;
 
+import java.util.EnumSet;
+import java.util.Set;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -54,9 +57,25 @@ public class Blocks implements Listener {
 	private Main plugin;
 	private ConsoleLogger logger;
 	
+	private Set<Material> physics;
+	
 	public Blocks(Main instance) {
 		plugin = instance;
 		logger = new ConsoleLogger(instance, "BlockListener");
+		
+		// Materials to log in the physics event.
+		physics = EnumSet.noneOf(Material.class);
+		physics.add(Material.TORCH);
+		physics.add(Material.PAINTING);
+		physics.add(Material.LADDER);
+		physics.add(Material.ITEM_FRAME);
+		physics.add(Material.REDSTONE_COMPARATOR_OFF);
+		physics.add(Material.REDSTONE_COMPARATOR_ON);
+		physics.add(Material.REDSTONE_TORCH_OFF);
+		physics.add(Material.REDSTONE_TORCH_ON);
+		physics.add(Material.REDSTONE_WIRE);
+		physics.add(Material.WALL_SIGN);
+		physics.add(Material.SIGN_POST);
 		
 		logger.debug("Initiated");
 	}
@@ -153,9 +172,12 @@ public class Blocks implements Listener {
 	@EventHandler(priority=EventPriority.MONITOR, ignoreCancelled=true)
 	public void onBlockPhysics(BlockPhysicsEvent event) {
 		
+		//TODO need to do something about this!
+		
 		Block b = event.getBlock();
 		
-		if(plugin.getWorldManager().isGameWorld(b.getWorld())) {
+		if(plugin.getWorldManager().isGameWorld(b.getWorld())
+				&& physics.contains(b.getType())) {
 			plugin.getWorldManager().logBlock(b, false);
 		}
 	}
