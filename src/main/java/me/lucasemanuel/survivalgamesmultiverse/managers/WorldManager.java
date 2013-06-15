@@ -39,6 +39,7 @@ import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -162,7 +163,7 @@ class GameWorld {
 	private final World world;
 	private boolean health_regen;
 	
-	private HashMap<String, LoggedBlock> log = new HashMap<String, LoggedBlock>();
+	private HashMap<Location, LoggedBlock> log = new HashMap<Location, LoggedBlock>();
 	
 	// Entities that shouldn't be removed on world reset
 	private static final EntityType[] nonremovable = new EntityType[] { 
@@ -180,9 +181,10 @@ class GameWorld {
 	}
 	
 	public void logBlock(Block b, boolean placed) {
-		String key = b.getX() + " " + b.getY() + " " + b.getZ();
 		
-		if (!log.containsKey(key)) {
+		Location l = b.getLocation();
+		
+		if (!log.containsKey(l)) {
 
 			Material material = placed ? Material.AIR : b.getType();
 
@@ -192,10 +194,10 @@ class GameWorld {
 				sign_lines = ((Sign) b.getState()).getLines();
 			}
 
-			log.put(key, new LoggedBlock(b.getWorld().getName(), b.getX(), b.getY(), b.getZ(), material, b.getData(), sign_lines));
+			log.put(l, new LoggedBlock(b.getWorld().getName(), b.getX(), b.getY(), b.getZ(), material, b.getData(), sign_lines));
 		}
 		else
-			logger.debug("Block already logged at position: " + key);
+			logger.debug("Block already logged at position: " + l.toString());
 	}
 	
 	public void resetWorld() {
