@@ -41,6 +41,7 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 
 import me.lucasemanuel.survivalgamesmultiverse.Main;
+import me.lucasemanuel.survivalgamesmultiverse.events.PlayerAddEvent;
 import me.lucasemanuel.survivalgamesmultiverse.events.PlayerRemoveEvent;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
 
@@ -77,6 +78,8 @@ public class PlayerManager {
 					resetPlayer(player);
 				}
 			}, 5L);
+			
+			plugin.getServer().getPluginManager().callEvent(new PlayerAddEvent(player));
 			
 			logger.debug("Added - " + player.getName() + " - to world - " + worldname);
 		}
