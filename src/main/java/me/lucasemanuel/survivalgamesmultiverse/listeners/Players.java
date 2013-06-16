@@ -32,6 +32,7 @@ package me.lucasemanuel.survivalgamesmultiverse.listeners;
 import java.util.ArrayList;
 
 import me.lucasemanuel.survivalgamesmultiverse.Main;
+import me.lucasemanuel.survivalgamesmultiverse.events.PlayerAddEvent;
 import me.lucasemanuel.survivalgamesmultiverse.events.PlayerRemoveEvent;
 import me.lucasemanuel.survivalgamesmultiverse.managers.PlayerManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.StatsManager;
@@ -360,5 +361,11 @@ public class Players implements Listener {
 	public void onPlayerRemove(PlayerRemoveEvent event) {
 		plugin.getStatsManager().updateMySQL(event.getPlayer().getName());
 		plugin.getPlayerManager().resetPlayer(event.getPlayer());
+		plugin.getPlayerManager().restoreInventory(event.getPlayer());
+	}
+	
+	@EventHandler
+	public void onPlayerAdd(PlayerAddEvent event) {
+		plugin.getPlayerManager().backupInventory(event.getPlayer());
 	}
 }
