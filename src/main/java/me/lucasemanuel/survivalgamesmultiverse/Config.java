@@ -67,8 +67,10 @@ public class Config {
 			
 			// General
 			put("debug", false);
-			put("backup_inventories", true);
 			put("lobbyworld", "world");
+			
+			// Backup
+			put("backup.inventories", true);
 			
 			// Halloween
 			put("halloween.enabled", false);
