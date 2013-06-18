@@ -61,8 +61,6 @@ public class Config {
 		
 		// Default entries
 		
-		// General
-		
 		HashMap<String, Object> defaults = new HashMap<String, Object>() {{
 			
 			// General
