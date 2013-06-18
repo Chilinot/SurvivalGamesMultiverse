@@ -32,6 +32,8 @@
 package me.lucasemanuel.survivalgamesmultiverse;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map.Entry;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -61,25 +63,31 @@ public class Config {
 		
 		// General
 		
-		if(!config.contains("debug")) {
-			config.set("debug", false);
-			save = true;
-		}
-		
-		if(!config.contains("lobbyworld")) {
-			config.set("lobbyworld", "world");
-			save = true;
-		}
-		
-		if(!config.contains("halloween.enabled")) {
-			config.set("halloween.enabled", false);
-			save = true;
-		}
-		
-		if(!config.contains("halloween.forcepumpkin")) {
-			config.set("halloween.forcepumpkin", false);
-			save = true;
-		}
+		HashMap<String, Object> defaults = new HashMap<String, Object>() {{
+			
+			// General
+			put("debug", false);
+			put("backup_inventories", true);
+			put("lobbyworld", "world");
+			
+			// Halloween
+			put("halloween.enabled", false);
+			put("halloween.forcepumpkin", false);
+			
+			// Time
+			put("timeoutTillStart", 120);
+			put("timeoutTillArenaInSeconds", 180);
+			put("timeoutAfterArena", 60);
+			
+			// Database
+			put("database.enabled", false);
+			put("database.auth.username", "username");
+			put("database.auth.password", "password");
+			put("database.settings.host", "localhost");
+			put("database.settings.port", 3306);
+			put("database.settings.database", "survivalgames");
+			put("database.settings.tablename", "sg_stats");
+		}};
 		
 		if(!config.contains("worlds")) {
 			config.set("worlds.survivalgames1.players_to_wait_for", 2);
@@ -89,67 +97,20 @@ public class Config {
 			save = true;
 		}
 		
-		if(!config.contains("timeoutTillStart")) {
-			config.set("timeoutTillStart", 120);
-			save = true;
-		}
-		
-		if(!config.contains("timeoutTillArenaInSeconds")) {
-			config.set("timeoutTillArenaInSeconds", 180);
-			save = true;
-		}
-		
-		if(!config.contains("timeoutAfterArena")) {
-			config.set("timeoutAfterArena", 60);
-			save = true;
-		}
-		
 		if(!config.contains("allowedCommandsInGame")) {
-			
 			ArrayList<String> allowedcommands = new ArrayList<String>() {{ 
 				add("/sgplayers");
 				add("/sgleave");
 			}};
-			
 			config.set("allowedCommandsInGame", allowedcommands);
 			save = true;
 		}
 		
-		// Database
-		
-		if(!config.contains("database.enabled")) {
-			config.set("database.enabled", false);
-			save = true;
-		}
-		
-		if(!config.contains("database.auth.username")) {
-			config.set("database.auth.username", "username");
-			save = true;
-		}
-		
-		if(!config.contains("database.auth.password")) {
-			config.set("database.auth.password", "password");
-			save = true;
-		}
-		
-		if(!config.contains("database.settings.host")) {
-			config.set("database.settings.host", "localhost");
-			save = true;
-		}
-		
-		if(!config.contains("database.settings.port")) {
-			config.set("database.settings.port", 3306);
-			save = true;
-		}
-				
-		if(!config.contains("database.settings.database")) {
-			config.set("database.settings.database", "survivalgames");
-			save = true;
-		}
-		
-		if(!config.contains("database.settings.tablename")) {
-			config.set("database.settings.tablename", "sg_stats");
-			save = true;
+		for(Entry<String, Object> entry : defaults.entrySet()) {
+			if(!config.contains(entry.getKey())) {
+				config.set(entry.getKey(), entry.getValue());
+				save = true;
+			}
 		}
 		
 		if(save) {
