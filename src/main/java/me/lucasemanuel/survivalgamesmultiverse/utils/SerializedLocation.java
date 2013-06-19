@@ -73,6 +73,8 @@ public class SerializedLocation implements Serializable {
 		
 		World world = Bukkit.getWorld(parts[0]);
 		
+		if(world == null) return null;
+		
 		try {
 			x     = Double.parseDouble(parts[1]);
 			y     = Double.parseDouble(parts[2]);
