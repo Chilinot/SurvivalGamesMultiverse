@@ -24,7 +24,8 @@
  *
  *
  *  Filedescription:
- *
+ * 
+ *  The basic patterns used to deserialize the strings from Serialize.java.
  * 
  */
 
@@ -33,6 +34,8 @@ package me.lucasemanuel.survivalgamesmultiverse.utils;
 import java.util.regex.Pattern;
 
 public enum SerializePatterns {
+	
+	INV_POSITION           (1, "([0-9]{1,2});@"),
 	
 	STACK_AMOUNT           (1, "@a:([0-9]{1,2})!"),
 	STACK_TYPE             (1, "t:([0-9]{1,})!"),

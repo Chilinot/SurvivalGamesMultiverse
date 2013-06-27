@@ -25,7 +25,8 @@
  *
  *  Filedescription:
  *
- *	Utility to serialize and deserialize misc stuff.
+ *  Utility to serialize and deserialize misc stuff.
+ *  Uses a lot of regular expressions.
  * 
  */
 
@@ -38,11 +39,64 @@ import java.util.regex.Pattern;
 
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class Serialize {
 	
+	/**
+	 * Serialize an entire inventory into a single string.
+	 * This saves all position data (uses the position in the array).
+	 * Use stringToInventory() to get the items back.
+	 * 
+	 * @param contents - ItemStack[] containing the inventory.
+	 * @return Serialized inventory.
+	 */
+	public static String inventoryToString(ItemStack[] contents) {
+		StringBuilder string = new StringBuilder();
+		
+		for(int i = 0 ; i < contents.length ; i++) {
+			ItemStack stack = contents[i];
+			if(stack == null) continue;
+			string.append(i).append(';').append(itemstackToString(stack)).append('-');
+		}
+		
+		return string.toString();
+	}
+	
+	/**
+	 * Deserializes the string from inventoryToString() and places all
+	 * items into the given inventory.
+	 * 
+	 * @param inv - Inventory to add items to.
+	 * @param serial - Serial to deserialize.
+	 */
+	public static void stringToInventory(Inventory inv, String serial) {
+		String[] values = serial.split("-");
+		
+		SerializePatterns pattern = SerializePatterns.INV_POSITION;
+		
+		for(String s : values) {
+			
+			Matcher m = pattern.pattern.matcher(s);
+			
+			if(m.find()) {
+				int pos = 0;
+				
+				try {
+					pos = Integer.parseInt(m.group(pattern.groupID));
+				}
+				catch(NumberFormatException e) {
+					ConsoleLogger.getLogger("Main").severe("SERIALIZE.JAVA - INVENTORY DESERIALIZATION FAILED! SERIAL=" + serial);
+					return;
+				}
+				
+				String stack = s.split(";")[1];
+				inv.setItem(pos, Serialize.stringToItemstack(stack));
+			}
+		}
+	}
 	
 	/**
 	 * <pre>Serialize a single ItemStack into a string.
@@ -117,7 +171,6 @@ public class Serialize {
 		return string.toString();
 	}
 	
-	
 	/**
 	 * Deserializes the string given from the itemstackToString() method.
 	 * 
@@ -176,7 +229,6 @@ public class Serialize {
 		
 		return stack;
 	}
-	
 	
 	/** 
 	 * Converts a string of regular characters into a string of their ASCII-values.
