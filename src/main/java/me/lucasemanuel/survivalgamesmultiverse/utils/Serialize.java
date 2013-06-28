@@ -61,7 +61,7 @@ public class Serialize {
 		for(int i = 0 ; i < contents.length ; i++) {
 			ItemStack stack = contents[i];
 			if(stack == null) continue;
-			string.append(i).append(';').append(itemstackToString(stack)).append('-');
+			string.append(i).append(';').append(itemstackToString(stack)).append('_');
 		}
 		
 		return string.toString();
@@ -79,7 +79,7 @@ public class Serialize {
 		
 		SerializePatterns p = SerializePatterns.INV_POSITION;
 		
-		for(String s : serial.split("-")) {
+		for(String s : serial.split("_")) {
 			
 			Matcher m = p.pattern.matcher(s);
 			
