@@ -33,6 +33,8 @@
 package me.lucasemanuel.survivalgamesmultiverse.utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -66,36 +68,37 @@ public class Serialize {
 	}
 	
 	/**
-	 * Deserializes the string from inventoryToString() and places all
-	 * items into the given inventory.
+	 * Deserializes the string from inventoryToString() and returns a map with
+	 * the stacks position as key and the stack as value.
 	 * 
-	 * @param inv - Inventory to add items to.
 	 * @param serial - Serial to deserialize.
+	 * @return Map with position as key and stack as value. Null if deserialization failed.
 	 */
-	public static void stringToInventory(Inventory inv, String serial) {
-		String[] values = serial.split("-");
+	public static Map<Integer, ItemStack> stringToInventory(String serial) {
+		HashMap<Integer, ItemStack> map = new HashMap<Integer, ItemStack>();
 		
-		SerializePatterns pattern = SerializePatterns.INV_POSITION;
+		SerializePatterns p = SerializePatterns.INV_POSITION;
 		
-		for(String s : values) {
+		for(String s : serial.split("-")) {
 			
-			Matcher m = pattern.pattern.matcher(s);
+			Matcher m = p.pattern.matcher(s);
 			
 			if(m.find()) {
 				int pos = 0;
 				
-				try {
-					pos = Integer.parseInt(m.group(pattern.groupID));
+				try { 
+					pos = Integer.parseInt(m.group(p.groupID)); 
 				}
-				catch(NumberFormatException e) {
-					ConsoleLogger.getLogger("Main").severe("SERIALIZE.JAVA - INVENTORY DESERIALIZATION FAILED! SERIAL=" + serial);
-					return;
+				catch(NumberFormatException e) { 
+					return null;
 				}
 				
 				String stack = s.split(";")[1];
-				inv.setItem(pos, Serialize.stringToItemstack(stack));
+				map.put(pos, Serialize.stringToItemstack(stack));
 			}
 		}
+		
+		return map;
 	}
 	
 	/**
