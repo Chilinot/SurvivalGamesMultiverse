@@ -86,6 +86,7 @@ public class SQLiteInterface {
 				stmt.execute("CREATE TABLE IF NOT EXISTS signlocations (serial_position VARHCAR(250) NOT NULL PRIMARY KEY, worldname VARCHAR(30) NOT NULL)");
 				stmt.execute("CREATE TABLE IF NOT EXISTS startlocations(serial_position VARHCAR(250) NOT NULL PRIMARY KEY, worldname VARCHAR(30) NOT NULL, type VARCHAR(10) NOT NULL)");
 				stmt.execute("CREATE TABLE IF NOT EXISTS playerstats   (playername VARHCAR(250)      NOT NULL PRIMARY KEY, wins INT(10), kills INT(10), deaths INT(10))");
+				stmt.execute("CREATE TABLE IF NOT EXISTS inventories   (playername VARCHAR(250)      NOT NULL PRIMARY KEY, inventory VARCHAR(8000) NOT NULL)");
 				
 				stmt.close();
 			}
@@ -368,8 +369,52 @@ public class SQLiteInterface {
 			}
 			catch (SQLException e) {
 				System.out.println("Error while saving stats for player= " + playername + "! " +
-						"Message: " + e.getMessage());
+								   "Message: " + e.getMessage());
 			}
 		}
+	}
+
+	public void saveInventory(String playername, String serial) {
+		synchronized(lock) {
+			testConnection();
+			
+			String insert_s = "INSERT OR REPLACE INTO inventories " +
+							  "VALUES( ? , ? )";
+			try {
+				PreparedStatement stmt = con.prepareStatement(insert_s);
+				stmt.setString(1, playername);
+				stmt.setString(2, serial);
+				stmt.execute();
+				stmt.close();
+			}
+			catch (SQLException e) {
+				System.out.println("Error while saving inventory for player=" + playername + "! " +
+								   "Message: " + e.getMessage());
+			}
+		}
+	}
+	
+	public String loadInventory(String playername) {
+		synchronized(lock) {
+			testConnection();
+			
+			String select_s = "SELECT inventory FROM inventories WHERE playername = ? ";
+			
+			try {
+				PreparedStatement select = con.prepareStatement(select_s);
+				select.setString(1, playername);
+				
+				ResultSet rs = select.executeQuery();
+				if(rs.next()) {
+					return rs.getString("inventory");
+				}
+			}
+			catch (SQLException e) {
+				System.out.println("Error while loading inventory for player=" + playername + "! " +
+								   "Message: " + e.getMessage());
+			}
+		}
+		
+		return null;
 	}
 }
