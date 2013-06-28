@@ -399,15 +399,27 @@ public class SQLiteInterface {
 			testConnection();
 			
 			String select_s = "SELECT inventory FROM inventories WHERE playername = ? ";
+			String delete_s = "DELETE FROM inventories WHERE playername = ? ";
 			
 			try {
+				String serial = null;
+				
 				PreparedStatement select = con.prepareStatement(select_s);
 				select.setString(1, playername);
 				
 				ResultSet rs = select.executeQuery();
 				if(rs.next()) {
-					return rs.getString("inventory");
+					serial = rs.getString("inventory");
+					PreparedStatement delete = con.prepareStatement(delete_s);
+					delete.setString(1, playername);
+					delete.execute();
+					delete.close();
 				}
+				
+				rs.close();
+				select.close();
+				
+				return serial;
 			}
 			catch (SQLException e) {
 				System.out.println("Error while loading inventory for player=" + playername + "! " +

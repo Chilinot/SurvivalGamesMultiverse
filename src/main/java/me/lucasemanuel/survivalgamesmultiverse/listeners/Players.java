@@ -32,7 +32,6 @@ package me.lucasemanuel.survivalgamesmultiverse.listeners;
 import java.util.ArrayList;
 
 import me.lucasemanuel.survivalgamesmultiverse.Main;
-import me.lucasemanuel.survivalgamesmultiverse.events.PlayerAddEvent;
 import me.lucasemanuel.survivalgamesmultiverse.events.PlayerRemoveEvent;
 import me.lucasemanuel.survivalgamesmultiverse.managers.PlayerManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.StatsManager;
@@ -120,22 +119,27 @@ public class Players implements Listener {
 		Location from   = event.getFrom();
 		Location to     = event.getTo();
 		
-		if(plugin.getWorldManager().isGameWorld(from.getWorld()) && !plugin.getWorldManager().isGameWorld(to.getWorld()) && plugin.getPlayerManager().isInGame(player)) {
+		if(plugin.getWorldManager().isGameWorld(from.getWorld()) && !plugin.getWorldManager().isGameWorld(to.getWorld())) {
 			
-			logger.debug("Removing player " + player.getName() + " due to teleportation!");
+			plugin.getPlayerManager().restoreInventory(player);
 			
-			plugin.getPlayerManager().removePlayer(from.getWorld().getName(), player);
-			
-			String message = "[" 
-					+ ChatColor.GOLD + "SGAnti-Cheat"
-					+ ChatColor.WHITE + "] :: " 
-					+ ChatColor.RED + player.getName() 
-					+ ChatColor.WHITE + " - " 
-					+ plugin.getLanguageManager().getString("anticheat.teleported");
-			
-			plugin.getWorldManager().broadcast(from.getWorld(), message);
-			
-			plugin.getSignManager().updateSigns();
+			if(plugin.getPlayerManager().isInGame(player)) {
+				
+				logger.debug("Removing player " + player.getName() + " due to teleportation!");
+				
+				plugin.getPlayerManager().removePlayer(from.getWorld().getName(), player);
+				
+				String message = "[" 
+						+ ChatColor.GOLD + "SGAnti-Cheat"
+						+ ChatColor.WHITE + "] :: " 
+						+ ChatColor.RED + player.getName() 
+						+ ChatColor.WHITE + " - " 
+						+ plugin.getLanguageManager().getString("anticheat.teleported");
+				
+				plugin.getWorldManager().broadcast(from.getWorld(), message);
+				
+				plugin.getSignManager().updateSigns();
+			}
 		}
 	}
 	
@@ -207,6 +211,8 @@ public class Players implements Listener {
 	
 	@EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled=true)
 	public void onPlayerRespawn(final PlayerRespawnEvent event) {
+		
+		plugin.getPlayerManager().restoreInventory(event.getPlayer());
 		
 		if(plugin.getWorldManager().isGameWorld(event.getRespawnLocation().getWorld())) {
 			
@@ -360,12 +366,5 @@ public class Players implements Listener {
 	@EventHandler
 	public void onPlayerRemove(PlayerRemoveEvent event) {
 		plugin.getStatsManager().updateMySQL(event.getPlayer().getName());
-		plugin.getPlayerManager().resetPlayer(event.getPlayer());
-		plugin.getPlayerManager().restoreInventory(event.getPlayer());
-	}
-	
-	@EventHandler
-	public void onPlayerAdd(PlayerAddEvent event) {
-		plugin.getPlayerManager().backupInventory(event.getPlayer());
 	}
 }

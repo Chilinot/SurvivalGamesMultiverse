@@ -30,6 +30,8 @@
 package me.lucasemanuel.survivalgamesmultiverse.managers;
 
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -39,11 +41,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import me.lucasemanuel.survivalgamesmultiverse.Main;
 import me.lucasemanuel.survivalgamesmultiverse.events.PlayerAddEvent;
 import me.lucasemanuel.survivalgamesmultiverse.events.PlayerRemoveEvent;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
+import me.lucasemanuel.survivalgamesmultiverse.utils.Serialize;
 
 public class PlayerManager {
 	
@@ -93,20 +97,12 @@ public class PlayerManager {
 		logger.debug("Resetting player: " + player.getName());
 		
 		if(!player.hasPermission("survivalgames.ignore.clearinv")){
-			PlayerInventory inventory = player.getInventory();
-			
-			inventory.clear();
-			
-			inventory.setHelmet(null);
-			inventory.setChestplate(null);
-			inventory.setLeggings(null);
-			inventory.setBoots(null);
-		
+			backupInventory(player);
+			clearInventory(player);
 			
 			if(plugin.getConfig().getBoolean("halloween.enabled"))
 				player.getInventory().setHelmet(new ItemStack(Material.PUMPKIN));
 			
-			// Doesn't work without this!
 			player.updateInventory();
 		}
 		
@@ -118,6 +114,70 @@ public class PlayerManager {
 		player.setFoodLevel(20);
 		player.setLevel(0);
 		player.setTotalExperience(0);
+	}
+	
+	public void backupInventory(Player p) {
+		if(plugin.getConfig().getBoolean("backup.inventories")) {
+			PlayerInventory inv = p.getInventory();
+			ItemStack[] c = inv.getContents();
+			
+			ItemStack[] contents = new ItemStack[p.getInventory().getSize() + 4];
+			
+			for(int i = 0 ; i < c.length ; i++) {
+				contents[i] = c[i];
+			}
+			
+			contents[c.length + 3] = inv.getHelmet();
+			contents[c.length + 2] = inv.getChestplate();
+			contents[c.length + 1] = inv.getLeggings();
+			contents[c.length + 0] = inv.getBoots();
+			
+			final String serial = Serialize.inventoryToString(contents);
+			final String name   = p.getName();
+			
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					plugin.getSQLiteConnector().saveInventory(name, serial);
+				}
+			}.runTaskAsynchronously(plugin);
+		}
+	}
+	
+	@SuppressWarnings("deprecation")
+	public void restoreInventory(Player p) {
+		String serial = plugin.getSQLiteConnector().loadInventory(p.getName());
+		if(serial == null) return;
+		
+		Map<Integer, ItemStack> map = Serialize.stringToInventory(serial);
+		
+		if(map != null && map.size() > 0) {
+			PlayerInventory inv = p.getInventory();
+			
+			clearInventory(p);
+			
+			for(Entry<Integer, ItemStack> entry : map.entrySet()) {
+				int key = entry.getKey().intValue();
+				int size = inv.getSize();
+				
+				if     (key <= size)     inv.setItem(key, entry.getValue());
+				else if(key == size + 3) inv.setHelmet(entry.getValue());
+				else if(key == size + 2) inv.setChestplate(entry.getValue());
+				else if(key == size + 1) inv.setLeggings(entry.getValue());
+				else if(key == size + 0) inv.setBoots(entry.getValue());
+			}
+			
+			p.updateInventory();
+		}
+	}
+	
+	public void clearInventory(Player p) {
+		PlayerInventory inv = p.getInventory();
+		inv.clear();
+		inv.setHelmet(null);
+		inv.setChestplate(null);
+		inv.setLeggings(null);
+		inv.setBoots(null);
 	}
 
 	public boolean isInGame(Player player) {
@@ -138,8 +198,9 @@ public class PlayerManager {
 			
 			if(playerlist.removePlayer(player) == false)
 				logger.debug("Tried to remove player from world where he was not listed! Worldname = " + worldname + " - Playername = " + player.getName());
-			else
+			else {
 				plugin.getServer().getPluginManager().callEvent(new PlayerRemoveEvent(player));
+			}
 		}
 		else
 			logger.warning("Tried to remove player '" + player.getName() + "' from incorrect world '" + worldname + "'!");
@@ -192,7 +253,7 @@ public class PlayerManager {
 		for(Player player : playerlist) {
 			
 			if(player != null) {
-				resetPlayer(player);
+				clearInventory(player);
 				player.setHealth(0);
 			}
 			else
