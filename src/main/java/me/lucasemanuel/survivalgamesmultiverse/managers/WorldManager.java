@@ -195,9 +195,8 @@ class GameWorld {
 			}
 
 			log.put(l, new LoggedBlock(b.getWorld().getName(), b.getX(), b.getY(), b.getZ(), material, b.getData(), sign_lines));
+			logger.debug("Logging block :: " + b.getWorld().getName() + " " + b.getX() + " " + b.getY() + " " + b.getZ() + " " + material + " " + b.getData() + " " + sign_lines.toString());
 		}
-		else
-			logger.debug("Block already logged at position: " + l.toString());
 	}
 	
 	public void resetWorld() {
