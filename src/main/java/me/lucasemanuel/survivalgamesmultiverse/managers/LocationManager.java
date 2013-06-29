@@ -55,7 +55,7 @@ public class LocationManager {
 	
 	public LocationManager(Main instance) {
 		plugin = instance;
-		logger = new ConsoleLogger(instance, "LocationManager");
+		logger = new ConsoleLogger("LocationManager");
 		
 		locations = new HashMap<String, HashMap<String, HashMap<Location, Boolean>>>();
 		

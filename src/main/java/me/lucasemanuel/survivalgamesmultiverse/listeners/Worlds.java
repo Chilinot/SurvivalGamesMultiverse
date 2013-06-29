@@ -46,7 +46,7 @@ public class Worlds implements Listener {
 	
 	public Worlds(Main instance) {
 		plugin = instance;
-		logger = new ConsoleLogger(instance, "WorldListener");
+		logger = new ConsoleLogger("WorldListener");
 		
 		logger.debug("Initiated");
 	}

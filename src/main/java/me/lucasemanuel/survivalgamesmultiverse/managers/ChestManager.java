@@ -68,7 +68,7 @@ public class ChestManager {
 	
 	public ChestManager(Main instance) {
 		this.plugin = instance;
-		this.logger = new ConsoleLogger(this.plugin, "ChestManager");
+		this.logger = new ConsoleLogger("ChestManager");
 		
 		this.randomizedchests = new ArrayList<Location>();
 		this.loadItemList();

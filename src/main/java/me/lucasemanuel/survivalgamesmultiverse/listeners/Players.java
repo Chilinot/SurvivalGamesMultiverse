@@ -71,7 +71,7 @@ public class Players implements Listener {
 	
 	public Players(Main instance) {
 		plugin = instance;
-		logger = new ConsoleLogger(instance, "PlayerListener");
+		logger = new ConsoleLogger("PlayerListener");
 		
 		logger.debug("Initiated");
 	}

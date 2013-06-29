@@ -56,7 +56,7 @@ public class SignManager {
 	
 	public SignManager(Main instance) {
 		plugin = instance;
-		logger = new ConsoleLogger(instance, "SignManager");
+		logger = new ConsoleLogger("SignManager");
 		
 		logger.debug("Initiated");
 	}

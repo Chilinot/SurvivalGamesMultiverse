@@ -47,7 +47,7 @@ public class Commands implements CommandExecutor {
 	
 	public Commands(Main instance) {
 		plugin = instance;
-		logger = new ConsoleLogger(instance, "CommandExecutor");
+		logger = new ConsoleLogger("CommandExecutor");
 		
 		logger.debug("Initiated");
 	}

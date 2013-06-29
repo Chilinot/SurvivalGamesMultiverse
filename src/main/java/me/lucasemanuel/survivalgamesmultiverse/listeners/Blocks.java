@@ -61,7 +61,7 @@ public class Blocks implements Listener {
 	
 	public Blocks(Main instance) {
 		plugin = instance;
-		logger = new ConsoleLogger(instance, "BlockListener");
+		logger = new ConsoleLogger("BlockListener");
 		
 		// Materials to log in the physics event.
 		physics = EnumSet.noneOf(Material.class);

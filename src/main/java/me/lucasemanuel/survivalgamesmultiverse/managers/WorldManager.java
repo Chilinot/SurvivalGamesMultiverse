@@ -65,7 +65,7 @@ public class WorldManager {
 
 	public WorldManager(final Main instance) {
 		plugin = instance;
-		logger = new ConsoleLogger(instance, "WorldManager");
+		logger = new ConsoleLogger("WorldManager");
 
 		logger.debug("Initiated");
 	}

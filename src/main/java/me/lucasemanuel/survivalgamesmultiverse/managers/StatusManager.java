@@ -49,7 +49,7 @@ public class StatusManager {
 	
 	public StatusManager(Main instance) {
 		plugin = instance;
-		logger = new ConsoleLogger(instance, "StatusManager");
+		logger = new ConsoleLogger("StatusManager");
 		
 		logger.debug("Loading configured times.");
 		Game.countdown_first = plugin.getConfig().getInt("timeoutTillStart");

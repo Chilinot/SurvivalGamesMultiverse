@@ -58,7 +58,7 @@ public class PlayerManager {
 	
 	public PlayerManager(Main instance) {
 		plugin = instance;
-		logger = new ConsoleLogger(instance, "PlayerManager");
+		logger = new ConsoleLogger("PlayerManager");
 		
 		playerlists = new ConcurrentHashMap<String, PlayerList>();
 		

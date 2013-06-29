@@ -64,7 +64,7 @@ public class StatsManager {
 	
 	public StatsManager(Main instance) {
 		
-		logger = new ConsoleLogger(instance, "StatsManager");
+		logger = new ConsoleLogger("StatsManager");
 		plugin = instance;
 		
 		logger.debug("Loading settings");

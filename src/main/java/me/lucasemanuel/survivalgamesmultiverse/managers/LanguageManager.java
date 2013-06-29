@@ -49,7 +49,7 @@ public class LanguageManager {
 
 	public LanguageManager(Main instance) {
 		plugin = instance;
-		logger = new ConsoleLogger(instance, "LanguageManager");
+		logger = new ConsoleLogger("LanguageManager");
 
 		language = new HashMap<String, String>();
 
