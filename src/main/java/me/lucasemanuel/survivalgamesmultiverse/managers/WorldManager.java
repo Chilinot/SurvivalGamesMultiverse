@@ -163,7 +163,7 @@ class GameWorld {
 	private final World world;
 	private boolean health_regen;
 	
-	private HashMap<Location, LoggedBlock> log = new HashMap<Location, LoggedBlock>();
+	private HashMap<Location, LoggedBlock> log_block = new HashMap<Location, LoggedBlock>();
 	
 	// Entities that shouldn't be removed on world reset
 	private static final EntityType[] nonremovable = new EntityType[] { 
@@ -184,7 +184,7 @@ class GameWorld {
 		
 		Location l = b.getLocation();
 		
-		if (!log.containsKey(l)) {
+		if (!log_block.containsKey(l)) {
 
 			Material material = placed ? Material.AIR : b.getType();
 
@@ -194,8 +194,8 @@ class GameWorld {
 				sign_lines = ((Sign) b.getState()).getLines();
 			}
 
-			log.put(l, new LoggedBlock(b.getWorld().getName(), b.getX(), b.getY(), b.getZ(), material, b.getData(), sign_lines));
-			logger.debug("Logging block :: " + b.getWorld().getName() + " " + b.getX() + " " + b.getY() + " " + b.getZ() + " " + material + " " + b.getData() + " " + sign_lines.toString());
+			log_block.put(l, new LoggedBlock(b.getWorld().getName(), b.getX(), b.getY(), b.getZ(), material, b.getData(), sign_lines));
+			logger.debug("Logging block :: " + b.getWorld().getName() + " " + b.getX() + " " + b.getY() + " " + b.getZ() + " " + material + " " + b.getData() + " " + sign_lines);
 		}
 	}
 	
@@ -205,7 +205,7 @@ class GameWorld {
 		
 		MassBlockUpdate mbu = CraftMassBlockUpdate.createMassBlockUpdater(plugin, world);
 
-		for (LoggedBlock block : log.values()) {
+		for (LoggedBlock block : log_block.values()) {
 			block.reset(mbu);
 		}
 		
@@ -217,7 +217,7 @@ class GameWorld {
 			}
 		});
 
-		log.clear();
+		log_block.clear();
 	}
 	
 	public void clearEntities() {
