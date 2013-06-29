@@ -66,9 +66,7 @@ public class Blocks implements Listener {
 		// Materials to log in the physics event.
 		physics = EnumSet.noneOf(Material.class);
 		physics.add(Material.TORCH);
-		physics.add(Material.PAINTING);
 		physics.add(Material.LADDER);
-		physics.add(Material.ITEM_FRAME);
 		physics.add(Material.REDSTONE_COMPARATOR_OFF);
 		physics.add(Material.REDSTONE_COMPARATOR_ON);
 		physics.add(Material.REDSTONE_TORCH_OFF);
