@@ -55,15 +55,9 @@ public class ConsoleLogger {
 	/**
 	 * Constructor for the ConsoleLogger.
 	 * 
-	 * @param instance - The JavaPlugin instance that initiated this logmanager.
 	 * @param logger_name - Name of the logger.
 	 */
 	public ConsoleLogger(JavaPlugin instance, String logger_name) {
-		ConsoleLogger.plugin   = instance;
-		ConsoleLogger.logger   = instance.getLogger();
-		ConsoleLogger.debug    = plugin.getConfig().getBoolean("debug");
-		ConsoleLogger.template = "v" + plugin.getDescription().getVersion() + ": ";
-		
 		this.name = logger_name;
 		this.info = ConsoleLogger.template + "[" + logger_name + "] - ";
 		
@@ -162,6 +156,18 @@ public class ConsoleLogger {
 	
 	
 	// ---------- Static methods ----------
+	
+	/**
+	 * Has to be called before any ConsoleLogger can be initialized.
+	 * 
+	 * @param instance - Plugin instance.
+	 */
+	public static void init(JavaPlugin instance) {
+		ConsoleLogger.plugin   = instance;
+		ConsoleLogger.logger   = instance.getLogger();
+		ConsoleLogger.debug    = instance.getConfig().getBoolean("debug");
+		ConsoleLogger.template = "v" + instance.getDescription().getVersion() + ": ";
+	}
 	
 	/**
 	 * Set whether or not to output debug information to the console.
