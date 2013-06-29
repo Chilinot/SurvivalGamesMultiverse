@@ -86,7 +86,6 @@ public class ConsoleLogger {
 	 */
 	public void info(String msg) {
 		ConsoleLogger.logger.info(Ansi.ansi().fg(Ansi.Color.GREEN) + this.info + msg + Ansi.ansi().fg(Ansi.Color.WHITE));
-		
 		broadcastToListeners("info", msg);
 	}
 
@@ -97,7 +96,6 @@ public class ConsoleLogger {
 	 */
 	public void warning(String msg) {
 		ConsoleLogger.logger.warning(Ansi.ansi().fg(Ansi.Color.YELLOW) + this.info + msg + Ansi.ansi().fg(Ansi.Color.WHITE));
-		
 		broadcastToListeners("warning", msg);
 	}
 
@@ -108,7 +106,6 @@ public class ConsoleLogger {
 	 */
 	public void severe(String msg) {
 		ConsoleLogger.logger.severe(Ansi.ansi().fg(Ansi.Color.RED) + this.info + msg + Ansi.ansi().fg(Ansi.Color.WHITE));
-		
 		broadcastToListeners("severe", msg);
 	}
 
@@ -119,10 +116,10 @@ public class ConsoleLogger {
 	 * @param msg - Debug message
 	 */
 	public void debug(String msg) {
-		if (debug == true)
+		if (debug == true) {
 			ConsoleLogger.logger.info(Ansi.ansi().fg(Ansi.Color.CYAN) + this.info + msg + Ansi.ansi().fg(Ansi.Color.WHITE));
-		
-		broadcastToListeners("debug", msg);
+			broadcastToListeners("debug", msg);
+		}
 	}
 	
 	private void broadcastToListeners(String level, String msg) {
