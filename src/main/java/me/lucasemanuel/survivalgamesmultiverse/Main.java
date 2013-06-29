@@ -35,6 +35,7 @@ import java.io.IOException;
 
 import me.desht.dhutils.nms.NMSHelper;
 import me.lucasemanuel.survivalgamesmultiverse.listeners.Blocks;
+import me.lucasemanuel.survivalgamesmultiverse.listeners.Misc;
 import me.lucasemanuel.survivalgamesmultiverse.listeners.Players;
 import me.lucasemanuel.survivalgamesmultiverse.listeners.Worlds;
 import me.lucasemanuel.survivalgamesmultiverse.managers.ChestManager;
@@ -120,6 +121,7 @@ public class Main extends JavaPlugin {
 		this.getServer().getPluginManager().registerEvents(new Players(this), this);
 		this.getServer().getPluginManager().registerEvents(new Blocks(this), this);
 		this.getServer().getPluginManager().registerEvents(new Worlds(this), this);
+		this.getServer().getPluginManager().registerEvents(new Misc(this), this);
 		
 		logger.debug("Finished! Registering commands...");
 		
