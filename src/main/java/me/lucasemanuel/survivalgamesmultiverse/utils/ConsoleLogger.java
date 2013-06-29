@@ -57,7 +57,7 @@ public class ConsoleLogger {
 	 * 
 	 * @param logger_name - Name of the logger.
 	 */
-	public ConsoleLogger(JavaPlugin instance, String logger_name) {
+	public ConsoleLogger(String logger_name) {
 		this.name = logger_name;
 		this.info = ConsoleLogger.template + "[" + logger_name + "] - ";
 		
