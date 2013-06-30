@@ -44,17 +44,20 @@ import org.bukkit.inventory.ItemStack;
 
 public class LoggedEntity {
 	
-	private final SerializedLocation      location;
+	private final Location                location;
 	private final EntityType              type;
 	private final HashMap<String, Object> data = new HashMap<String, Object>();
 	
 	public LoggedEntity(Entity e) {
-		location = new SerializedLocation(e.getLocation());
-		type     = e.getType();
+		type = e.getType();
 		
 		if(e instanceof Hanging) {
 			Hanging h = (Hanging) e;
 			data.put("FacingDirection", h.getFacing());
+			
+			// For hanging entities I have to respawn them inside the block they are
+			// hanging on and then teleport them to their old location.
+			location = e.getLocation().getBlock().getRelative(h.getAttachedFace()).getLocation();
 			
 			if(h instanceof Painting) {
 				Painting p = (Painting) h;
@@ -65,22 +68,27 @@ public class LoggedEntity {
 				data.put("ItemStack", i.getItem().clone());
 			}
 		}
+		else
+			location = e.getLocation();
 	}
 	
 	public void reset() {
-		Location l = location.deserialize();
+		
+		BlockFace face = (BlockFace) data.get("FacingDirection");
 		
 		switch(type) {
 			case ITEM_FRAME:
-				ItemFrame i = l.getWorld().spawn(l, ItemFrame.class);
-				i.setFacingDirection((BlockFace) data.get("FacingDirection"));
+				ItemFrame i = location.getWorld().spawn(location, ItemFrame.class);
+				i.teleport(location.getBlock().getRelative(face).getLocation());
+				i.setFacingDirection(face);
 				i.setItem((ItemStack) data.get("ItemStack"));
 				break;
 			
 			case PAINTING:
-				Painting p = l.getWorld().spawn(l, Painting.class);
-				p.setFacingDirection((BlockFace) data.get("FacingDirection"));
-				p.setArt((Art) data.get("Art"));
+				Painting p = location.getWorld().spawn(location, Painting.class);
+				p.teleport(location.getBlock().getRelative(face).getLocation());
+				p.setFacingDirection(face);
+				p.setArt((Art) data.get("Art"), true);
 				break;
 				
 			default:

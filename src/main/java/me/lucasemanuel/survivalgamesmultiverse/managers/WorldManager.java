@@ -54,6 +54,7 @@ import me.desht.dhutils.block.MassBlockUpdate;
 import me.lucasemanuel.survivalgamesmultiverse.Main;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
 import me.lucasemanuel.survivalgamesmultiverse.utils.LoggedBlock;
+import me.lucasemanuel.survivalgamesmultiverse.utils.LoggedEntity;
 
 public class WorldManager {
 
@@ -102,6 +103,10 @@ public class WorldManager {
 
 	public void logBlock(Block b, boolean placed) {
 		getGameWorld(b.getWorld().getName()).logBlock(b, placed);
+	}
+	
+	public void logEntity(Entity e) {
+		getGameWorld(e.getWorld().getName()).logEntity(e);
 	}
 
 	public void resetWorld(final World world) {
@@ -163,7 +168,8 @@ class GameWorld {
 	private final World world;
 	private boolean health_regen;
 	
-	private HashMap<Location, LoggedBlock> log_block = new HashMap<Location, LoggedBlock>();
+	private HashMap<Location, LoggedBlock>  log_block  = new HashMap<Location, LoggedBlock>();
+	private HashMap<Location, LoggedEntity> log_entity = new HashMap<Location, LoggedEntity>();
 	
 	// Entities that shouldn't be removed on world reset
 	private static final EntityType[] nonremovable = new EntityType[] { 
@@ -199,14 +205,26 @@ class GameWorld {
 		}
 	}
 	
+	public void logEntity(Entity e) {
+		Location l = e.getLocation();
+		if(!log_entity.containsKey(l)) {
+			log_entity.put(l, new LoggedEntity(e));
+			logger.debug("Logged entity " + e.getType() + " " + e.getLocation());
+		}
+	}
+	
 	public void resetWorld() {
 		
 		logger.debug("Resetting world: " + world.getName());
 		
 		MassBlockUpdate mbu = CraftMassBlockUpdate.createMassBlockUpdater(plugin, world);
 
-		for (LoggedBlock block : log_block.values()) {
+		for(LoggedBlock block : log_block.values()) {
 			block.reset(mbu);
+		}
+		
+		for(LoggedEntity entity : log_entity.values()) {
+			entity.reset();
 		}
 		
 		mbu.notifyClients();
@@ -218,6 +236,7 @@ class GameWorld {
 		});
 
 		log_block.clear();
+		log_entity.clear();
 	}
 	
 	public void clearEntities() {
