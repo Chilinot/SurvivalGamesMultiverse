@@ -57,23 +57,22 @@ public class Blocks implements Listener {
 	private Main plugin;
 	private ConsoleLogger logger;
 	
-	private Set<Material> physics;
+	// Materials to log in the physics event.
+	private Set<Material> physics = EnumSet.of(
+			Material.TORCH,
+			Material.LADDER,
+			Material.REDSTONE_COMPARATOR_OFF,
+			Material.REDSTONE_COMPARATOR_ON,
+			Material.REDSTONE_TORCH_OFF,
+			Material.REDSTONE_TORCH_ON,
+			Material.REDSTONE_WIRE,
+			Material.WALL_SIGN,
+			Material.SIGN_POST
+		);
 	
 	public Blocks(Main instance) {
 		plugin = instance;
 		logger = new ConsoleLogger("BlockListener");
-		
-		// Materials to log in the physics event.
-		physics = EnumSet.noneOf(Material.class);
-		physics.add(Material.TORCH);
-		physics.add(Material.LADDER);
-		physics.add(Material.REDSTONE_COMPARATOR_OFF);
-		physics.add(Material.REDSTONE_COMPARATOR_ON);
-		physics.add(Material.REDSTONE_TORCH_OFF);
-		physics.add(Material.REDSTONE_TORCH_ON);
-		physics.add(Material.REDSTONE_WIRE);
-		physics.add(Material.WALL_SIGN);
-		physics.add(Material.SIGN_POST);
 		
 		logger.debug("Initiated");
 	}
