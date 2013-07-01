@@ -36,6 +36,7 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -168,8 +169,8 @@ class GameWorld {
 	private final World world;
 	private boolean health_regen;
 	
-	private HashMap<Location, LoggedBlock>  log_block  = new HashMap<Location, LoggedBlock>();
-	private HashMap<Location, LoggedEntity> log_entity = new HashMap<Location, LoggedEntity>();
+	private HashMap<Location, LoggedBlock> log_block  = new HashMap<Location, LoggedBlock>();
+	private HashMap<UUID, LoggedEntity>    log_entity = new HashMap<UUID, LoggedEntity>();
 	
 	// Entities that shouldn't be removed on world reset
 	private static final EntityType[] nonremovable = new EntityType[] { 
@@ -206,9 +207,8 @@ class GameWorld {
 	}
 	
 	public void logEntity(Entity e) {
-		Location l = e.getLocation();
-		if(!log_entity.containsKey(l)) {
-			log_entity.put(l, new LoggedEntity(e));
+		if(!log_entity.containsKey(e.getUniqueId())) {
+			log_entity.put(e.getUniqueId(), new LoggedEntity(e));
 			logger.debug("Logged entity " + e.getType() + " " + e.getLocation());
 		}
 	}
