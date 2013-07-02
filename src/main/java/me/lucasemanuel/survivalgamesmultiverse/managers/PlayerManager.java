@@ -254,7 +254,7 @@ public class PlayerManager {
 			
 			if(player != null) {
 				clearInventory(player);
-				player.setHealth(0);
+				player.setHealth(0D);
 			}
 			else
 				logger.warning("Tried to reset/kill null player!");
