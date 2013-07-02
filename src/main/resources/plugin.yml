@@ -34,6 +34,20 @@ commands:
     permission: survivalgames.commands.sgleave
     
 permissions:
+  survivalgames.commands.sginfo:
+    default: op
+  survivalgames.commands.sgdebug:
+    default: op
+  survivalgames.commands.sglocation:
+    default: op
+  survivalgames.commands.sgactivate:
+    default: op
+  survivalgames.commands.sgreset:
+    default: op
+  survivalgames.commands.sgplayers:
+    default: true
+  survivalgames.commands.sgleave:
+    default: true
   survivalgames.ignore.commandfilter:
     description: Players with this perm will be allowed to use any command while playing SG.
     default: op
