@@ -120,7 +120,7 @@ public class LoggedEntity {
 			case POOL:
 			case SEA:
 			case SUNSET:
-				return loc;
+				return loc; // Needs work
 				
 			// 2x2
 			case BUST:
@@ -129,11 +129,11 @@ public class LoggedEntity {
 			case STAGE:
 			case VOID:
 			case WITHER:
-				return loc;
+				return loc; // Needs work
 				
 			// 4x2
 			case FIGHTERS:
-				return loc;
+				return loc; // Needs work
 				
 			// 4x3
 			case DONKEYKONG:
@@ -147,7 +147,7 @@ public class LoggedEntity {
 			case BURNINGSKULL:
 			case PIGSCENE:
 			case POINTER:
-				return loc;
+				return loc; // Needs work
 				
 			// Unsupported artwork.
 			default:
