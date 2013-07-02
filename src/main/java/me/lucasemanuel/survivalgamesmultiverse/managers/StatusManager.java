@@ -219,7 +219,7 @@ class Game {
 					p.sendMessage(ChatColor.GOLD + plugin.getLanguageManager().getString("sentYouToArena"));
 				}
 				else {
-					p.setHealth(0);
+					p.setHealth(0D);
 					p.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("killedSendingArena"));
 				}
 			}
