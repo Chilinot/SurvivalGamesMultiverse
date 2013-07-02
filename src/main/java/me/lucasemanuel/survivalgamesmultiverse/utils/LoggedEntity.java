@@ -85,13 +85,73 @@ public class LoggedEntity {
 				break;
 			
 			case PAINTING:
+				Art art = (Art) data.get("Art");
 				Painting p = location.getWorld().spawn(location, Painting.class);
-				p.teleport(location.getBlock().getRelative(face).getLocation());
+				p.teleport(calculatePainting(art, face, location.getBlock().getRelative(face).getLocation()));
 				p.setFacingDirection(face);
-				p.setArt((Art) data.get("Art"), true);
+				p.setArt(art, true);
 				break;
 				
 			default:
+		}
+	}
+	
+	private Location calculatePainting(Art art, BlockFace facing, Location loc) {
+		switch(art) {
+			
+			// 1x1
+			case ALBAN:
+			case AZTEC:
+			case AZTEC2:
+			case BOMB:
+			case KEBAB:
+			case PLANT:
+			case WASTELAND:
+				return loc; // No calculation needed.
+				
+			// 1x2
+			case GRAHAM:
+			case WANDERER:
+				return loc.getBlock().getRelative(BlockFace.DOWN).getLocation();
+			
+			// 2x1
+			case CREEBET:
+			case COURBET:
+			case POOL:
+			case SEA:
+			case SUNSET:
+				return loc;
+				
+			// 2x2
+			case BUST:
+			case MATCH:
+			case SKULL_AND_ROSES:
+			case STAGE:
+			case VOID:
+			case WITHER:
+				return loc;
+				
+			// 4x2
+			case FIGHTERS:
+				return loc;
+				
+			// 4x3
+			case DONKEYKONG:
+			case SKELETON:
+				if(facing == BlockFace.SOUTH || facing == BlockFace.NORTH)
+					return loc.getBlock().getRelative(BlockFace.WEST).getLocation();
+				else
+					return loc.getBlock().getRelative(BlockFace.NORTH).getLocation();
+				
+			// 4x4
+			case BURNINGSKULL:
+			case PIGSCENE:
+			case POINTER:
+				return loc;
+				
+			// Unsupported artwork.
+			default:
+				return null;
 		}
 	}
 }
