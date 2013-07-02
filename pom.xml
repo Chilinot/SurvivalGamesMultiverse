@@ -105,8 +105,8 @@
 									<artifact>me.desht:dhutils-lib</artifact>
 									<includes>
 										<include>me/desht/dhutils/nms/**</include>
-										<include>me/desht/dhutils/block/CraftMassBlockUpdate.class</include>
-										<include>me/desht/dhutils/block/MassBlockUpdate.class</include>
+										<include>me/desht/dhutils/block/CraftMass**</include>
+										<include>me/desht/dhutils/block/MassBlock**</include>
 									</includes>
 								</filter>
 							</filters>
