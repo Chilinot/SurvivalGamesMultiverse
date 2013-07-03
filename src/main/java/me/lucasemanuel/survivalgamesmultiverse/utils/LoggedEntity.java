@@ -34,6 +34,7 @@ import java.util.HashMap;
 
 import org.bukkit.Art;
 import org.bukkit.Location;
+import org.bukkit.Rotation;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -55,17 +56,18 @@ public class LoggedEntity {
 			Hanging h = (Hanging) e;
 			data.put("FacingDirection", h.getFacing());
 			
-			// For hanging entities I have to respawn them inside the block they are
-			// hanging on and then teleport them to their old location.
-			location = e.getLocation().getBlock().getRelative(h.getAttachedFace()).getLocation();
+			// Get the pure location (no decimal value)
+			location = e.getLocation().getBlock().getLocation();
 			
 			if(h instanceof Painting) {
 				Painting p = (Painting) h;
 				data.put("Art", p.getArt());
+				System.out.println("" + p.getArt());
 			}
 			else if(h instanceof ItemFrame) {
 				ItemFrame i = (ItemFrame) h;
 				data.put("ItemStack", i.getItem().clone());
+				data.put("Rotation", i.getRotation());
 			}
 		}
 		else
@@ -78,17 +80,18 @@ public class LoggedEntity {
 		
 		switch(type) {
 			case ITEM_FRAME:
-				ItemFrame i = location.getWorld().spawn(location, ItemFrame.class);
-				i.teleport(location.getBlock().getRelative(face).getLocation());
-				i.setFacingDirection(face);
+				ItemFrame i = location.getWorld().spawn(location.getBlock().getRelative(face.getOppositeFace()).getLocation(), ItemFrame.class);
+				i.teleport(location);
+				i.setRotation((Rotation) data.get("Rotation"));
+				i.setFacingDirection(face, true);
 				i.setItem((ItemStack) data.get("ItemStack"));
 				break;
 			
 			case PAINTING:
 				Art art = (Art) data.get("Art");
-				Painting p = location.getWorld().spawn(location, Painting.class);
-				p.teleport(calculatePainting(art, face, location.getBlock().getRelative(face).getLocation()));
-				p.setFacingDirection(face);
+				Painting p = location.getWorld().spawn(location.getBlock().getRelative(face.getOppositeFace()).getLocation(), Painting.class);
+				p.teleport(calculatePainting(art, face, location));
+				p.setFacingDirection(face, true);
 				p.setArt(art, true);
 				break;
 				
@@ -112,15 +115,24 @@ public class LoggedEntity {
 			// 1x2
 			case GRAHAM:
 			case WANDERER:
-				return loc.getBlock().getRelative(BlockFace.DOWN).getLocation();
-			
+				return loc.getBlock().getLocation().add(0, -1, 0);
+				
 			// 2x1
 			case CREEBET:
 			case COURBET:
 			case POOL:
 			case SEA:
-			case SUNSET:
-				return loc; // Needs work
+			case SUNSET:	// Use same as 4x3
+				
+			// 4x3
+			case DONKEYKONG:
+			case SKELETON:
+				if(facing == BlockFace.WEST)
+					return loc.getBlock().getLocation().add(0, 0, -1);
+				else if(facing == BlockFace.SOUTH)
+					return loc.getBlock().getLocation().add(-1, 0, 0);
+				else
+					return loc;
 				
 			// 2x2
 			case BUST:
@@ -128,30 +140,25 @@ public class LoggedEntity {
 			case SKULL_AND_ROSES:
 			case STAGE:
 			case VOID:
-			case WITHER:
-				return loc; // Needs work
+			case WITHER:	// Use same as 4x2
 				
 			// 4x2
-			case FIGHTERS:
-				return loc; // Needs work
-				
-			// 4x3
-			case DONKEYKONG:
-			case SKELETON:
-				if(facing == BlockFace.SOUTH || facing == BlockFace.NORTH)
-					return loc.getBlock().getRelative(BlockFace.WEST).getLocation();
-				else
-					return loc.getBlock().getRelative(BlockFace.NORTH).getLocation();
+			case FIGHTERS:  // Use same as 4x4
 				
 			// 4x4
 			case BURNINGSKULL:
 			case PIGSCENE:
 			case POINTER:
-				return loc; // Needs work
+				if(facing == BlockFace.WEST)
+					return loc.getBlock().getLocation().add(0, -1, -1);
+				else if(facing == BlockFace.SOUTH)
+					return loc.getBlock().getLocation().add(-1, -1, 0);
+				else
+					return loc.add(0, -1, 0);
 				
-			// Unsupported artwork.
+			// Unsupported artwork
 			default:
-				return null;
+				return loc;
 		}
 	}
 }
