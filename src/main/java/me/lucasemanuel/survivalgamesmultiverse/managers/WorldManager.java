@@ -106,8 +106,8 @@ public class WorldManager {
 		getGameWorld(b.getWorld().getName()).logBlock(b, placed);
 	}
 	
-	public void logEntity(Entity e) {
-		getGameWorld(e.getWorld().getName()).logEntity(e);
+	public void logEntity(Entity e, boolean remove) {
+		getGameWorld(e.getWorld().getName()).logEntity(e, remove);
 	}
 
 	public void resetWorld(final World world) {
@@ -169,8 +169,9 @@ class GameWorld {
 	private final World world;
 	private boolean health_regen;
 	
-	private HashMap<Location, LoggedBlock> log_block  = new HashMap<Location, LoggedBlock>();
-	private HashMap<UUID, LoggedEntity>    log_entity = new HashMap<UUID, LoggedEntity>();
+	private HashMap<Location, LoggedBlock> log_block          = new HashMap<Location, LoggedBlock>();
+	private HashMap<UUID, LoggedEntity>    log_entity         = new HashMap<UUID, LoggedEntity>();
+	private HashSet<Entity>                log_entity_removal = new HashSet<Entity>();
 	
 	// Entities that shouldn't be removed on world reset
 	private static final EntityType[] nonremovable = new EntityType[] { 
@@ -206,9 +207,15 @@ class GameWorld {
 		}
 	}
 	
-	public void logEntity(Entity e) {
+	public void logEntity(Entity e, boolean remove) {
 		if(!log_entity.containsKey(e.getUniqueId())) {
-			log_entity.put(e.getUniqueId(), new LoggedEntity(e));
+			if(remove) {
+				log_entity_removal.add(e);
+				log_entity.put(e.getUniqueId(), null);
+			}
+			else {
+				log_entity.put(e.getUniqueId(), new LoggedEntity(e));
+			}
 			logger.debug("Logged entity " + e.getType() + " " + e.getLocation());
 		}
 	}
@@ -224,7 +231,8 @@ class GameWorld {
 		}
 		
 		for(LoggedEntity entity : log_entity.values()) {
-			entity.reset();
+			if(entity != null)
+				entity.reset();
 		}
 		
 		mbu.notifyClients();
@@ -242,7 +250,16 @@ class GameWorld {
 	public void clearEntities() {
 		Set<EntityType> skip = EnumSet.noneOf(EntityType.class);
 		Collections.addAll(skip, nonremovable);
+		
+		// Clear all logged entities
+		for(Entity e : log_entity_removal) {
+			if(e != null)
+				e.remove();
+		}
+		
+		log_entity_removal.clear();
 
+		// Clear the remaining basic entities
 		for (Entity entity : world.getEntities()) {
 			
 			if(skip.contains(entity.getType()))

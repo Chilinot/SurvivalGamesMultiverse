@@ -38,6 +38,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.hanging.HangingBreakEvent;
+import org.bukkit.event.hanging.HangingPlaceEvent;
 
 public class Misc implements Listener {
 	
@@ -55,6 +56,12 @@ public class Misc implements Listener {
 	@EventHandler(priority=EventPriority.MONITOR, ignoreCancelled=true)
 	public void onHangingBreak(HangingBreakEvent event) {
 		if(worldmanager.isGameWorld(event.getEntity().getWorld()))
-			worldmanager.logEntity(event.getEntity());
+			worldmanager.logEntity(event.getEntity(), false);
+	}
+	
+	@EventHandler(priority=EventPriority.MONITOR, ignoreCancelled=true)
+	public void onHangingPlace(HangingPlaceEvent event) {
+		if(worldmanager.isGameWorld(event.getEntity().getWorld()))
+			worldmanager.logEntity(event.getEntity(), true);
 	}
 }
