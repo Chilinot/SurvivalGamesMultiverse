@@ -54,9 +54,7 @@ public class Misc implements Listener {
 	
 	@EventHandler(priority=EventPriority.MONITOR, ignoreCancelled=true)
 	public void onHangingBreak(HangingBreakEvent event) {
-		if(worldmanager.isGameWorld(event.getEntity().getWorld())) {
+		if(worldmanager.isGameWorld(event.getEntity().getWorld()))
 			worldmanager.logEntity(event.getEntity());
-//			event.getEntity().getLocation().getBlock().setType(Material.GOLD_BLOCK);
-		}
 	}
 }
