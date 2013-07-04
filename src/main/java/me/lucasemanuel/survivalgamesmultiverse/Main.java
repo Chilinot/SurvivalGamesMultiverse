@@ -48,6 +48,7 @@ import me.lucasemanuel.survivalgamesmultiverse.managers.StatusManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.WorldManager;
 import me.lucasemanuel.survivalgamesmultiverse.threading.SQLiteInterface;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
+import me.lucasemanuel.survivalgamesmultiverse.utils.Updater;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -81,6 +82,17 @@ public class Main extends JavaPlugin {
 		logger = new ConsoleLogger("Main");
 		logger.debug("Initiating startup sequence...");
 		
+		// Config
+		logger.debug("Loading configurationfile...");
+		Config.load(this);
+		
+		// Update
+		if(getConfig().getBoolean("auto-update")) {
+			logger.info("Auto-Updating enabled!");
+			new Updater(this, "survivalgamesmultiverse", this.getFile(), Updater.UpdateType.DEFAULT, true);
+		}
+		
+		// DHUtils
 		try {
 			logger.info("Checking compatability...");
 			NMSHelper.init(this);
@@ -92,6 +104,7 @@ public class Main extends JavaPlugin {
 			return;
 		}
 		
+		// Metrics
 		try {
 			logger.debug("Initiating metrics...");
 			Metrics metrics = new Metrics(this);
@@ -101,9 +114,7 @@ public class Main extends JavaPlugin {
 			logger.severe("Failed to submit stats to MCStats.org! Please contact author of this plugin!");
 		}
 		
-		logger.debug("Loading configurationfile...");
-		Config.load(this);
-		
+		// Managers
 		logger.debug("Initiating managers...");
 		
 		playermanager   = new PlayerManager(this);
@@ -116,6 +127,7 @@ public class Main extends JavaPlugin {
 		signmanager     = new SignManager(this);
 		sqlite          = new SQLiteInterface(this);
 		
+		// Events
 		logger.debug("Finished! Moving on to event listeners...");
 		
 		this.getServer().getPluginManager().registerEvents(new Players(this), this);
@@ -123,6 +135,7 @@ public class Main extends JavaPlugin {
 		this.getServer().getPluginManager().registerEvents(new Worlds(this), this);
 		this.getServer().getPluginManager().registerEvents(new Misc(this), this);
 		
+		// Commands
 		logger.debug("Finished! Registering commands...");
 		
 		Commands commands = new Commands(this);
@@ -135,6 +148,7 @@ public class Main extends JavaPlugin {
 		this.getCommand("sgplayers").setExecutor(commands);
 		this.getCommand("sgleave").setExecutor(commands);
 		
+		// Worlds
 		logger.debug("Finished! Lets load some worlds...");
 		
 		for(String key : getConfig().getConfigurationSection("worlds").getKeys(false)) {
@@ -147,6 +161,7 @@ public class Main extends JavaPlugin {
 			statusmanager.addWorld(key);
 		}
 		
+		// Signs
 		logger.debug("Finished! Schedules sign update...");
 		
 		// Runs a little while after the server is setup to let the signs be registered in time.

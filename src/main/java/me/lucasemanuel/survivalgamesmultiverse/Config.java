@@ -67,6 +67,9 @@ public class Config {
 			put("debug", false);
 			put("lobbyworld", "world");
 			
+			// Update
+			put("auto-update", true);
+			
 			// Backup
 			put("backup.inventories", true);
 			
