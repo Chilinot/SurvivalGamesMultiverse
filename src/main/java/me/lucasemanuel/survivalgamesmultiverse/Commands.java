@@ -64,6 +64,9 @@ public class Commands implements CommandExecutor {
 			case "sginfo":
 				return sginfo(sender, args);
 				
+			case "sgupdate":
+				return sgupdate(sender, args);
+				
 			case "sgdebug":
 				return sgdebug(sender, args);
 			
@@ -115,6 +118,16 @@ public class Commands implements CommandExecutor {
 		}
 		
 		return false;
+	}
+	
+	private boolean sgupdate(CommandSender sender, String[] args) {
+		
+		if(!isPlayer(sender)) {
+			sender.sendMessage(ChatColor.RED + "You have to be a player inorder to use this command!");
+			return true;
+		}
+		
+		return true;
 	}
 
 	private boolean sgdebug(CommandSender sender, String[] args) {
@@ -175,7 +188,7 @@ public class Commands implements CommandExecutor {
 
 	private boolean sgleave(CommandSender sender, String[] args) {
 		
-		if(!(sender instanceof Player)) {
+		if(!isPlayer(sender)) {
 			sender.sendMessage(ChatColor.RED + "You have to be a player inorder to use this command!");
 			return true;
 		}
@@ -205,7 +218,7 @@ public class Commands implements CommandExecutor {
 
 	private boolean sgplayers(CommandSender sender, String[] args) {
 		
-		if(!(sender instanceof Player)) {
+		if(!isPlayer(sender)) {
 			sender.sendMessage(ChatColor.RED + "You have to be a player inorder to use this command!");
 			return true;
 		}
@@ -283,10 +296,11 @@ public class Commands implements CommandExecutor {
 
 	private boolean sglocation(CommandSender sender, String[] args) {
 		
-		if(!(sender instanceof Player)) {
-			sender.sendMessage(ChatColor.RED + "You have to be a player to use this command!");
+		if(!isPlayer(sender)) {
+			sender.sendMessage(ChatColor.RED + "You have to be a player inorder to use this command!");
 			return true;
 		}
+		
 		if(args.length != 2)
 			return false;
 		
@@ -388,5 +402,10 @@ public class Commands implements CommandExecutor {
 		}
 		
 		return false;
+	}
+	
+	private boolean isPlayer(CommandSender sender) {
+		if(sender instanceof Player) return true;
+		else return false;
 	}
 }
