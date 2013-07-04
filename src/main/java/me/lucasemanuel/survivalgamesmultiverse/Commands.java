@@ -64,9 +64,6 @@ public class Commands implements CommandExecutor {
 			case "sginfo":
 				return sginfo(sender, args);
 				
-			case "sgupdate":
-				return sgupdate(sender, args);
-				
 			case "sgdebug":
 				return sgdebug(sender, args);
 			
@@ -118,16 +115,6 @@ public class Commands implements CommandExecutor {
 		}
 		
 		return false;
-	}
-	
-	private boolean sgupdate(CommandSender sender, String[] args) {
-		
-		if(!isPlayer(sender)) {
-			sender.sendMessage(ChatColor.RED + "You have to be a player inorder to use this command!");
-			return true;
-		}
-		
-		return true;
 	}
 
 	private boolean sgdebug(CommandSender sender, String[] args) {
