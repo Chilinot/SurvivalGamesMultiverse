@@ -44,6 +44,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 
 import me.lucasemanuel.survivalgamesmultiverse.Main;
+import me.lucasemanuel.survivalgamesmultiverse.managers.StatusManager.GameFlag;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
 import me.lucasemanuel.survivalgamesmultiverse.utils.SerializedLocation;
 
@@ -133,12 +134,12 @@ public class SignManager {
 			
 			String output = "";
 			
-			int status = plugin.getStatusManager().getStatusFlag(worldname);
-			switch(status) {
-				case 0:  output = ChatColor.GREEN + plugin.getLanguageManager().getString("signs.waiting"); break;
-				case 1:  output = ChatColor.GOLD  + plugin.getLanguageManager().getString("signs.started"); break;
-				case 2:  output = ChatColor.RED   + plugin.getLanguageManager().getString("signs.frozen");  break;
-				default: output = ChatColor.RED   + "ERROR"; break;
+			GameFlag flag = plugin.getStatusManager().getStatusFlag(worldname);
+			switch(flag) {
+				case WAITING: output = ChatColor.GREEN + plugin.getLanguageManager().getString("signs.waiting"); break;
+				case STARTED: output = ChatColor.GOLD  + plugin.getLanguageManager().getString("signs.started"); break;
+				case FROZEN:  output = ChatColor.RED   + plugin.getLanguageManager().getString("signs.frozen");  break;
+				default:      output = ChatColor.RED   + "ERROR"; break;
 			}
 					
 			Player[] playerlist = plugin.getPlayerManager().getPlayerList(worldname);
@@ -149,7 +150,7 @@ public class SignManager {
 			sign.setLine(3, "" + ChatColor.WHITE + playerlist.length + 
 					"/" + plugin.getLocationManager().getLocationAmount(worldname));
 			
-			logger.debug("Updating sign :: " + worldname + " - " + status + " - " + playerlist.length);
+			logger.debug("Updating sign :: " + worldname + " - " + flag + " - " + playerlist.length);
 			sign.update();
 		}
 		else

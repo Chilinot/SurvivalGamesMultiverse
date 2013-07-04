@@ -50,6 +50,7 @@ import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 
 import me.lucasemanuel.survivalgamesmultiverse.Main;
+import me.lucasemanuel.survivalgamesmultiverse.managers.StatusManager.GameFlag;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
 
 public class Blocks implements Listener {
@@ -83,7 +84,7 @@ public class Blocks implements Listener {
 		Block block = event.getBlock();
 		
 		if(plugin.getWorldManager().isGameWorld(block.getWorld())) {
-			if(plugin.getStatusManager().getStatusFlag(block.getWorld().getName()) == 1 
+			if(plugin.getStatusManager().getStatusFlag(block.getWorld().getName()) == GameFlag.STARTED 
 					|| event.getPlayer().hasPermission("survivalgames.ignore.blockfilter")) {
 					
 				plugin.getWorldManager().logBlock(block, true);
@@ -104,7 +105,7 @@ public class Blocks implements Listener {
 		Block block = event.getBlock();
 		
 		if(plugin.getWorldManager().isGameWorld(block.getWorld())) {
-			if(plugin.getStatusManager().getStatusFlag(block.getWorld().getName()) == 1 
+			if(plugin.getStatusManager().getStatusFlag(block.getWorld().getName()) == GameFlag.STARTED 
 					|| event.getPlayer().hasPermission("survivalgames.ignore.blockfilter")) {
 				
 				plugin.getWorldManager().logBlock(block, false);

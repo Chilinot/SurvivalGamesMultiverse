@@ -36,6 +36,7 @@ import me.lucasemanuel.survivalgamesmultiverse.events.PlayerRemoveEvent;
 import me.lucasemanuel.survivalgamesmultiverse.managers.PlayerManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.StatsManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.WorldManager;
+import me.lucasemanuel.survivalgamesmultiverse.managers.StatusManager.GameFlag;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
 
 import org.bukkit.Bukkit;
@@ -161,7 +162,7 @@ public class Players implements Listener {
 				String worldname = plugin.getSignManager().getGameworldName(block);
 				
 				if(worldname != null && plugin.getWorldManager().isGameWorld(Bukkit.getWorld(worldname))) {
-					if(plugin.getStatusManager().getStatusFlag(worldname) == 0) {
+					if(plugin.getStatusManager().getStatusFlag(worldname) == GameFlag.WAITING) {
 						if(plugin.getPlayerManager().isInGame(player) == false) {
 							if(plugin.getLocationManager().tpToStart(player, worldname)) {
 								
@@ -184,9 +185,9 @@ public class Players implements Listener {
 						else
 							player.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("alreadyPlaying"));
 					}
-					else if(plugin.getStatusManager().getStatusFlag(worldname) == 1)
+					else if(plugin.getStatusManager().getStatusFlag(worldname) == GameFlag.STARTED)
 						player.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("gameHasAlreadyStarted"));
-					else if(plugin.getStatusManager().getStatusFlag(worldname) == 2)
+					else if(plugin.getStatusManager().getStatusFlag(worldname) == GameFlag.FROZEN)
 						player.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("Join_Blocked_Frozen"));
 				}
 				
@@ -317,7 +318,7 @@ public class Players implements Listener {
 		if(plugin.getWorldManager().isGameWorld(player.getWorld())) {
 			
 			if(plugin.getPlayerManager().isInGame(player)) {
-				if(plugin.getStatusManager().getStatusFlag(player.getWorld().getName()) == 0) {
+				if(plugin.getStatusManager().getStatusFlag(player.getWorld().getName()) == GameFlag.WAITING) {
 					
 					double fromX = event.getFrom().getX();
 					double fromZ = event.getFrom().getZ();
@@ -343,7 +344,7 @@ public class Players implements Listener {
 			
 			if(plugin.getWorldManager().isGameWorld(player.getWorld())
 					&& plugin.getPlayerManager().isInGame(player)
-					&& plugin.getStatusManager().getStatusFlag(player.getWorld().getName()) == 0) {
+					&& plugin.getStatusManager().getStatusFlag(player.getWorld().getName()) == GameFlag.WAITING) {
 				
 				event.setCancelled(true);
 			}
