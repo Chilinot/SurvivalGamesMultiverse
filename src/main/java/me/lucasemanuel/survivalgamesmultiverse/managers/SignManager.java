@@ -52,7 +52,7 @@ public class SignManager {
 	private final Main plugin;
 	private final ConsoleLogger logger;
 	
-	private HashMap<Sign, String> signs;
+	private HashMap<Block, String> signs;
 	
 	public SignManager(Main instance) {
 		plugin = instance;
@@ -65,7 +65,7 @@ public class SignManager {
 		
 		logger.debug("Loading signlocations...");
 		
-		this.signs = new HashMap<Sign, String>();
+		this.signs = new HashMap<Block, String>();
 		
 		HashMap<String, String> locations = plugin.getSQLiteConnector().getSignlocations();
 		
@@ -78,7 +78,7 @@ public class SignManager {
 				
 				if(block != null) {
 					if(block.getType().equals(Material.SIGN_POST) || block.getType().equals(Material.WALL_SIGN)) {
-						signs.put((Sign) block.getState(), entry.getValue());
+						signs.put(block, entry.getValue());
 					}
 					else {
 						logger.warning("Loaded block not a sign! Material: " + block.getType());
@@ -105,7 +105,7 @@ public class SignManager {
 		
 		final HashMap<SerializedLocation, String> locations = new HashMap<SerializedLocation, String>();
 		
-		for(Entry<Sign, String> entry : signs.entrySet()) {
+		for(Entry<Block, String> entry : signs.entrySet()) {
 			locations.put(new SerializedLocation(entry.getKey().getLocation()), entry.getValue());
 		}
 		
@@ -125,9 +125,11 @@ public class SignManager {
 
 	private void updateInfoSign(String worldname) {
 		
-		Sign sign = getSign(worldname);
+		Block b = getSign(worldname);
 		
-		if(sign != null) {
+		if(b != null && (b.getType().equals(Material.SIGN_POST) || b.getType().equals(Material.WALL_SIGN))) {
+			
+			Sign sign = (Sign) b.getState();
 			
 			String output = "";
 			
@@ -154,9 +156,9 @@ public class SignManager {
 			logger.warning("Sign is null! Worldname: " + worldname);
 	}
 
-	private Sign getSign(String worldname) {
+	private Block getSign(String worldname) {
 		
-		for(Entry<Sign, String> entry : signs.entrySet()) {
+		for(Entry<Block, String> entry : signs.entrySet()) {
 			if(entry.getValue().equals(worldname))
 				return entry.getKey();
 		}
@@ -164,19 +166,20 @@ public class SignManager {
 		return null;
 	}
 
-	public String getGameworldName(Sign sign) {
+	public String getGameworldName(Block b) {
 		
-		for(Entry<Sign, String> entry : signs.entrySet()) {
-			if(entry.getKey().equals(sign))
+		for(Entry<Block, String> entry : signs.entrySet()) {
+			if(entry.getKey().equals(b))
 				return entry.getValue();
 		}
 		
 		return null;
 	}
 
-	public void registerSign(Sign sign) {
-		
-		if(sign != null) {
+	public void registerSign(Block b) {
+		if(b != null && (b.getType().equals(Material.SIGN_POST) || b.getType().equals(Material.WALL_SIGN))) {
+			
+			Sign sign = (Sign) b.getState();
 			
 			String firstline  = sign.getLine(0);
 			String secondline = sign.getLine(1);
@@ -186,7 +189,7 @@ public class SignManager {
 				World world = Bukkit.getWorld(secondline);
 				
 				if(world != null) {
-					signs.put(sign, world.getName());
+					signs.put(sign.getBlock(), world.getName());
 					updateInfoSign(world.getName());
 					saveSigns();
 				}

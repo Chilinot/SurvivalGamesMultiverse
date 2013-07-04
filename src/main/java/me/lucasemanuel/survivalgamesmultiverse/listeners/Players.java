@@ -158,7 +158,7 @@ public class Players implements Listener {
 				 *  ---- Join sign
 				 */
 				
-				String worldname = plugin.getSignManager().getGameworldName(sign);
+				String worldname = plugin.getSignManager().getGameworldName(block);
 				
 				if(worldname != null && plugin.getWorldManager().isGameWorld(Bukkit.getWorld(worldname))) {
 					if(plugin.getStatusManager().getStatusFlag(worldname) == 0) {
@@ -195,7 +195,7 @@ public class Players implements Listener {
 				 */
 				
 				else if(sign.getLine(0).equalsIgnoreCase("[sginfo]") && player.hasPermission("survivalgames.signs.sginfo")) {
-					plugin.getSignManager().registerSign(sign);
+					plugin.getSignManager().registerSign(block);
 				}
 			}
 			
