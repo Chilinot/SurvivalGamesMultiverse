@@ -117,6 +117,7 @@ public class SignManager {
 	}
 
 	public void updateSigns() {
+		logger.debug("Updating signs");
 		for(String worldname : signs.values()) {
 			updateInfoSign(worldname);
 		}
