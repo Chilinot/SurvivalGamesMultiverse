@@ -147,6 +147,7 @@ public class SignManager {
 			sign.setLine(3, "" + ChatColor.WHITE + playerlist.length + 
 					"/" + plugin.getLocationManager().getLocationAmount(worldname));
 			
+			logger.debug("Updating sign :: " + worldname + " - " + status + " - " + playerlist.length);
 			sign.update();
 		}
 		else
