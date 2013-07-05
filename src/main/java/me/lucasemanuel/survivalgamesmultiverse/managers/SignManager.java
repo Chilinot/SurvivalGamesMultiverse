@@ -142,15 +142,15 @@ public class SignManager {
 				default:      output = ChatColor.RED   + "ERROR"; break;
 			}
 					
-			Player[] playerlist = plugin.getPlayerManager().getPlayerList(worldname);
+			int amount = plugin.getPlayerManager().getPlayerAmount(worldname);
 				
 			sign.setLine(0, worldname);
 			sign.setLine(1, output);
 			sign.setLine(2, plugin.getLanguageManager().getString("signs.playersIngame"));
-			sign.setLine(3, "" + ChatColor.WHITE + playerlist.length + 
+			sign.setLine(3, "" + ChatColor.WHITE + amount + 
 					"/" + plugin.getLocationManager().getLocationAmount(worldname));
 			
-			logger.debug("Updating sign :: " + worldname + " - " + flag + " - " + playerlist.length);
+			logger.debug("Updating sign :: " + worldname + " - " + flag + " - " + amount);
 			sign.update();
 		}
 		else
