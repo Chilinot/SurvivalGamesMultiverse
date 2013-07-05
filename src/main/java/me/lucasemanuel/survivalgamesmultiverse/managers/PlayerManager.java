@@ -30,11 +30,13 @@
 package me.lucasemanuel.survivalgamesmultiverse.managers;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -280,22 +282,22 @@ public class PlayerManager {
 
 class PlayerList {
 	
-	private Set<Player> players;
+	private Set<String> players;
 	
 	public PlayerList() {
-		players = new HashSet<Player>();
+		players = new HashSet<String>();
 	}
 	
 	public boolean containsPlayer(Player player) {
-		return players.contains(player);
+		return players.contains(player.getName());
 	}
 
 	public boolean addPlayer(Player player) {
-		return players.add(player);
+		return players.add(player.getName());
 	}
 	
 	public boolean removePlayer(Player player) {
-		return players.remove(player);
+		return players.remove(player.getName());
 	}
 	
 	public int getAmountOfPlayers() {
@@ -306,15 +308,20 @@ class PlayerList {
 		players.clear();
 	}
 	
-	// It didn't let me use the set.toArray() and parse like (Player[]) set.toArray()
 	public Player[] toArray() {
 		
 		Player[] array = new Player[players.size()];
 		
+		Iterator<String> iterator = players.iterator();
 		int i = 0;
-		for(Player player : players) {
-			array[i] = player;
-			i++;
+		while(iterator.hasNext()) {
+			Player p = Bukkit.getPlayerExact(iterator.next());
+			if(p != null) {
+				array[i] = p;
+				i++;
+			}
+			else
+				iterator.remove();
 		}
 		
 		return array;
