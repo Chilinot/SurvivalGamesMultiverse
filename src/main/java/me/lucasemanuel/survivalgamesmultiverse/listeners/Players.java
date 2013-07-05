@@ -225,9 +225,9 @@ public class Players implements Listener {
 		
 		if(worldmanager.isGameWorld(event.getRespawnLocation().getWorld())) {
 			
-			// The players should be teleported directly after respawn instead of resetting the respawnlocation
-			// to the desired value. This is to make sure that the player shifts worlds correctly and ensure
-			// that any multiverse monitor like MultiInv catches the world change correctly.
+			/* The players should be teleported directly after respawn instead of resetting the respawnlocation
+			 * to the desired value. This is to make sure that the player shifts worlds correctly and ensure
+			 * that any multiverse monitor like MultiInv catches the world change correctly. */
 			
 			final Location lobby = Bukkit.getWorld(plugin.getConfig().getString("lobbyworld")).getSpawnLocation();
 			
