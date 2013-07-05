@@ -41,9 +41,11 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import me.lucasemanuel.survivalgamesmultiverse.Main;
 import me.lucasemanuel.survivalgamesmultiverse.managers.StatusManager.GameFlag;
+import me.lucasemanuel.survivalgamesmultiverse.threading.SQLiteInterface;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
 import me.lucasemanuel.survivalgamesmultiverse.utils.SerializedLocation;
 
@@ -52,11 +54,17 @@ public class SignManager {
 	private final Main plugin;
 	private final ConsoleLogger logger;
 	
+	private LanguageManager language;
+	private SQLiteInterface sqlite;
+	
 	private HashMap<Block, String> signs;
 	
 	public SignManager(Main instance) {
 		plugin = instance;
 		logger = new ConsoleLogger("SignManager");
+		
+		language = plugin.getLanguageManager();
+		sqlite   = plugin.getSQLiteConnector();
 		
 		logger.debug("Initiated");
 	}
@@ -67,7 +75,7 @@ public class SignManager {
 		
 		this.signs = new HashMap<Block, String>();
 		
-		HashMap<String, String> locations = plugin.getSQLiteConnector().getSignlocations();
+		HashMap<String, String> locations = sqlite.getSignlocations();
 		
 		if(locations != null && locations.size() > 0) {
 			for(Entry<String, String> entry : locations.entrySet()) {
@@ -77,17 +85,18 @@ public class SignManager {
 				Block block = l.getBlock();
 				
 				if(block != null) {
-					if(block.getType().equals(Material.SIGN_POST) || block.getType().equals(Material.WALL_SIGN)) {
+					if(block.getType().equals(Material.SIGN_POST) 
+							|| block.getType().equals(Material.WALL_SIGN)) {
 						signs.put(block, entry.getValue());
 					}
 					else {
 						logger.warning("Loaded block not a sign! Material: " + block.getType());
 						
-						plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+						new BukkitRunnable() {
 							public void run() {
-								plugin.getSQLiteConnector().removeSign(new SerializedLocation(l));
+								sqlite.removeSign(new SerializedLocation(l));
 							}
-						});
+						}.runTaskAsynchronously(plugin);
 					}
 				}
 				else
@@ -109,11 +118,11 @@ public class SignManager {
 			locations.put(new SerializedLocation(entry.getKey().getLocation()), entry.getValue());
 		}
 		
-		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+		new BukkitRunnable() {
 			public void run() {
-				plugin.getSQLiteConnector().saveSignLocations(locations);
+				sqlite.saveSignLocations(locations);
 			}
-		});
+		}.runTaskAsynchronously(plugin);
 	}
 
 	public void updateSigns() {
@@ -127,7 +136,8 @@ public class SignManager {
 		
 		Block b = getSign(worldname);
 		
-		if(b != null && (b.getType().equals(Material.SIGN_POST) || b.getType().equals(Material.WALL_SIGN))) {
+		if(b != null && (b.getType().equals(Material.SIGN_POST) 
+				|| b.getType().equals(Material.WALL_SIGN))) {
 			
 			Sign sign = (Sign) b.getState();
 			
@@ -135,9 +145,9 @@ public class SignManager {
 			
 			GameFlag flag = plugin.getStatusManager().getStatusFlag(worldname);
 			switch(flag) {
-				case WAITING: output = ChatColor.GREEN + plugin.getLanguageManager().getString("signs.waiting"); break;
-				case STARTED: output = ChatColor.GOLD  + plugin.getLanguageManager().getString("signs.started"); break;
-				case FROZEN:  output = ChatColor.RED   + plugin.getLanguageManager().getString("signs.frozen");  break;
+				case WAITING: output = ChatColor.GREEN + language.getString("signs.waiting"); break;
+				case STARTED: output = ChatColor.GOLD  + language.getString("signs.started"); break;
+				case FROZEN:  output = ChatColor.RED   + language.getString("signs.frozen");  break;
 				default:      output = ChatColor.RED   + "ERROR"; break;
 			}
 					
@@ -177,7 +187,8 @@ public class SignManager {
 	}
 
 	public void registerSign(Block b) {
-		if(b != null && (b.getType().equals(Material.SIGN_POST) || b.getType().equals(Material.WALL_SIGN))) {
+		if(b != null && (b.getType().equals(Material.SIGN_POST) 
+				|| b.getType().equals(Material.WALL_SIGN))) {
 			
 			Sign sign = (Sign) b.getState();
 			
