@@ -161,8 +161,6 @@ public class Players implements Listener {
 			if(block.getType().equals(Material.SIGN_POST) 
 					|| block.getType().equals(Material.WALL_SIGN)) {
 				
-				Sign sign = (Sign) block.getState();
-				
 				/* 
 				 *  ---- Join sign
 				 */
@@ -204,7 +202,7 @@ public class Players implements Listener {
 				 *  ---- Sign Registration
 				 */
 				
-				else if(sign.getLine(0).equalsIgnoreCase("[sginfo]") 
+				else if(((Sign)block.getState()).getLine(0).equalsIgnoreCase("[sginfo]") 
 						&& player.hasPermission("survivalgames.signs.sginfo")) {
 					plugin.getSignManager().registerSign(block);
 				}
