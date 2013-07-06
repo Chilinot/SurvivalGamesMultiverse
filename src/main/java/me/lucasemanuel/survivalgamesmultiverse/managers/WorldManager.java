@@ -31,31 +31,18 @@
 
 package me.lucasemanuel.survivalgamesmultiverse.managers;
 
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
-import me.desht.dhutils.block.CraftMassBlockUpdate;
-import me.desht.dhutils.block.MassBlockUpdate;
-
 import me.lucasemanuel.survivalgamesmultiverse.Main;
+import me.lucasemanuel.survivalgamesmultiverse.misc.GameWorld;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
-import me.lucasemanuel.survivalgamesmultiverse.utils.LoggedBlock;
-import me.lucasemanuel.survivalgamesmultiverse.utils.LoggedEntity;
 
 public class WorldManager {
 
@@ -158,122 +145,5 @@ public class WorldManager {
 			return game.allowHealthRegen();
 		else
 			return true;
-	}
-}
-
-class GameWorld {
-	
-	private Main plugin;
-	private ConsoleLogger logger;
-	
-	private final World world;
-	private boolean health_regen;
-	
-	private HashMap<Location, LoggedBlock> log_block          = new HashMap<Location, LoggedBlock>();
-	private HashMap<UUID, LoggedEntity>    log_entity         = new HashMap<UUID, LoggedEntity>();
-	private HashSet<Entity>                log_entity_removal = new HashSet<Entity>();
-	
-	// Entities that shouldn't be removed on world reset
-	private static final EntityType[] nonremovable = new EntityType[] { 
-			EntityType.PLAYER, 
-			EntityType.PAINTING,
-			EntityType.ITEM_FRAME
-	};
-	
-	public GameWorld(Main plugin, ConsoleLogger logger, World w) {
-		this.plugin = plugin;
-		this.logger = logger;
-		this.world  = w;
-		
-		health_regen = plugin.getConfig().getBoolean("worlds." + world.getName() + ".enable_healthregeneration");
-	}
-	
-	public void logBlock(Block b, boolean placed) {
-		
-		Location l = b.getLocation();
-		
-		if (!log_block.containsKey(l)) {
-
-			Material material = placed ? Material.AIR : b.getType();
-
-			String[] sign_lines = null;
-
-			if (b.getType() == Material.WALL_SIGN || b.getType() == Material.SIGN_POST) {
-				sign_lines = ((Sign) b.getState()).getLines();
-			}
-
-			log_block.put(l, new LoggedBlock(b.getWorld().getName(), b.getX(), b.getY(), b.getZ(), material, b.getData(), sign_lines));
-			logger.debug("Logging block :: " + b.getWorld().getName() + " " + b.getX() + " " + b.getY() + " " + b.getZ() + " " + material + " " + b.getData() + " " + sign_lines);
-		}
-	}
-	
-	public void logEntity(Entity e, boolean remove) {
-		if(!log_entity.containsKey(e.getUniqueId())) {
-			if(remove) {
-				log_entity_removal.add(e);
-				log_entity.put(e.getUniqueId(), null);
-			}
-			else {
-				log_entity.put(e.getUniqueId(), new LoggedEntity(e));
-			}
-			logger.debug("Logged entity " + e.getType() + " " + e.getLocation());
-		}
-	}
-	
-	public void resetWorld() {
-		
-		logger.debug("Resetting world: " + world.getName());
-		
-		MassBlockUpdate mbu = CraftMassBlockUpdate.createMassBlockUpdater(plugin, world);
-
-		for(LoggedBlock block : log_block.values()) {
-			block.reset(mbu);
-		}
-		
-		for(LoggedEntity entity : log_entity.values()) {
-			if(entity != null)
-				entity.reset();
-		}
-		
-		mbu.notifyClients();
-
-		plugin.getServer().getScheduler().runTask(plugin, new Runnable() {
-			public void run() {
-				clearEntities();
-			}
-		});
-
-		log_block.clear();
-		log_entity.clear();
-	}
-	
-	public void clearEntities() {
-		Set<EntityType> skip = EnumSet.noneOf(EntityType.class);
-		Collections.addAll(skip, nonremovable);
-		
-		// Clear all logged entities
-		for(Entity e : log_entity_removal) {
-			if(e != null)
-				e.remove();
-		}
-		
-		log_entity_removal.clear();
-
-		// Clear the remaining basic entities
-		for (Entity entity : world.getEntities()) {
-			
-			if(skip.contains(entity.getType()))
-				continue;
-
-			entity.remove();
-		}
-	}
-	
-	public boolean allowHealthRegen() {
-		return health_regen;
-	}
-	
-	public String getWorldname() {
-		return world.getName();
 	}
 }

@@ -28,7 +28,7 @@
  * 
  */
 
-package me.lucasemanuel.survivalgamesmultiverse.utils;
+package me.lucasemanuel.survivalgamesmultiverse.misc;
 
 import me.desht.dhutils.block.MassBlockUpdate;
 
