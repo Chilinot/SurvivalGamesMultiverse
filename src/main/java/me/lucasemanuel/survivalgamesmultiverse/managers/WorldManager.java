@@ -146,4 +146,12 @@ public class WorldManager {
 		else
 			return true;
 	}
+	
+	public boolean allowBlock(Block b) {
+		GameWorld game = getGameWorld(b.getWorld().getName());
+		if(game != null) {
+			return game.allowBlock(b);
+		}
+		return true;
+	}
 }

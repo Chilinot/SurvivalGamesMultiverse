@@ -46,11 +46,12 @@ public class Config {
 		FileConfiguration config = plugin.getConfig();
 		boolean save = false;
 		
-		// Fix old entries
+		// -- Fix old entries
 		if(config.contains("worldnames")) {
 			for(String name : config.getStringList("worldnames")) {
 				config.set("worlds." + name + ".players_to_wait_for", 2);
 				config.set("worlds." + name + ".enable_healthregeneration", true);
+				config.set("worlds." + name + ".blockfilter", false);
 			}
 			
 			// Remove the now obsolete entry
@@ -59,7 +60,15 @@ public class Config {
 			save = true;
 		}
 		
-		// Default entries
+		// Add .blockfilter to already configure worlds
+		for(String key : config.getConfigurationSection("worlds").getKeys(false)) {
+			if(!config.contains("worlds." + key + ".blockfilter")) {
+				config.set("worlds." + key + ".blockfilter", false);
+				save = true;
+			}
+		}
+		
+		// -- Default entries
 		
 		HashMap<String, Object> defaults = new HashMap<String, Object>() {{
 			

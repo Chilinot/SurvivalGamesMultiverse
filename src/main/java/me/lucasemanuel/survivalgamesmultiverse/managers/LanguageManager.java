@@ -89,6 +89,9 @@ public class LanguageManager {
 				put("sgplayersNoonealive",    "No players alive!");
 				put("sgplayersIncorrect",     "You need to be in a gameworld, or enter the name of one!");
 				
+				// Blocks
+				put("nonAllowedBlock",        "You are not allowed to break/place this block!");
+				
 				// StatusManager
 				put("waitingForPlayers",      "Waiting for more players!");
 				put("timeleft",               "seconds left until game starts.");

@@ -37,6 +37,7 @@ import java.util.Set;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -51,6 +52,7 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 
 import me.lucasemanuel.survivalgamesmultiverse.Main;
 import me.lucasemanuel.survivalgamesmultiverse.managers.StatusManager.GameFlag;
+import me.lucasemanuel.survivalgamesmultiverse.managers.WorldManager;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
 
 public class Blocks implements Listener {
@@ -81,16 +83,22 @@ public class Blocks implements Listener {
 	@EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled=true)
 	public void onBlockPlace(BlockPlaceEvent event) {
 		
+		WorldManager wm = plugin.getWorldManager();
+		
 		Block block = event.getBlock();
 		
-		if(plugin.getWorldManager().isGameWorld(block.getWorld())) {
+		if(wm.isGameWorld(block.getWorld())) {
 			if(plugin.getStatusManager().getStatusFlag(block.getWorld().getName()) == GameFlag.STARTED 
 					|| event.getPlayer().hasPermission("survivalgames.ignore.blockfilter")) {
-					
-				plugin.getWorldManager().logBlock(block, true);
-				
-				if(block.getType().equals(Material.CHEST))
-					plugin.getChestManager().addChestToLog(block.getLocation());
+				if(wm.allowBlock(block)) {
+					wm.logBlock(block, true);
+					if(block.getType().equals(Material.CHEST))
+						plugin.getChestManager().addChestToLog(block.getLocation());
+				}
+				else {
+					event.getPlayer().sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("nonAllowedBlock"));
+					event.setCancelled(true);
+				}
 			}
 			else {
 				event.getPlayer().sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("gameHasNotStartedYet"));
@@ -102,16 +110,24 @@ public class Blocks implements Listener {
 	@EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled=true)
 	public void onBlockBreak(BlockBreakEvent event) {
 		
-		Block block = event.getBlock();
+		WorldManager wm = plugin.getWorldManager();
 		
-		if(plugin.getWorldManager().isGameWorld(block.getWorld())) {
+		Player player = event.getPlayer();
+		Block block   = event.getBlock();
+		
+		if(wm.isGameWorld(block.getWorld())) {
 			if(plugin.getStatusManager().getStatusFlag(block.getWorld().getName()) == GameFlag.STARTED 
-					|| event.getPlayer().hasPermission("survivalgames.ignore.blockfilter")) {
-				
-				plugin.getWorldManager().logBlock(block, false);
+					|| player.hasPermission("survivalgames.ignore.blockfilter")) {
+				if(wm.allowBlock(block)) {
+					wm.logBlock(block, false);
+				}
+				else {
+					player.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("nonAllowedBlock"));
+					event.setCancelled(true);
+				}
 			}
 			else {
-				event.getPlayer().sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("gameHasNotStartedYet"));
+				player.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString("gameHasNotStartedYet"));
 				event.setCancelled(true);
 			}
 		}
