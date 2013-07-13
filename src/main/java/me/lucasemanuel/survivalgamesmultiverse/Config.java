@@ -57,14 +57,19 @@ public class Config {
 			// Remove the now obsolete entry
 			config.set("worldnames", null);
 			
-			save = true;
+			// Save the config, to make sure the rest of the checks don't fail.
+			plugin.saveConfig();
 		}
 		
-		// Add .blockfilter to already configure worlds
-		for(String key : config.getConfigurationSection("worlds").getKeys(false)) {
-			if(!config.contains("worlds." + key + ".blockfilter")) {
-				config.set("worlds." + key + ".blockfilter", false);
-				save = true;
+		// Add .blockfilter to already configured worlds
+		if(config.contains("worlds")) {
+			for(String key : config.getConfigurationSection("worlds").getKeys(false)) {
+				if(!config.contains("worlds." + key + ".blockfilter")) {
+					config.set("worlds." + key + ".blockfilter", false);
+					save = true;
+				}
+				
+				plugin.saveConfig();
 			}
 		}
 		
@@ -104,8 +109,10 @@ public class Config {
 		if(!config.contains("worlds")) {
 			config.set("worlds.survivalgames1.players_to_wait_for", 2);
 			config.set("worlds.survivalgames1.enable_healthregeneration", true);
+			config.set("worlds.survivalgames1.blockfilter", false);
 			config.set("worlds.survivalgames2.players_to_wait_for", 2);
 			config.set("worlds.survivalgames2.enable_healthregeneration", true);
+			config.set("worlds.survivalgames2.blockfilter", false);
 			save = true;
 		}
 		
