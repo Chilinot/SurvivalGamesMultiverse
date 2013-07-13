@@ -79,27 +79,29 @@ public class GameWorld {
 		// Load blockfilter
 		String materials = plugin.getConfig().getString("worlds." + world.getName() + ".blockfilter");
 		
-		String[] list = materials.split(", ");
+		if(materials != null) {
+			String[] list = materials.split(", ");
 			
-		for(String s : list) {
-			
-			if(s.equalsIgnoreCase("false")) {
-				logger.info("Blockfilter disabled for world " + world.getName());
-				blockfilter = null; // Just to make sure it is disabled.
-				break;
-			}
-			
-			// Remove any data added by user since it can't handle that right now
-			if(s.contains(":"))
-				s = s.split(":")[0];
-			
-			try {
-				int id = Integer.parseInt(s);
-				addMaterialToFilter(id);
-			}
-			catch(NumberFormatException e) {
-				logger.severe("Incorrectly formatted blockfilter for world \"" + world.getName() + "\" :: ENTRY IS NOT A VALID MATERIAL-ID: ENTRY = \"" + s + "\"");
-				continue;
+			for(String s : list) {
+				
+				if(s.equalsIgnoreCase("false")) {
+					logger.info("Blockfilter disabled for world " + world.getName());
+					blockfilter = null; // Just to make sure it is disabled.
+					break;
+				}
+				
+				// Remove any data added by user since it can't handle that right now
+				if(s.contains(":"))
+					s = s.split(":")[0];
+				
+				try {
+					int id = Integer.parseInt(s);
+					addMaterialToFilter(id);
+				}
+				catch(NumberFormatException e) {
+					logger.severe("Incorrectly formatted blockfilter for world \"" + world.getName() + "\" :: ENTRY IS NOT A VALID MATERIAL-ID: ENTRY = \"" + s + "\"");
+					continue;
+				}
 			}
 		}
 	}

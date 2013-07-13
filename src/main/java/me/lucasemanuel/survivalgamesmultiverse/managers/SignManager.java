@@ -77,13 +77,29 @@ public class SignManager {
 				
 				Block block = l.getBlock();
 				
+				String error = null;
+				
 				if(block != null) {
 					if(block.getType().equals(Material.SIGN_POST) 
 							|| block.getType().equals(Material.WALL_SIGN)) {
-						signs.put(block, entry.getValue());
+						
+						String worldname = ((Sign) block.getState()).getLine(0);
+						World w = Bukkit.getWorld(worldname);
+						
+						if(w != null && plugin.getWorldManager().isGameWorld(w)) {
+							signs.put(block, entry.getValue());
+						}
+						else {
+							error = "Loaded sign is for a non-registered gameworld! Gameworld=" + worldname;
+						}
 					}
 					else {
-						logger.warning("Loaded block not a sign! Material: " + block.getType());
+						error = "Loaded sign is no longer a sign! Material=" + block.getType();
+					}
+					
+					if(error != null) {
+						logger.warning(error);
+						logger.warning("Sign will now be removed from the savefile!");
 						
 						new BukkitRunnable() {
 							public void run() {
