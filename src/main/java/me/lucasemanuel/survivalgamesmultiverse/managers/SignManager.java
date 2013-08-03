@@ -44,7 +44,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.lucasemanuel.survivalgamesmultiverse.Main;
-import me.lucasemanuel.survivalgamesmultiverse.managers.StatusManager.GameFlag;
+import me.lucasemanuel.survivalgamesmultiverse.managers.StatusManager.StatusFlag;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
 import me.lucasemanuel.survivalgamesmultiverse.utils.SerializedLocation;
 
@@ -152,7 +152,7 @@ public class SignManager {
 			
 			String output = "";
 			
-			GameFlag flag = plugin.getStatusManager().getStatusFlag(worldname);
+			StatusFlag flag = plugin.getStatusManager().getStatusFlag(worldname);
 			switch(flag) {
 				case WAITING: output = ChatColor.GREEN + plugin.getLanguageManager().getString("signs.waiting"); break;
 				case STARTED: output = ChatColor.GOLD  + plugin.getLanguageManager().getString("signs.started"); break;

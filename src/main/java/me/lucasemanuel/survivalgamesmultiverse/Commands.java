@@ -38,7 +38,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.lucasemanuel.survivalgamesmultiverse.managers.StatusManager.GameFlag;
+import me.lucasemanuel.survivalgamesmultiverse.managers.StatusManager.StatusFlag;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
 
 public class Commands implements CommandExecutor {
@@ -192,7 +192,7 @@ public class Commands implements CommandExecutor {
 		plugin.getStatsManager().removeScoreboard(player.getName());
 		plugin.getSignManager().updateSigns();
 		
-		if(plugin.getStatusManager().getStatusFlag(player.getWorld().getName()) == GameFlag.STARTED) {
+		if(plugin.getStatusManager().getStatusFlag(player.getWorld().getName()) == StatusFlag.STARTED) {
 			plugin.gameover(player.getWorld());
 		}
 		else {

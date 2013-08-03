@@ -38,13 +38,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
 import me.lucasemanuel.survivalgamesmultiverse.Main;
-import me.lucasemanuel.survivalgamesmultiverse.managers.StatusManager.GameFlag;
+import me.lucasemanuel.survivalgamesmultiverse.managers.StatusManager.StatusFlag;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
 
 public class StatusManager {
 	
 	// Statusflags
-	public enum GameFlag {
+	public enum StatusFlag {
 		WAITING, STARTED, FROZEN
 	}
 	
@@ -98,7 +98,7 @@ public class StatusManager {
 			return false;
 	}
 	
-	public GameFlag getStatusFlag(String worldname) {
+	public StatusFlag getStatusFlag(String worldname) {
 		if(games.containsKey(worldname))
 			return games.get(worldname).getFlag();
 		else
@@ -118,7 +118,7 @@ class Game {
 	
 	private final String worldname;
 	private BukkitTask task = null;
-	private GameFlag flag = GameFlag.WAITING;
+	private StatusFlag flag = StatusFlag.WAITING;
 	
 	private long time_of_initiation = 0;
 	private boolean started_10 = false;
@@ -190,7 +190,7 @@ class Game {
 	
 	public void activate() {
 		cancelTask();
-		flag = GameFlag.STARTED;
+		flag = StatusFlag.STARTED;
 		
 		plugin.getWorldManager().broadcast(worldname, plugin.getLanguageManager().getString("gamestarted"));
 		
@@ -246,7 +246,7 @@ class Game {
 		plugin.resetWorld(Bukkit.getWorld(worldname));
 	}
 	
-	public GameFlag getFlag() {
+	public StatusFlag getFlag() {
 		return flag;
 	}
 	
@@ -266,7 +266,7 @@ class Game {
 	
 	public void reset() {
 		cancelTask();
-		flag = GameFlag.WAITING;
+		flag = StatusFlag.WAITING;
 		started_10 = false;
 		time_of_initiation = 0;
 	}

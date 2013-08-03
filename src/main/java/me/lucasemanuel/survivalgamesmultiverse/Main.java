@@ -46,7 +46,7 @@ import me.lucasemanuel.survivalgamesmultiverse.managers.SignManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.StatsManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.StatusManager;
 import me.lucasemanuel.survivalgamesmultiverse.managers.WorldManager;
-import me.lucasemanuel.survivalgamesmultiverse.managers.StatusManager.GameFlag;
+import me.lucasemanuel.survivalgamesmultiverse.managers.StatusManager.StatusFlag;
 import me.lucasemanuel.survivalgamesmultiverse.threading.SQLiteInterface;
 import me.lucasemanuel.survivalgamesmultiverse.utils.ConsoleLogger;
 import me.lucasemanuel.survivalgamesmultiverse.utils.Updater;
@@ -226,7 +226,7 @@ public class Main extends JavaPlugin {
 		
 		if(playermanager.isGameOver(world)) {
 			
-			if(statusmanager.getStatusFlag(world.getName()) == GameFlag.STARTED) {
+			if(statusmanager.getStatusFlag(world.getName()) == StatusFlag.STARTED) {
 				
 				// Broadcast a message to all players in that world that the game is over.
 				worldmanager.broadcast(world, languagemanager.getString("gameover"));
