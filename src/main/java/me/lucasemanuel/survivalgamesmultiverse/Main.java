@@ -236,12 +236,18 @@ public class Main extends JavaPlugin {
 				
 				if(winner != null) {
 					
-					worldmanager.broadcast(world, ChatColor.GOLD + winner.getName() + ChatColor.WHITE + " " + languagemanager.getString("wonTheGame"));
+					worldmanager.broadcast(world, ChatColor.GOLD + winner.getName() 
+							+ ChatColor.WHITE + " " + languagemanager.getString("wonTheGame"));
 					
-					if(!winner.hasPermission("survivalgames.ignore.stats")) statsmanager.addWinPoints(winner.getName(), 1, true);
+					if(!winner.hasPermission("survivalgames.ignore.stats")) 
+						statsmanager.addWinPoints(winner.getName(), 1, true);
 					
 					statsmanager.removeScoreboard(winner.getName());
+					
 					playermanager.removePlayer(winner.getWorld().getName(), winner);
+					playermanager.clearInventory(winner);
+					playermanager.restoreInventory(winner);
+					
 					worldmanager.sendPlayerToLobby(winner);
 				}
 			}
