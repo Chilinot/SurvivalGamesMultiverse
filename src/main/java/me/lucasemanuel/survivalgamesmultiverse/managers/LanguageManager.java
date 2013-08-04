@@ -94,6 +94,8 @@ public class LanguageManager {
 				put("sgplayersNoonealive",    "No players alive!");
 				put("sgplayersIncorrect",     "You need to be in a gameworld, or enter the name of one!");
 				
+				put("compassLock",            "The compass is locking on to the last known location of the closest player...");
+				
 				// Blocks
 				put("nonAllowedBlock",        "You are not allowed to break/place this block!");
 				

@@ -60,6 +60,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -366,6 +367,38 @@ public class Players implements Listener {
 					&& event.getRegainReason().equals(RegainReason.SATIATED)
 					&& !worldmanager.allowHealthRegen(p.getWorld())) {
 				event.setCancelled(true);
+			}
+		}
+	}
+	
+	@EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled=true)
+	public void onPlayerItemHeldEvent(PlayerItemHeldEvent event) {
+		Player p = event.getPlayer();
+		
+		if(worldmanager.isGameWorld(p.getWorld())
+				&& p.getItemInHand().getType().equals(Material.COMPASS)) {
+			
+			Location origin  = p.getLocation();
+			Location closest = null;
+			
+			for(Player temp : playermanager.getPlayerList(p.getWorld().getName())) {
+				
+				// Skip the holder.
+				if(temp == p) continue;
+				
+				if(closest == null) {
+					closest = temp.getLocation();
+					continue;
+				}
+				
+				if(closest.distanceSquared(origin) >= temp.getLocation().distanceSquared(origin)) {
+					closest = temp.getLocation();
+				}
+			}
+			
+			if(closest != null) {
+				p.sendMessage(language.getString("compassLock"));
+				p.setCompassTarget(closest);
 			}
 		}
 	}
