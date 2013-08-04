@@ -68,6 +68,11 @@ public class LanguageManager {
 	}
 
 	private void checkDefaults(FileConfiguration config) {
+		
+		/*
+		 * TODO - Add variables to the strings such as %player% etc.
+		 *      - Add an ability to convert the old language config into the newer one that uses variables.
+		 */
 
 		@SuppressWarnings("serial")
 		HashMap<String, String> defaults = new HashMap<String, String>() {{
@@ -103,7 +108,7 @@ public class LanguageManager {
 				put("secondsTillTheGameEnds", "seconds until the game is cancelled!");
 
 				// Anticheat
-				put("anticheat.disconnect", "was removed due to disconnect!");
+				put("anticheat.disconnect", "was removed due to disconnection!");
 				put("anticheat.teleported", "was removed due to teleportation!");
 
 				// Signs
