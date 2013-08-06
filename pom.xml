@@ -74,6 +74,7 @@
 				<filtering>true</filtering>
 				<includes>
 					<include>*.yml</include>
+					<include>License.txt</include>
 				</includes>
 			</resource>
 		</resources>
