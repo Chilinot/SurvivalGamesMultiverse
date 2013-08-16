@@ -30,8 +30,6 @@
 
 package se.lucasarnstrom.survivalgamesmultiverse.managers;
 
-import java.util.HashMap;
-
 import se.lucasarnstrom.survivalgamesmultiverse.Main;
 import se.lucasarnstrom.survivalgamesmultiverse.utils.ConsoleLogger;
 
@@ -41,12 +39,10 @@ public class AbilityManager {
 		COMPASS;
 	}
 	
-	private Main          plugin;
 	private ConsoleLogger logger;
 	
 	public AbilityManager(Main instance) {
 		logger = new ConsoleLogger("AbilityManager");
-		plugin = instance;
 		
 		logger.debug("Initiated!");
 	}
