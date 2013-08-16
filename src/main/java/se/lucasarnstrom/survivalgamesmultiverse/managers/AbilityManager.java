@@ -44,48 +44,10 @@ public class AbilityManager {
 	private Main          plugin;
 	private ConsoleLogger logger;
 	
-	private HashMap<String, Ability> current_abilities = new HashMap<String, Ability>();
-	
 	public AbilityManager(Main instance) {
 		logger = new ConsoleLogger("AbilityManager");
 		plugin = instance;
 		
 		logger.debug("Initiated!");
-	}
-	
-	public boolean hasAbilityAlready(String player_name) {
-		return current_abilities.containsKey(player_name);
-	}
-	
-	/*
-	 *  -- Abstract ability
-	 */
-	private abstract class Ability {
-		
-		public final String ABILITY_NAME;
-		public final String PLAYER_NAME;
-		
-		public Ability(String name, String player_name) {
-			this.ABILITY_NAME = name;
-			this.PLAYER_NAME = player_name;
-		}
-		
-		public abstract void run();
-	}
-
-	/*
-	 *  -- Abilities
-	 */
-	
-	private class Compass extends Ability {
-
-		public Compass(String player_name) {
-			super("Compass", player_name);
-		}
-
-		@Override
-		public void run() {
-			
-		}
 	}
 }
