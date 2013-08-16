@@ -75,10 +75,9 @@ public class LoggedEntity {
 	
 	public void reset() {
 		
-		BlockFace face = (BlockFace) data.get("FacingDirection");
-		
 		switch(type) {
 			case ITEM_FRAME:
+				BlockFace face = (BlockFace) data.get("FacingDirection");
 				ItemFrame i = location.getWorld().spawn(location.getBlock().getRelative(face.getOppositeFace()).getLocation(), ItemFrame.class);
 				i.teleport(location);
 				i.setRotation((Rotation) data.get("Rotation"));
@@ -87,10 +86,11 @@ public class LoggedEntity {
 				break;
 			
 			case PAINTING:
+				BlockFace face2 = (BlockFace) data.get("FacingDirection");
 				Art art = (Art) data.get("Art");
-				Painting p = location.getWorld().spawn(location.getBlock().getRelative(face.getOppositeFace()).getLocation(), Painting.class);
-				p.teleport(calculatePainting(art, face, location));
-				p.setFacingDirection(face, true);
+				Painting p = location.getWorld().spawn(location.getBlock().getRelative(face2.getOppositeFace()).getLocation(), Painting.class);
+				p.teleport(calculatePainting(art, face2, location));
+				p.setFacingDirection(face2, true);
 				p.setArt(art, true);
 				break;
 				
