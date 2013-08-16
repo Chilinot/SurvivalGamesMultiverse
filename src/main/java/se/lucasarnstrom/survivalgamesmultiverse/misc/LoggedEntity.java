@@ -62,7 +62,6 @@ public class LoggedEntity {
 			if(h instanceof Painting) {
 				Painting p = (Painting) h;
 				data.put("Art", p.getArt());
-				System.out.println("" + p.getArt());
 			}
 			else if(h instanceof ItemFrame) {
 				ItemFrame i = (ItemFrame) h;
