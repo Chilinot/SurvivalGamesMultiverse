@@ -269,8 +269,7 @@ public class Serialize {
 	/**
 	 * Locates and returns the values in the search string using the given regex-pattern.
 	 * 
-	 * @param regex - Expression to use when searching.
-	 * @param search - The string you want to search through.
+	 * @param pattern - The SerializePatterns value to search for.
 	 * @return Returns ArrayList containing found strings.
 	 */
 	public static ArrayList<String> locate(SerializePatterns pattern, String search) {
