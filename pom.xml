@@ -120,11 +120,11 @@
 							<relocations>
 								<relocation>
 									<pattern>me.desht.dhutils</pattern>
-									<shadedPattern>me.lucasemanuel.survivalgamesmultiverse.dhutils</shadedPattern>
+									<shadedPattern>se.lucasarnstrom.survivalgamesmultiverse.dhutils</shadedPattern>
 								</relocation>
 								<relocation>
 									<pattern>org.mcstats</pattern>
-									<shadedPattern>me.lucasemanuel.survivalgamesmultiverse.mcstats</shadedPattern>
+									<shadedPattern>se.lucasarnstrom.survivalgamesmultiverse.mcstats</shadedPattern>
 								</relocation>
 							</relocations>
 						</configuration>
