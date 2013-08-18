@@ -104,6 +104,11 @@ public class Config {
 			put("database.settings.port", 3306);
 			put("database.settings.database", "survivalgames");
 			put("database.settings.tablename", "sg_stats");
+			
+			// Abilities
+			put("abilities.enabled", true);
+			put("abilities.compass.enabled", true);
+			put("abilities.compass.duration_in_seconds", 30);
 		}};
 		
 		if(!config.contains("worlds")) {

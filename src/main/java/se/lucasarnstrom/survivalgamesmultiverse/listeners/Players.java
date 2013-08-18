@@ -371,37 +371,37 @@ public class Players implements Listener {
 		}
 	}
 	
-	@EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled=true)
-	public void onPlayerItemHeldEvent(PlayerItemHeldEvent event) {
-		Player p = event.getPlayer();
-		
-		if(worldmanager.isGameWorld(p.getWorld())
-				&& p.getItemInHand().getType().equals(Material.COMPASS)) {
-			
-			Location origin  = p.getLocation();
-			Location closest = null;
-			
-			for(Player temp : playermanager.getPlayerList(p.getWorld().getName())) {
-				
-				// Skip the holder.
-				if(temp == p) continue;
-				
-				if(closest == null) {
-					closest = temp.getLocation();
-					continue;
-				}
-				
-				if(closest.distanceSquared(origin) >= temp.getLocation().distanceSquared(origin)) {
-					closest = temp.getLocation();
-				}
-			}
-			
-			if(closest != null) {
-				p.sendMessage(language.getString("compassLock"));
-				p.setCompassTarget(closest);
-			}
-		}
-	}
+//	@EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled=true)
+//	public void onPlayerItemHeldEvent(PlayerItemHeldEvent event) {
+//		Player p = event.getPlayer();
+//		
+//		if(worldmanager.isGameWorld(p.getWorld())
+//				&& p.getItemInHand().getType().equals(Material.COMPASS)) {
+//			
+//			Location origin  = p.getLocation();
+//			Location closest = null;
+//			
+//			for(Player temp : playermanager.getPlayerList(p.getWorld().getName())) {
+//				
+//				// Skip the holder.
+//				if(temp == p) continue;
+//				
+//				if(closest == null) {
+//					closest = temp.getLocation();
+//					continue;
+//				}
+//				
+//				if(closest.distanceSquared(origin) >= temp.getLocation().distanceSquared(origin)) {
+//					closest = temp.getLocation();
+//				}
+//			}
+//			
+//			if(closest != null) {
+//				p.sendMessage(language.getString("compassLock"));
+//				p.setCompassTarget(closest);
+//			}
+//		}
+//	}
 	
 	@EventHandler
 	public void onPlayerRemove(PlayerRemoveEvent event) {
