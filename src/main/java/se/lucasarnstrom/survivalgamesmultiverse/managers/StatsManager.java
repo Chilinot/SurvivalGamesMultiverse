@@ -51,7 +51,8 @@ public class StatsManager {
 	private Main plugin;
 	private ConsoleLogger logger;
 	
-	private HashMap<String, Score[]> playerstats;
+	private HashMap<String, Score[]>    playerstats   = new HashMap<String, Score[]>();
+	private HashMap<String, Scoreboard> backup_boards = new HashMap<String, Scoreboard>();
 	
 	private final String username;
 	private final String password;
@@ -68,8 +69,6 @@ public class StatsManager {
 		plugin = instance;
 		
 		logger.debug("Loading settings");
-		
-		playerstats = new HashMap<String, Score[]>();
 		
 		username  = instance.getConfig().getString("database.auth.username");
 		password  = instance.getConfig().getString("database.auth.password");
@@ -121,7 +120,10 @@ public class StatsManager {
 			
 			playerstats.put(playername, s);
 			
-			Bukkit.getPlayerExact(playername).setScoreboard(board);
+			Player p = Bukkit.getPlayerExact(playername);
+			
+			backup_boards.put(playername, p.getScoreboard());
+			p.setScoreboard(board);
 			
 			plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 				public void run() {
@@ -136,7 +138,8 @@ public class StatsManager {
 		
 		if(player != null && playerstats.containsKey(playername)) {
 			
-			player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+			player.setScoreboard(backup_boards.get(playername));
+			backup_boards.remove(playername);
 			playerstats.remove(playername);
 			
 			return true;
