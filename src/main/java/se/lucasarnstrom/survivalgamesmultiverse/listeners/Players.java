@@ -132,7 +132,9 @@ public class Players implements Listener {
 		Location to     = event.getTo();
 		
 		// Teleport in to gameworld
-		if(worldmanager.isGameWorld(to.getWorld()) && !worldmanager.isGameWorld(from.getWorld())) {
+		if(worldmanager.isGameWorld(to.getWorld()) 
+				&& !worldmanager.isGameWorld(from.getWorld())
+				&& !player.hasPermission("survivalgames.ignore.teleport_blocking")) {
 			player.sendMessage(ChatColor.RED + language.getString("blocked_teleportation_to_gameworld"));
 			event.setCancelled(true);
 		}

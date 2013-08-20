@@ -48,6 +48,9 @@ permissions:
     default: true
   survivalgames.commands.sgleave:
     default: true
+  survivalgames.ignore.teleport_blocking:
+    description: Players with this perm will be allowed to teleport in to a gameworld.
+    default: op
   survivalgames.ignore.commandfilter:
     description: Players with this perm will be allowed to use any command while playing SG.
     default: op
