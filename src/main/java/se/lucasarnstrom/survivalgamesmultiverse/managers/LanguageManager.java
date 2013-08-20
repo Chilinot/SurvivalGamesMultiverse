@@ -94,8 +94,6 @@ public class LanguageManager {
 				put("sgplayersNoonealive",    "No players alive!");
 				put("sgplayersIncorrect",     "You need to be in a gameworld, or enter the name of one!");
 				
-				put("compassLock",            "The compass is locking on to the last known location of the closest player...");
-				
 				// Blocks
 				put("nonAllowedBlock",        "You are not allowed to break/place this block!");
 				
@@ -118,6 +116,10 @@ public class LanguageManager {
 				put("signs.waiting",       "Waiting");
 				put("signs.playersIngame", "Players Ingame");
 				put("signs.frozen",        "Frozen");
+				
+				// Misc
+				put("compassLock",                        "The compass is locking on to the last known location of the closest player...");
+				put("blocked_teleportation_to_gameworld", "You are not allowed to teleport into this world!");
 				
 				// Scrap
 				put("Join_Blocked_Frozen", "This world is temporary frozen!");

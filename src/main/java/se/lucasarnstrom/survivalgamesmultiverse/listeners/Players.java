@@ -131,8 +131,18 @@ public class Players implements Listener {
 		Location from   = event.getFrom();
 		Location to     = event.getTo();
 		
-		if(worldmanager.isGameWorld(from.getWorld()) && !worldmanager.isGameWorld(to.getWorld())) {
+		// Teleport in to gameworld
+		if(worldmanager.isGameWorld(to.getWorld()) && !worldmanager.isGameWorld(from.getWorld())) {
+			player.sendMessage(ChatColor.RED + language.getString("blocked_teleportation_to_gameworld"));
+			event.setCancelled(true);
+		}
+		
+		// Teleport out of gameworld
+		else if(worldmanager.isGameWorld(from.getWorld()) && !worldmanager.isGameWorld(to.getWorld())) {
+			
+			// Restore the players inventory even if he/she wasn't in the game. Just to be sure.
 			playermanager.restoreInventory(player);
+			
 			if(playermanager.isInGame(player)) {
 				logger.debug("Removing player " + player.getName() + " due to teleportation!");
 				
