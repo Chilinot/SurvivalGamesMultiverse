@@ -123,6 +123,7 @@ public class AbilityManager {
 		public void activate() {
 			final Player p = Bukkit.getPlayerExact(PLAYERNAME);
 			
+			//TODO remove debug
 			p.sendMessage("You have activated the compass ability!");
 			p.sendMessage("You can use the compass in your inventory to track players for " + plugin.getConfig().getLong("abilities.compass.duration_in_seconds") + " seconds.");
 			
