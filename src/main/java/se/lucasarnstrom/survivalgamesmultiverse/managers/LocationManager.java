@@ -110,6 +110,24 @@ public class LocationManager {
 		}
 	}
 	
+	public boolean areThereLocationsLeft(String worldname) {
+		
+		HashMap<Location, Boolean> locationlist = locations.get(worldname).get("main");
+		
+		if(locationlist == null) {
+			logger.severe("No saved locations for world: " + worldname);
+			return false;
+		}
+		
+		for(Boolean value : locationlist.values()) {
+			if(value == true) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	public boolean tpToStart(Player player, String worldname) {
 		
 		HashMap<Location, Boolean> locationlist = locations.get(worldname).get("main");

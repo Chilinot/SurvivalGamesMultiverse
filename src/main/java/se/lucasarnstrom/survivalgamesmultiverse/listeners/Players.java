@@ -134,6 +134,7 @@ public class Players implements Listener {
 		// Teleport in to gameworld
 		if(worldmanager.isGameWorld(to.getWorld()) 
 				&& !worldmanager.isGameWorld(from.getWorld())
+				&& !playermanager.isInGame(player)
 				&& !player.hasPermission("survivalgames.ignore.teleport_blocking")) {
 			player.sendMessage(ChatColor.RED + language.getString("blocked_teleportation_to_gameworld"));
 			event.setCancelled(true);
@@ -183,9 +184,10 @@ public class Players implements Listener {
 				if(worldname != null && worldmanager.isGameWorld(Bukkit.getWorld(worldname))) {
 					if(plugin.getStatusManager().getStatusFlag(worldname) == StatusFlag.WAITING) {
 						if(playermanager.isInGame(player) == false) {
-							if(plugin.getLocationManager().tpToStart(player, worldname)) {
+							if(plugin.getLocationManager().areThereLocationsLeft(worldname)) {
 								
 								playermanager.addPlayer(worldname, player);
+								plugin.getLocationManager().tpToStart(player, worldname);
 								
 								plugin.getStatsManager().checkAndAddScoreboard(player.getName());
 								
