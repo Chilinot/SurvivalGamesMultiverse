@@ -186,6 +186,8 @@ public class Players implements Listener {
 						if(playermanager.isInGame(player) == false) {
 							if(plugin.getLocationManager().areThereLocationsLeft(worldname)) {
 								
+								// The order of these method-calls are very important!
+								
 								playermanager.addPlayer(worldname, player);
 								plugin.getLocationManager().tpToStart(player, worldname);
 								
