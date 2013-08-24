@@ -35,6 +35,7 @@ import java.util.HashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import se.lucasarnstrom.survivalgamesmultiverse.Main;
@@ -196,6 +197,10 @@ class Game {
 		
 		plugin.getSignManager().updateSigns();
 		
+		/*
+		 *  --- Arena
+		 */
+		
 		long delay = countdown_arena * 20; delay = delay <= 100 ? delay : delay-100;
 		
 		setTask(plugin.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
@@ -210,6 +215,25 @@ class Game {
 				}, 100L));
 			}
 		}, delay));
+		
+		/*
+		 *  --- Grace period
+		 */
+		
+		if(plugin.getConfig().getBoolean("worlds." + worldname + ".grace.enabled")) {
+			
+			int time = plugin.getConfig().getInt("worlds." + worldname + ".grace.time_in_seconds");
+			
+			plugin.getWorldManager().setAllowPVP(worldname, false);
+			plugin.getWorldManager().broadcast(worldname, plugin.getLanguageManager().getString("grace_enabled") + time + "s.");
+			
+			new BukkitRunnable() {
+				public void run() {
+					plugin.getWorldManager().setAllowPVP(worldname, true);
+					plugin.getWorldManager().broadcast(worldname, plugin.getLanguageManager().getString("grace_pvp_activated"));
+				}
+			}.runTaskLater(plugin, (long) (time * 20));
+		}
 	}
 	
 	private void arena() {

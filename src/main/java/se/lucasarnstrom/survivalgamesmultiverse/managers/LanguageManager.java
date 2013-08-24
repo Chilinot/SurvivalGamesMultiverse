@@ -106,6 +106,8 @@ public class LanguageManager {
 				put("sentYouToArena",         "You where sent to the arena!");
 				put("killedSendingArena",     "No locations left in the arena! You where killed.");
 				put("secondsTillTheGameEnds", "seconds until the game is cancelled!");
+				put("grace_enabled",          "PVP will be enabled in ");
+				put("grace_pvp_activated",    "PVP has been activated!");
 
 				// Anticheat
 				put("anticheat.disconnect", "was removed due to disconnection!");

@@ -366,10 +366,12 @@ public class Players implements Listener {
 			Player player = (Player) event.getEntity();
 			
 			if(worldmanager.isGameWorld(player.getWorld())
-					&& playermanager.isInGame(player)
-					&& plugin.getStatusManager().getStatusFlag(player.getWorld().getName()) == StatusFlag.WAITING) {
+					&& playermanager.isInGame(player)) {
 				
-				event.setCancelled(true);
+				if(plugin.getStatusManager().getStatusFlag(player.getWorld().getName()) == StatusFlag.WAITING
+						|| !worldmanager.allowPVP(player.getWorld())) {
+					event.setCancelled(true);
+				}
 			}
 		}
 	}

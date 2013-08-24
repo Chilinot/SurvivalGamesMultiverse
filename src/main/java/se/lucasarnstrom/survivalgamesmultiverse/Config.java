@@ -46,30 +46,47 @@ public class Config {
 		FileConfiguration config = plugin.getConfig();
 		boolean save = false;
 		
+		HashMap<String, Object> world_defaults = new HashMap<String, Object>() {{
+			put("players_to_wait_for", 2);
+			put("enable_healthregeneration", true);
+			put("blockfilter", false);
+			
+			put("grace.enabled", true);
+			put("grace.time_in_seconds", 15);
+		}};
+		
 		// -- Fix old entries
 		if(config.contains("worldnames")) {
 			for(String name : config.getStringList("worldnames")) {
-				config.set("worlds." + name + ".players_to_wait_for", 2);
-				config.set("worlds." + name + ".enable_healthregeneration", true);
-				config.set("worlds." + name + ".blockfilter", false);
+				for(Entry<String, Object> entry : world_defaults.entrySet()) {
+					config.set("worlds." + name + "." + entry.getKey(), entry.getValue());
+				}
 			}
 			
 			// Remove the now obsolete entry
 			config.set("worldnames", null);
 			
-			// Save the config, to make sure the rest of the checks don't fail.
-			plugin.saveConfig();
+			save = true;
 		}
 		
-		// Add .blockfilter to already configured worlds
+		if(!config.contains("worlds")) {
+			// This doesn't need to be any more specific.
+			config.set("worlds.survivalgames1.players_to_wait_for", 2);
+			config.set("worlds.survivalgames2.players_to_wait_for", 2);
+			save = true;
+		}
+		
+		// Add missing settings to existing worlds.
 		if(config.contains("worlds")) {
-			for(String key : config.getConfigurationSection("worlds").getKeys(false)) {
-				if(!config.contains("worlds." + key + ".blockfilter")) {
-					config.set("worlds." + key + ".blockfilter", false);
-					save = true;
+			for(String name : config.getConfigurationSection("worlds").getKeys(false)) {
+				
+				for(Entry<String, Object> entry : world_defaults.entrySet()) {
+					String key = "worlds." + name + "." + entry.getKey();
+					if(!config.contains(key))
+						config.set(key, entry.getValue());
 				}
 				
-				plugin.saveConfig();
+				save = true;
 			}
 		}
 		
@@ -80,6 +97,11 @@ public class Config {
 			// General
 			put("debug", false);
 			put("lobbyworld", "world");
+			
+			put("allowedCommandsInGame", new ArrayList<String>() {{ 
+				add("/sgplayers");
+				add("/sgleave");
+			}});
 			
 			// Update
 			put("auto-update", true);
@@ -110,25 +132,6 @@ public class Config {
 			put("abilities.compass.enabled", true);
 			put("abilities.compass.duration_in_seconds", 30);
 		}};
-		
-		if(!config.contains("worlds")) {
-			config.set("worlds.survivalgames1.players_to_wait_for", 2);
-			config.set("worlds.survivalgames1.enable_healthregeneration", true);
-			config.set("worlds.survivalgames1.blockfilter", false);
-			config.set("worlds.survivalgames2.players_to_wait_for", 2);
-			config.set("worlds.survivalgames2.enable_healthregeneration", true);
-			config.set("worlds.survivalgames2.blockfilter", false);
-			save = true;
-		}
-		
-		if(!config.contains("allowedCommandsInGame")) {
-			ArrayList<String> allowedcommands = new ArrayList<String>() {{ 
-				add("/sgplayers");
-				add("/sgleave");
-			}};
-			config.set("allowedCommandsInGame", allowedcommands);
-			save = true;
-		}
 		
 		for(Entry<String, Object> entry : defaults.entrySet()) {
 			if(!config.contains(entry.getKey())) {

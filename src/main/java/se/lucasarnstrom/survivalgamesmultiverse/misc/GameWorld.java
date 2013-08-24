@@ -55,7 +55,9 @@ public class GameWorld {
 	private ConsoleLogger logger;
 	
 	private final World world;
+	
 	private boolean health_regen;
+	private boolean allow_pvp    = true;
 	
 	private EnumSet<Material> blockfilter = null;
 	
@@ -210,6 +212,14 @@ public class GameWorld {
 			return true;
 		}
 		return false;
+	}
+	
+	public boolean allowPVP() {
+		return allow_pvp;
+	}
+	
+	public void setAllowPVP(boolean value) {
+		allow_pvp = value;
 	}
 	
 	public String getWorldname() {

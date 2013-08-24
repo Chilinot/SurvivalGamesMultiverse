@@ -154,4 +154,19 @@ public class WorldManager {
 		}
 		return true;
 	}
+	
+	public boolean allowPVP(World w) {
+		GameWorld game = getGameWorld(w.getName());
+		if(game != null) {
+			return game.allowPVP();
+		}
+		return true;
+	}
+	
+	public void setAllowPVP(String worldname, boolean value) {
+		GameWorld game = getGameWorld(worldname);
+		if(game != null) {
+			game.setAllowPVP(value);
+		}
+	}
 }
