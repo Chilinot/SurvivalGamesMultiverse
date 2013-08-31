@@ -46,6 +46,32 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class Serialize {
 	
+	enum SerializePatterns {
+		
+		INV_POSITION           (1, "([0-9]{1,2});@"),
+		
+		STACK_AMOUNT           (1, "@a:([0-9]{1,2})!"),
+		STACK_TYPE             (1, "t:([0-9]{1,})!"),
+		STACK_DATA             (1, "D:([0-9]{1,2})!"),
+		STACK_DURABILITY       (1, "d:([0-9]{1,2})!"),
+		STACK_ENCHANTMENTS     (1, "([0-9]{1,2}-[0-9]{1,2})\\+"),
+		STACK_META_DISPLAYNAME (1, "mn:(\\[([0-9]*,)*\\])&"),
+		STACK_META_LORE        (1, "(\\[([0-9]*,)*\\])/"),
+		
+		ENCHANTMENT_ID         (1, "(\\d{1,2})-(\\d{1,2})"),
+		ENCHANTMENT_LEVEL      (2, "(\\d{1,2})-(\\d{1,2})"),
+		
+		ASCII                  (1, "([0-9]{1,3}),");
+		
+		public Pattern pattern;
+		public int groupID;
+		
+		private SerializePatterns(int groupID, String regex) {
+			this.pattern = Pattern.compile(regex);
+			this.groupID = groupID;
+		}
+	}
+	
 	/**
 	 * Serialize an entire inventory into a single string.
 	 * This saves all position data (uses the position in the array).
