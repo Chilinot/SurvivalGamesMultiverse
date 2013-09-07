@@ -62,7 +62,7 @@ public class AbilityManager {
 	
 	public void giveAbility(String playername, Abilities type) {
 		
-		if(plugin.getConfig().getBoolean("abilities.enabled")) {
+		if(plugin.getConfig().getBoolean("abilities.enabled") && !active_abilities.containsKey(playername)) {
 			Ability ability = null;
 			
 			switch(type) {
