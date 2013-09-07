@@ -65,7 +65,9 @@ public class AbilityManager {
 	
 	public boolean giveAbility(String playername, Abilitytype type) {
 		
-		if(plugin.getConfig().getBoolean("abilities.enabled") && !active_abilities.containsKey(playername)) {
+		if(plugin.getConfig().getBoolean("abilities.enabled") 
+				&& plugin.getConfig().getBoolean("worlds." + Bukkit.getPlayerExact(playername).getWorld().getName() + ".enable_abilities")
+				&& !active_abilities.containsKey(playername)) {
 			Ability ability = null;
 			
 			switch(type) {

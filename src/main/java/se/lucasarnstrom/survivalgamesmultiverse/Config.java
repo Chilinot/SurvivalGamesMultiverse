@@ -51,6 +51,8 @@ public class Config {
 			put("enable_healthregeneration", true);
 			put("blockfilter", false);
 			
+			put("enable_abilities", true);
+			
 			put("grace.enabled", true);
 			put("grace.time_in_seconds", 15);
 		}};
