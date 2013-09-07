@@ -112,7 +112,8 @@ public class PlayerManager {
 			player.removePotionEffect(potion.getType());
 		}
 		
-		player.setHealth(20);
+		// Giving setHealth an integer to make it work with older versions of bukkit
+		player.setHealth((int)20);
 		player.setFoodLevel(20);
 		player.setLevel(0);
 		player.setTotalExperience(0);
