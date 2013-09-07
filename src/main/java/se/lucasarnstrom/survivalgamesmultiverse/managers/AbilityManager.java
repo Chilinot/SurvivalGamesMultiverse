@@ -68,6 +68,7 @@ public class AbilityManager {
 		if(plugin.getConfig().getBoolean("abilities.enabled") 
 				&& plugin.getConfig().getBoolean("worlds." + Bukkit.getPlayerExact(playername).getWorld().getName() + ".enable_abilities")
 				&& !active_abilities.containsKey(playername)) {
+			
 			Ability ability = null;
 			
 			switch(type) {
@@ -141,9 +142,11 @@ public class AbilityManager {
 		public void activate() {
 			final Player p = Bukkit.getPlayerExact(PLAYERNAME);
 			
+			int time = plugin.getConfig().getInt("abilities.compass.duration_in_seconds");
+			
 			//TODO remove debug
 			p.sendMessage("You have activated the compass ability!");
-			p.sendMessage("You can use the compass in your inventory to track players for " + plugin.getConfig().getLong("abilities.compass.duration_in_seconds") + " seconds.");
+			p.sendMessage("You can use the compass in your inventory to track players for " + time + " seconds.");
 			
 			final ItemStack compass = new ItemStack(Material.COMPASS, 1);
 			p.getInventory().addItem(compass);
@@ -180,12 +183,7 @@ public class AbilityManager {
 					plugin.getServer().getScheduler().cancelTask(id);
 					p.getInventory().remove(compass);
 				}
-			}.runTaskLater(plugin, plugin.getConfig().getLong("abilities.compass.duration_in_seconds") * 20);
+			}.runTaskLater(plugin, time * 20);
 		}
 	}
 }
-
-
-
-
-
