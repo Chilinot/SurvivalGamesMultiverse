@@ -31,6 +31,7 @@
 package se.lucasarnstrom.survivalgamesmultiverse.managers;
 
 import java.util.HashMap;
+import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -44,7 +45,7 @@ import se.lucasarnstrom.survivalgamesmultiverse.utils.ConsoleLogger;
 
 public class AbilityManager {
 	
-	public enum Abilities {
+	public enum Abilitytype {
 		COMPASS, INVISIBILITY, FORCE, HEALING;
 	}
 	
@@ -53,6 +54,8 @@ public class AbilityManager {
 	
 	private HashMap<String, Ability> active_abilities = new HashMap<String, Ability>();
 	
+	private final Random random = new Random();
+	
 	public AbilityManager(Main instance) {
 		logger = new ConsoleLogger("AbilityManager");
 		plugin = instance;
@@ -60,7 +63,7 @@ public class AbilityManager {
 		logger.debug("Initiated!");
 	}
 	
-	public void giveAbility(String playername, Abilities type) {
+	public boolean giveAbility(String playername, Abilitytype type) {
 		
 		if(plugin.getConfig().getBoolean("abilities.enabled") && !active_abilities.containsKey(playername)) {
 			Ability ability = null;
@@ -86,12 +89,25 @@ public class AbilityManager {
 			if(ability != null) {
 				active_abilities.put(playername, ability);
 				Bukkit.getPlayerExact(playername).sendMessage("You have been given the ability " + ability.getType());
+				
+				return true;
 			}
-			else
+			else {
 				logger.debug("Tried to give ability \"" + type + "\" to player \"" + playername + "\" but it was disabled!");
+				return false;
+			}
 		}
-		else
-			logger.debug("giveAbility() aborted - Abilities are disabled!");
+		
+		logger.debug("giveAbility() aborted - Abilities are disabled!");
+		
+		return false;
+	}
+	
+	public boolean giveRandomAbility(String playername) {
+		
+		Abilitytype[] values = Abilitytype.values();
+		
+		return giveAbility(playername, values[random.nextInt(values.length)]);
 	}
 	
 	/* =================================
@@ -99,16 +115,16 @@ public class AbilityManager {
 	 * ================================= */
 	private abstract class Ability {
 		protected final String PLAYERNAME;
-		protected final Abilities TYPE;
+		protected final Abilitytype TYPE;
 		
-		public Ability(String playername, Abilities type) {
+		public Ability(String playername, Abilitytype type) {
 			PLAYERNAME = playername;
 			TYPE = type;
 		}
 		
 		public abstract void activate();
 		
-		public Abilities getType() {
+		public Abilitytype getType() {
 			return TYPE;
 		}
 	}
@@ -117,7 +133,7 @@ public class AbilityManager {
 	private class Compass extends Ability {
 
 		public Compass(String playername) {
-			super(playername, Abilities.COMPASS);
+			super(playername, Abilitytype.COMPASS);
 		}
 
 		public void activate() {
