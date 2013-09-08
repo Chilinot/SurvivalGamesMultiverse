@@ -138,7 +138,7 @@ public class PlayerManager {
 			final String serial = Serialize.inventoryToString(contents);
 			final String name   = p.getName();
 			
-			logger.debug("Backing up inventory: \"" + serial + "\"");
+			logger.debug("Backing up inventory - PLAYER:\"" + name + "\" - INVENTORY:\"" + serial + "\"");
 			
 			new BukkitRunnable() {
 				@Override
@@ -154,7 +154,7 @@ public class PlayerManager {
 		String serial = plugin.getSQLiteConnector().loadInventory(p.getName());
 		if(serial == null) return;
 		
-		logger.debug("Restoring inventory: \"" + serial + "\"");
+		logger.debug("Restoring inventory - PLAYER:\"" + p.getName() + "\" INVENTORY:\"" + serial + "\"");
 		
 		Map<Integer, ItemStack> map = Serialize.stringToInventory(serial);
 		
