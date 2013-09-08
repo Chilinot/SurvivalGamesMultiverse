@@ -151,6 +151,7 @@ public class Serialize {
 	 * @param stack - The stack to be serialized.
 	 * @return Serialized string.
 	 */
+	@SuppressWarnings("deprecation")
 	public static String itemstackToString(ItemStack stack) {
 		StringBuilder string = new StringBuilder();
 		string.append('@'); // Start string character
@@ -205,6 +206,7 @@ public class Serialize {
 	 * @param serial - Serial to deserialize.
 	 * @return Deserialized ItemStack. Null if deserialization didn't work.
 	 */
+	@SuppressWarnings("deprecation")
 	public static ItemStack stringToItemstack(String serial) {
 		if(!serial.startsWith("@") || !serial.endsWith("#")) return null;
 		
