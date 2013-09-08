@@ -46,6 +46,7 @@ public class LoggedBlock {
 
 	private final String[]	SIGN_LINES;
 
+	@SuppressWarnings("deprecation")
 	public LoggedBlock(String worldname, int x, int y, int z, Material material, byte data, String[] sign_lines) {
 
 		WORLDNAME = worldname;
@@ -59,6 +60,7 @@ public class LoggedBlock {
 		SIGN_LINES = sign_lines;
 	}
 
+	@SuppressWarnings("deprecation")
 	public void reset(MassBlockUpdate mbu) {
 		
 		mbu.setBlock(X, Y, Z, MATERIAL, DATA);

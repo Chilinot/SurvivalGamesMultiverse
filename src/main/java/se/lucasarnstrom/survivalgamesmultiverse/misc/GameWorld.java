@@ -109,6 +109,7 @@ public class GameWorld {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void addMaterialToFilter(int id) throws NumberFormatException {
 		if(blockfilter == null) {
 			blockfilter = EnumSet.noneOf(Material.class);
@@ -124,6 +125,7 @@ public class GameWorld {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void logBlock(Block b, boolean placed) {
 		
 		Location l = b.getLocation();
