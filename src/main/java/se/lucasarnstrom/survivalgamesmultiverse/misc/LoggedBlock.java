@@ -36,6 +36,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Sign;
 
+import se.lucasarnstrom.survivalgamesmultiverse.utils.ConsoleLogger;
+
 public class LoggedBlock {
 
 	private final String	WORLDNAME;
@@ -66,14 +68,20 @@ public class LoggedBlock {
 		mbu.setBlock(X, Y, Z, MATERIAL, DATA);
 		
 		if (SIGN_LINES != null && (MATERIAL == Material.SIGN_POST.getId() || MATERIAL == Material.WALL_SIGN.getId())) {
+			
+			try {
+				Sign sign = (Sign) Bukkit.getWorld(WORLDNAME).getBlockAt(X, Y, Z).getState();
+				
+				for (int i = 0; i < 4; i++) {
+					sign.setLine(i, SIGN_LINES[i]);
+				}
 
-			Sign sign = (Sign) Bukkit.getWorld(WORLDNAME).getBlockAt(X, Y, Z).getState();
-
-			for (int i = 0; i < 4; i++) {
-				sign.setLine(i, SIGN_LINES[i]);
+				sign.update();
 			}
-
-			sign.update();
+			catch(ClassCastException e) {
+				ConsoleLogger.getLogger("WorldManager")
+					.severe("ClassCastException when trying to reset sign for world=\"" + WORLDNAME + "\"! Sign will be skipped!");
+			}
 		}
 	}
 }
