@@ -34,6 +34,7 @@ import me.desht.dhutils.block.MassBlockUpdate;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 
 import se.lucasarnstrom.survivalgamesmultiverse.utils.ConsoleLogger;
@@ -62,14 +63,16 @@ public class LoggedBlock {
 		SIGN_LINES = sign_lines;
 	}
 
-	@SuppressWarnings("deprecation")
 	public void reset(MassBlockUpdate mbu) {
 		
 		mbu.setBlock(X, Y, Z, MATERIAL, DATA);
 		
-		if (SIGN_LINES != null && (MATERIAL == Material.SIGN_POST.getId() || MATERIAL == Material.WALL_SIGN.getId())) {
+		if (SIGN_LINES != null) {
 			
-			try {
+			Block b = Bukkit.getWorld(WORLDNAME).getBlockAt(X, Y, Z);
+			
+			if(b.getType().equals(Material.SIGN_POST) || b.getType().equals(Material.WALL_SIGN)) {
+				
 				Sign sign = (Sign) Bukkit.getWorld(WORLDNAME).getBlockAt(X, Y, Z).getState();
 				
 				for (int i = 0; i < 4; i++) {
@@ -78,9 +81,10 @@ public class LoggedBlock {
 
 				sign.update();
 			}
-			catch(ClassCastException e) {
+			else {
 				ConsoleLogger.getLogger("WorldManager")
-					.severe("ClassCastException when trying to reset sign for world=\"" + WORLDNAME + "\"! Sign will be skipped!");
+					.severe("Tried to reset the data for the following sign but failed! " +
+							"WORLDNAME:\"" + WORLDNAME + "\" X:\"" + X + "\" Y:\"" + Y + "\" Z:\"" + Z + "\"");
 			}
 		}
 	}
