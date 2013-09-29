@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>se.lucasarnstrom</groupId>
 	<artifactId>survivalgamesmultiverse</artifactId>
-	<version>1.4.9</version>
+	<version>1.4.10</version>
 	<name>SurvivalGamesMultiverse</name>
 
 	<!-- Repositories -->
