@@ -64,6 +64,15 @@ public class PlayerManager {
 		
 		playerlists = new ConcurrentHashMap<String, PlayerList>();
 		
+		// Clean all playerlists every 5 seconds.
+		new BukkitRunnable() {
+			public void run() {
+				for(PlayerList list : playerlists.values()) {
+					list.clean();
+				}
+			}
+		}.runTaskTimer(plugin, 10L, 100L);
+		
 		logger.debug("Initiated");
 	}
 	
@@ -313,7 +322,21 @@ class PlayerList {
 		players.clear();
 	}
 	
+	/**
+	 * Clean this playerlist of "null" players.
+	 */
+	public void clean() {
+		Iterator<String> i = players.iterator();
+		while(i.hasNext()) {
+			Player p = Bukkit.getPlayerExact(i.next());
+			if(p == null) i.remove();
+		}
+	}
+	
 	public Player[] toArray() {
+		
+		// Make sure this list is clean before creating the array.
+		clean();
 		
 		Player[] array = new Player[players.size()];
 		
