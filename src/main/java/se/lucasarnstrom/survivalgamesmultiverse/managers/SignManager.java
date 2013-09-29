@@ -142,6 +142,7 @@ public class SignManager {
 	}
 
 	private void updateInfoSign(String worldname) {
+		LanguageManager lang = plugin.getLanguageManager();
 		
 		Block b = getSign(worldname);
 		
@@ -154,9 +155,9 @@ public class SignManager {
 			
 			StatusFlag flag = plugin.getStatusManager().getStatusFlag(worldname);
 			switch(flag) {
-				case WAITING: output = ChatColor.GREEN + plugin.getLanguageManager().getString("signs.waiting"); break;
-				case STARTED: output = ChatColor.GOLD  + plugin.getLanguageManager().getString("signs.started"); break;
-				case FROZEN:  output = ChatColor.RED   + plugin.getLanguageManager().getString("signs.frozen");  break;
+				case WAITING: output = ChatColor.GREEN + lang.getString("signs.waiting"); break;
+				case STARTED: output = ChatColor.GOLD  + lang.getString("signs.started"); break;
+				case FROZEN:  output = ChatColor.RED   + lang.getString("signs.frozen");  break;
 				default:      output = ChatColor.RED   + "ERROR"; break;
 			}
 					
@@ -164,7 +165,7 @@ public class SignManager {
 				
 			sign.setLine(0, worldname);
 			sign.setLine(1, output);
-			sign.setLine(2, plugin.getLanguageManager().getString("signs.playersIngame"));
+			sign.setLine(2, lang.getString("signs.playersIngame"));
 			sign.setLine(3, "" + ChatColor.WHITE + amount + 
 					"/" + plugin.getLocationManager().getLocationAmount(worldname));
 			
