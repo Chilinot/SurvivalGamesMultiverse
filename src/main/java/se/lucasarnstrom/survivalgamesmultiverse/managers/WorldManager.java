@@ -63,8 +63,8 @@ public class WorldManager {
 		worlds.add(new GameWorld(plugin, logger, world));
 	}
 
-	public boolean isGameWorld(World world) {
-		if(getGameWorld(world.getName()) != null)
+	public boolean isGameWorld(String name) {
+		if(getGameWorld(name) != null)
 			return true;
 		else
 			return false;

@@ -86,7 +86,7 @@ public class SignManager {
 						String worldname = ((Sign) block.getState()).getLine(0);
 						World w = Bukkit.getWorld(worldname);
 						
-						if(w != null && plugin.getWorldManager().isGameWorld(w)) {
+						if(w != null && plugin.getWorldManager().isGameWorld(w.getName())) {
 							signs.put(block, entry.getValue());
 						}
 						else {

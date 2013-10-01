@@ -87,7 +87,7 @@ public class Blocks implements Listener {
 		
 		Block block = event.getBlock();
 		
-		if(wm.isGameWorld(block.getWorld())) {
+		if(wm.isGameWorld(block.getWorld().getName())) {
 			if(plugin.getStatusManager().getStatusFlag(block.getWorld().getName()) == StatusFlag.STARTED 
 					|| event.getPlayer().hasPermission("survivalgames.ignore.blockfilter")) {
 				if(wm.allowBlock(block)) {
@@ -115,7 +115,7 @@ public class Blocks implements Listener {
 		Player player = event.getPlayer();
 		Block block   = event.getBlock();
 		
-		if(wm.isGameWorld(block.getWorld())) {
+		if(wm.isGameWorld(block.getWorld().getName())) {
 			if(plugin.getStatusManager().getStatusFlag(block.getWorld().getName()) == StatusFlag.STARTED 
 					|| player.hasPermission("survivalgames.ignore.blockfilter")) {
 				if(wm.allowBlock(block)) {
@@ -136,7 +136,7 @@ public class Blocks implements Listener {
 	@EventHandler(priority=EventPriority.MONITOR, ignoreCancelled=true)
 	public void onEntityExplode(EntityExplodeEvent event) {
 		
-		if(plugin.getWorldManager().isGameWorld(event.getLocation().getWorld())) {
+		if(plugin.getWorldManager().isGameWorld(event.getLocation().getWorld().getName())) {
 			for(Block block : event.blockList()) {
 				plugin.getWorldManager().logBlock(block, false);
 			}
@@ -148,7 +148,7 @@ public class Blocks implements Listener {
 		
 		Block block = event.getBlock();
 		
-		if(plugin.getWorldManager().isGameWorld(block.getWorld())) {
+		if(plugin.getWorldManager().isGameWorld(block.getWorld().getName())) {
 			plugin.getWorldManager().logBlock(block, false);
 		}
 	}
@@ -158,7 +158,7 @@ public class Blocks implements Listener {
 		
 		Block block = event.getBlock();
 		
-		if(plugin.getWorldManager().isGameWorld(block.getWorld())) {
+		if(plugin.getWorldManager().isGameWorld(block.getWorld().getName())) {
 			plugin.getWorldManager().logBlock(block, false);
 		}
 	}
@@ -168,7 +168,7 @@ public class Blocks implements Listener {
 
 		Block block = event.getBlock();
 		
-		if(plugin.getWorldManager().isGameWorld(block.getWorld())) {
+		if(plugin.getWorldManager().isGameWorld(block.getWorld().getName())) {
 			plugin.getWorldManager().logBlock(block, false);
 		}
 	}
@@ -178,7 +178,7 @@ public class Blocks implements Listener {
 		
 		Block block = event.getBlock();
 		
-		if(plugin.getWorldManager().isGameWorld(block.getWorld())) {
+		if(plugin.getWorldManager().isGameWorld(block.getWorld().getName())) {
 			plugin.getWorldManager().logBlock(block, false);
 		}
 	}
@@ -190,7 +190,7 @@ public class Blocks implements Listener {
 		
 		Block b = event.getBlock();
 		
-		if(plugin.getWorldManager().isGameWorld(b.getWorld())
+		if(plugin.getWorldManager().isGameWorld(b.getWorld().getName())
 				&& physics.contains(b.getType())) {
 			plugin.getWorldManager().logBlock(b, false);
 		}

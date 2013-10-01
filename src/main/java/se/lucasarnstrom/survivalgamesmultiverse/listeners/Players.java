@@ -93,7 +93,7 @@ public class Players implements Listener {
 		
 		Player player = (Player) event.getWhoClicked();
 		
-		if(worldmanager.isGameWorld(player.getWorld())
+		if(worldmanager.isGameWorld(player.getWorld().getName())
 				&& playermanager.isInGame(player)
 				&& plugin.getConfig().getBoolean("halloween.forcepumpkin")
 				&& !player.hasPermission("survivalgames.ignore.forcepumpkin")
@@ -115,7 +115,7 @@ public class Players implements Listener {
 		String command = event.getMessage();
 		
 		if(playermanager.isInGame(player)
-				&& worldmanager.isGameWorld(player.getWorld())
+				&& worldmanager.isGameWorld(player.getWorld().getName())
 				&& !allowedcommands.contains(command)
 				&& !player.hasPermission("survivalgames.ignore.commandfilter")) {
 			
@@ -132,8 +132,8 @@ public class Players implements Listener {
 		Location to     = event.getTo();
 		
 		// Teleport in to gameworld
-		if(worldmanager.isGameWorld(to.getWorld()) 
-				&& !worldmanager.isGameWorld(from.getWorld())
+		if(worldmanager.isGameWorld(to.getWorld().getName()) 
+				&& !worldmanager.isGameWorld(from.getWorld().getName())
 				&& !playermanager.isInGame(player)
 				&& !player.hasPermission("survivalgames.ignore.teleport_blocking")) {
 			player.sendMessage(ChatColor.RED + language.getString("blocked_teleportation_to_gameworld"));
@@ -141,7 +141,7 @@ public class Players implements Listener {
 		}
 		
 		// Teleport out of gameworld
-		else if(worldmanager.isGameWorld(from.getWorld()) && !worldmanager.isGameWorld(to.getWorld())) {
+		else if(worldmanager.isGameWorld(from.getWorld().getName()) && !worldmanager.isGameWorld(to.getWorld().getName())) {
 			
 			// Restore the players inventory even if he/she wasn't in the game. Just to be sure.
 			playermanager.restoreInventory(player);
@@ -181,7 +181,7 @@ public class Players implements Listener {
 				
 				String worldname = plugin.getSignManager().getGameworldName(block);
 				
-				if(worldname != null && worldmanager.isGameWorld(Bukkit.getWorld(worldname))) {
+				if(worldname != null && worldmanager.isGameWorld(worldname)) {
 					if(plugin.getStatusManager().getStatusFlag(worldname) == StatusFlag.WAITING) {
 						if(playermanager.isInGame(player) == false) {
 							if(plugin.getLocationManager().areThereLocationsLeft(worldname)) {
@@ -229,7 +229,7 @@ public class Players implements Listener {
 			 *  ---- Chest logging
 			 */
 			
-			else if(block.getType().equals(Material.CHEST) && worldmanager.isGameWorld(block.getWorld())) {
+			else if(block.getType().equals(Material.CHEST) && worldmanager.isGameWorld(block.getWorld().getName())) {
 				plugin.getChestManager().randomizeChest((Chest)block.getState());
 			}
 		}
@@ -240,7 +240,7 @@ public class Players implements Listener {
 		
 		playermanager.restoreInventory(event.getPlayer());
 		
-		if(worldmanager.isGameWorld(event.getRespawnLocation().getWorld())) {
+		if(worldmanager.isGameWorld(event.getRespawnLocation().getWorld().getName())) {
 			
 			/* The players should be teleported directly after respawn instead of resetting the respawnlocation
 			 * to the desired value. This is to make sure that the player shifts worlds correctly and ensure
@@ -260,7 +260,7 @@ public class Players implements Listener {
 	@EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled=true)
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		
-		if(worldmanager.isGameWorld(event.getPlayer().getWorld())) {
+		if(worldmanager.isGameWorld(event.getPlayer().getWorld().getName())) {
 			event.getPlayer().teleport(Bukkit.getWorld(plugin.getConfig().getString("lobbyworld")).getSpawnLocation());
 		}
 	}
@@ -270,7 +270,7 @@ public class Players implements Listener {
 		
 		Player player = event.getPlayer();
 		
-		if(worldmanager.isGameWorld(player.getWorld()) 
+		if(worldmanager.isGameWorld(player.getWorld().getName()) 
 				&& playermanager.isInGame(player)) {
 			
 			String message =  "[" 
@@ -295,7 +295,7 @@ public class Players implements Listener {
 		
 		Player victim = event.getEntity();
 		
-		if(worldmanager.isGameWorld(victim.getWorld())) {
+		if(worldmanager.isGameWorld(victim.getWorld().getName())) {
 			
 			// Block all deathmessages in the SG worlds
 			event.setDeathMessage(null);
@@ -338,7 +338,7 @@ public class Players implements Listener {
 		Player player = event.getPlayer();
 		
 		// If it is a SG world and the game hasnt started and the player is in the game
-		if(worldmanager.isGameWorld(player.getWorld())) {
+		if(worldmanager.isGameWorld(player.getWorld().getName())) {
 			
 			if(playermanager.isInGame(player)) {
 				if(plugin.getStatusManager().getStatusFlag(player.getWorld().getName()) == StatusFlag.WAITING) {
@@ -365,7 +365,7 @@ public class Players implements Listener {
 			
 			Player player = (Player) event.getEntity();
 			
-			if(worldmanager.isGameWorld(player.getWorld())
+			if(worldmanager.isGameWorld(player.getWorld().getName())
 					&& playermanager.isInGame(player)) {
 				
 				if(plugin.getStatusManager().getStatusFlag(player.getWorld().getName()) == StatusFlag.WAITING
@@ -381,7 +381,7 @@ public class Players implements Listener {
 		if(event.getEntity() instanceof Player) {
 			Player p = (Player) event.getEntity();
 			
-			if(worldmanager.isGameWorld(p.getWorld()) 
+			if(worldmanager.isGameWorld(p.getWorld().getName()) 
 					&& event.getRegainReason().equals(RegainReason.SATIATED)
 					&& !worldmanager.allowHealthRegen(p.getWorld())) {
 				event.setCancelled(true);

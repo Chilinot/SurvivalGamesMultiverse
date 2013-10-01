@@ -219,10 +219,10 @@ public class Commands implements CommandExecutor {
 			
 			World world = Bukkit.getWorld(args[0]);
 			
-			if(world != null && plugin.getWorldManager().isGameWorld(world))
+			if(world != null && plugin.getWorldManager().isGameWorld(world.getName()))
 				playerlist = plugin.getPlayerManager().getPlayerList(world.getName());
 		}
-		else if(playerlist == null && plugin.getWorldManager().isGameWorld(player.getWorld())) {
+		else if(playerlist == null && plugin.getWorldManager().isGameWorld(player.getWorld().getName())) {
 			playerlist = plugin.getPlayerManager().getPlayerList(player.getWorld().getName());
 		}
 		else

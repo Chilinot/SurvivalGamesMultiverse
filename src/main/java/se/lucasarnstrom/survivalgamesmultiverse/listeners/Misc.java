@@ -55,13 +55,13 @@ public class Misc implements Listener {
 	
 	@EventHandler(priority=EventPriority.MONITOR, ignoreCancelled=true)
 	public void onHangingBreak(HangingBreakEvent event) {
-		if(worldmanager.isGameWorld(event.getEntity().getWorld()))
+		if(worldmanager.isGameWorld(event.getEntity().getWorld().getName()))
 			worldmanager.logEntity(event.getEntity(), false);
 	}
 	
 	@EventHandler(priority=EventPriority.MONITOR, ignoreCancelled=true)
 	public void onHangingPlace(HangingPlaceEvent event) {
-		if(worldmanager.isGameWorld(event.getEntity().getWorld()))
+		if(worldmanager.isGameWorld(event.getEntity().getWorld().getName()))
 			worldmanager.logEntity(event.getEntity(), true);
 	}
 }
