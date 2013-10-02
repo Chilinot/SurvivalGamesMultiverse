@@ -315,6 +315,7 @@ class PlayerList {
 	}
 	
 	public int getAmountOfPlayers() {
+		clean();
 		return players.size();
 	}
 	
