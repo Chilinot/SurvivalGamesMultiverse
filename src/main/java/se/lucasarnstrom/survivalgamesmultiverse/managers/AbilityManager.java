@@ -111,7 +111,7 @@ public class AbilityManager {
 		return giveAbility(playername, values[random.nextInt(values.length)]);
 	}
 	
-	public void spawnAbilityBeacon(String worldname) {
+	public void spawnAbilityPoint(String worldname) {
 		if(plugin.getWorldManager().isGameWorld(worldname)) {
 			
 		}
