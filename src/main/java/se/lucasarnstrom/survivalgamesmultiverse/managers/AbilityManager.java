@@ -107,9 +107,7 @@ public class AbilityManager {
 	}
 	
 	public boolean giveRandomAbility(String playername) {
-		
 		Abilitytype[] values = Abilitytype.values();
-		
 		return giveAbility(playername, values[random.nextInt(values.length)]);
 	}
 	
