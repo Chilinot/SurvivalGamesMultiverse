@@ -42,8 +42,8 @@ import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import se.lucasarnstrom.lucasutils.SerializedLocation;
 import se.lucasarnstrom.survivalgamesmultiverse.Main;
-import se.lucasarnstrom.survivalgamesmultiverse.utils.SerializedLocation;
 
 public class SQLiteInterface {
 	

@@ -41,9 +41,9 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import se.lucasarnstrom.lucasutils.ConsoleLogger;
+import se.lucasarnstrom.lucasutils.SerializedLocation;
 import se.lucasarnstrom.survivalgamesmultiverse.Main;
-import se.lucasarnstrom.survivalgamesmultiverse.utils.ConsoleLogger;
-import se.lucasarnstrom.survivalgamesmultiverse.utils.SerializedLocation;
 
 public class LocationManager {
 	

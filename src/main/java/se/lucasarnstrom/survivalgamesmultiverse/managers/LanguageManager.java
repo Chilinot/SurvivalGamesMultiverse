@@ -37,8 +37,8 @@ import java.util.Map.Entry;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import se.lucasarnstrom.lucasutils.ConsoleLogger;
 import se.lucasarnstrom.survivalgamesmultiverse.Main;
-import se.lucasarnstrom.survivalgamesmultiverse.utils.ConsoleLogger;
 
 public class LanguageManager {
 

@@ -40,8 +40,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import se.lucasarnstrom.lucasutils.ConsoleLogger;
 import se.lucasarnstrom.survivalgamesmultiverse.Main;
-import se.lucasarnstrom.survivalgamesmultiverse.utils.ConsoleLogger;
 
 public class AbilityManager {
 	

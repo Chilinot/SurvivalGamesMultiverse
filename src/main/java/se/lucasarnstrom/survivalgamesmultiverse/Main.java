@@ -43,6 +43,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
 
+import se.lucasarnstrom.lucasutils.ConsoleLogger;
 import se.lucasarnstrom.survivalgamesmultiverse.listeners.Blocks;
 import se.lucasarnstrom.survivalgamesmultiverse.listeners.Misc;
 import se.lucasarnstrom.survivalgamesmultiverse.listeners.Players;
@@ -57,7 +58,6 @@ import se.lucasarnstrom.survivalgamesmultiverse.managers.StatusManager;
 import se.lucasarnstrom.survivalgamesmultiverse.managers.WorldManager;
 import se.lucasarnstrom.survivalgamesmultiverse.managers.StatusManager.StatusFlag;
 import se.lucasarnstrom.survivalgamesmultiverse.threading.SQLiteInterface;
-import se.lucasarnstrom.survivalgamesmultiverse.utils.ConsoleLogger;
 import se.lucasarnstrom.survivalgamesmultiverse.utils.Updater;
 
 public class Main extends JavaPlugin {

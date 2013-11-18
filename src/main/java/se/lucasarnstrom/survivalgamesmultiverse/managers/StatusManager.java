@@ -38,9 +38,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
+import se.lucasarnstrom.lucasutils.ConsoleLogger;
 import se.lucasarnstrom.survivalgamesmultiverse.Main;
 import se.lucasarnstrom.survivalgamesmultiverse.managers.StatusManager.StatusFlag;
-import se.lucasarnstrom.survivalgamesmultiverse.utils.ConsoleLogger;
 
 public class StatusManager {
 	

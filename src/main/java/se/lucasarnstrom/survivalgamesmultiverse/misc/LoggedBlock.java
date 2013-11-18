@@ -37,7 +37,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 
-import se.lucasarnstrom.survivalgamesmultiverse.utils.ConsoleLogger;
+import se.lucasarnstrom.lucasutils.ConsoleLogger;
 
 public class LoggedBlock {
 

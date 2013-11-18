@@ -36,9 +36,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 
+import se.lucasarnstrom.lucasutils.ConsoleLogger;
 import se.lucasarnstrom.survivalgamesmultiverse.Main;
 import se.lucasarnstrom.survivalgamesmultiverse.managers.WorldManager;
-import se.lucasarnstrom.survivalgamesmultiverse.utils.ConsoleLogger;
 
 public class Misc implements Listener {
 	

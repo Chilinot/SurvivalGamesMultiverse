@@ -42,9 +42,9 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 
+import se.lucasarnstrom.lucasutils.ConsoleLogger;
 import se.lucasarnstrom.survivalgamesmultiverse.Main;
 import se.lucasarnstrom.survivalgamesmultiverse.threading.ConcurrentMySQLConnection;
-import se.lucasarnstrom.survivalgamesmultiverse.utils.ConsoleLogger;
 
 public class StatsManager {
 	

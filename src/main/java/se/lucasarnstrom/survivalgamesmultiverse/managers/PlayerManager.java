@@ -45,11 +45,11 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import se.lucasarnstrom.lucasutils.ConsoleLogger;
+import se.lucasarnstrom.lucasutils.Serialize;
 import se.lucasarnstrom.survivalgamesmultiverse.Main;
 import se.lucasarnstrom.survivalgamesmultiverse.events.PlayerAddEvent;
 import se.lucasarnstrom.survivalgamesmultiverse.events.PlayerRemoveEvent;
-import se.lucasarnstrom.survivalgamesmultiverse.utils.ConsoleLogger;
-import se.lucasarnstrom.survivalgamesmultiverse.utils.Serialize;
 
 public class PlayerManager {
 	

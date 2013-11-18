@@ -59,6 +59,7 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import se.lucasarnstrom.lucasutils.ConsoleLogger;
 import se.lucasarnstrom.survivalgamesmultiverse.Main;
 import se.lucasarnstrom.survivalgamesmultiverse.events.PlayerRemoveEvent;
 import se.lucasarnstrom.survivalgamesmultiverse.managers.LanguageManager;
@@ -66,7 +67,6 @@ import se.lucasarnstrom.survivalgamesmultiverse.managers.PlayerManager;
 import se.lucasarnstrom.survivalgamesmultiverse.managers.StatsManager;
 import se.lucasarnstrom.survivalgamesmultiverse.managers.WorldManager;
 import se.lucasarnstrom.survivalgamesmultiverse.managers.StatusManager.StatusFlag;
-import se.lucasarnstrom.survivalgamesmultiverse.utils.ConsoleLogger;
 
 public class Players implements Listener {
 	

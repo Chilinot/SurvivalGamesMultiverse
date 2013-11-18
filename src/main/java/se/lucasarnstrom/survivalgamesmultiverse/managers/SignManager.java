@@ -43,10 +43,10 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import se.lucasarnstrom.lucasutils.ConsoleLogger;
+import se.lucasarnstrom.lucasutils.SerializedLocation;
 import se.lucasarnstrom.survivalgamesmultiverse.Main;
 import se.lucasarnstrom.survivalgamesmultiverse.managers.StatusManager.StatusFlag;
-import se.lucasarnstrom.survivalgamesmultiverse.utils.ConsoleLogger;
-import se.lucasarnstrom.survivalgamesmultiverse.utils.SerializedLocation;
 
 public class SignManager {
 	
