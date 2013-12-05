@@ -91,7 +91,7 @@ public class Main extends JavaPlugin {
 		// Update
 		if(getConfig().getBoolean("auto-update")) {
 			logger.info("Auto-Updating enabled!");
-			new Updater(this, "survivalgamesmultiverse", this.getFile(), Updater.UpdateType.DEFAULT, true);
+			new Updater(this, 58613, this.getFile(), Updater.UpdateType.DEFAULT, getConfig().getBoolean("debug"));
 		}
 		
 		// DHUtils
