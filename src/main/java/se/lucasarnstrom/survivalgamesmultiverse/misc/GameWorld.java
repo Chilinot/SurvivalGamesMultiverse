@@ -37,6 +37,7 @@ import java.util.UUID;
 
 import me.desht.dhutils.block.CraftMassBlockUpdate;
 import me.desht.dhutils.block.MassBlockUpdate;
+import me.desht.dhutils.block.MassBlockUpdate.RelightingStrategy;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -163,6 +164,8 @@ public class GameWorld {
 		logger.debug("Resetting world: " + world.getName());
 		
 		MassBlockUpdate mbu = CraftMassBlockUpdate.createMassBlockUpdater(plugin, world);
+		
+		mbu.setRelightingStrategy(RelightingStrategy.NEVER);
 
 		for(LoggedBlock block : log_block.values()) {
 			block.reset(mbu);
@@ -172,8 +175,6 @@ public class GameWorld {
 			if(entity != null)
 				entity.reset();
 		}
-		
-		mbu.notifyClients();
 
 		plugin.getServer().getScheduler().runTask(plugin, new Runnable() {
 			public void run() {
