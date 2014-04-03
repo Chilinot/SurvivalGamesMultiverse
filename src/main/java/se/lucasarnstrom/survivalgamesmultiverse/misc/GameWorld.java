@@ -65,6 +65,7 @@ public class GameWorld {
 	private HashMap<Location, LoggedBlock> log_block          = new HashMap<Location, LoggedBlock>();
 	private HashMap<UUID, LoggedEntity>    log_entity         = new HashMap<UUID, LoggedEntity>();
 	private HashSet<Entity>                log_entity_removal = new HashSet<Entity>();
+	private boolean inReset = false;
 	
 	// Entities that shouldn't be removed on world reset
 	private static final EnumSet<EntityType> nonremovable = EnumSet.of(
@@ -128,6 +129,8 @@ public class GameWorld {
 	
 	@SuppressWarnings("deprecation")
 	public void logBlock(Block b, boolean placed) {
+		if (inReset)
+			return;
 		
 		Location l = b.getLocation();
 		
@@ -147,6 +150,8 @@ public class GameWorld {
 	}
 	
 	public void logEntity(Entity e, boolean remove) {
+		if (inReset)
+			return;
 		if(!log_entity.containsKey(e.getUniqueId())) {
 			if(remove) {
 				log_entity_removal.add(e);
@@ -160,30 +165,34 @@ public class GameWorld {
 	}
 	
 	public void resetWorld() {
-		
-		logger.debug("Resetting world: " + world.getName());
-		
-		MassBlockUpdate mbu = CraftMassBlockUpdate.createMassBlockUpdater(plugin, world);
-		
-		mbu.setRelightingStrategy(RelightingStrategy.NEVER);
+		inReset = true;
+		try {
+			logger.debug("Resetting world: " + world.getName());
 
-		for(LoggedBlock block : log_block.values()) {
-			block.reset(mbu);
-		}
-		
-		for(LoggedEntity entity : log_entity.values()) {
-			if(entity != null)
-				entity.reset();
-		}
+			MassBlockUpdate mbu = CraftMassBlockUpdate.createMassBlockUpdater(plugin, world);
 
-		plugin.getServer().getScheduler().runTask(plugin, new Runnable() {
-			public void run() {
-				clearEntities();
+			mbu.setRelightingStrategy(RelightingStrategy.NEVER);
+
+			for(LoggedBlock block : log_block.values()) {
+				block.reset(mbu);
 			}
-		});
 
-		log_block.clear();
-		log_entity.clear();
+			for(LoggedEntity entity : log_entity.values()) {
+				if(entity != null)
+					entity.reset();
+			}
+
+			plugin.getServer().getScheduler().runTask(plugin, new Runnable() {
+					public void run() {
+						clearEntities();
+					}
+					});
+
+			log_block.clear();
+			log_entity.clear();
+		} finally {
+			inReset = false;
+		}
 	}
 	
 	public void clearEntities() {
