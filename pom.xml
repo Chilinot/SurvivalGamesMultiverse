@@ -6,6 +6,10 @@
 	<version>1.4.12</version>
 	<name>SurvivalGamesMultiverse</name>
 
+    <properties>
+      <project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
+    </properties>
+
 	<!-- Repositories -->
 	<repositories>
 
@@ -44,7 +48,7 @@
 		<dependency>
 			<groupId>me.desht</groupId>
 			<artifactId>dhutils-lib</artifactId>
-			<version>2.9.1-SNAPSHOT</version>
+			<version>2.11.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Metrics -->
@@ -64,7 +68,7 @@
 		<dependency>
 			<groupId>se.lucasarnstrom</groupId>
 			<artifactId>lucasutils</artifactId>
-			<version>1.0</version>
+			<version>5.1</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
