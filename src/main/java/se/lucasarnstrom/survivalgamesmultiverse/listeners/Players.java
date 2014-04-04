@@ -55,6 +55,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -267,24 +268,30 @@ public class Players implements Listener {
 	
 	@EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled=true)
 	public void onPlayerQuit(PlayerQuitEvent event) {
-		
-		Player player = event.getPlayer();
-		
+        onPlayerDisconnect(event.getPlayer());
+	}
+
+	@EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled=true)
+	public void onPlayerKick(PlayerKickEvent event) {
+		onPlayerDisconnect(event.getPlayer());
+	}
+
+	private void onPlayerDisconnect(Player player) {
 		if(worldmanager.isGameWorld(player.getWorld().getName()) 
 				&& playermanager.isInGame(player)) {
-			
+
 			String message =  "[" 
 					+ ChatColor.GOLD + "SGAnti-Cheat"
 					+ ChatColor.WHITE + "] :: " 
 					+ ChatColor.RED + player.getName() 
 					+ ChatColor.WHITE + " - " 
 					+ language.getString("anticheat.disconnect");
-			
+
 			playermanager.removePlayer(player.getWorld().getName(), player);
 			worldmanager.broadcast(player.getWorld(), message);
-			
+
 			plugin.getSignManager().updateSigns();
-			
+
 			// Is the game over?
 			plugin.gameover(player.getWorld());
 		}
