@@ -1,3 +1,6 @@
+# Deprecated
+This repository and this Bukkit plugin is dead. It is an old code base with some poor design decisions. My plan was to remake this but that plan ended due to what happened between the bukkit developers and Mojang.
+
 ###Server owners
 http://dev.bukkit.org/bukkit-plugins/survivalgamesmultiverse/
 
